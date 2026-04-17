@@ -401,7 +401,9 @@
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.05em;
-    
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
     transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
   }
   .nav-cta:hover {
@@ -494,7 +496,9 @@
     font-family: var(--sans);
     font-size: 15px;
     font-weight: 600;
-    
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
@@ -1264,7 +1268,7 @@
 <!-- NAV -->
 <nav role="navigation" aria-label="Navegação principal">
   <div class="nav-brand" aria-label="Pulso Aprimoramento em Enfermagem — Plataforma de Educação em Enfermagem">Pulso <span>Aprimoramento em Enfermagem</span></div>
-  <button class="nav-cta" aria-label="Inscreva-se no curso de Anotações de Enfermagem">Quero me inscrever</button>
+  <a href="https://pay.hotmart.com/Q105434911B" target="_blank" rel="noopener" class="nav-cta" aria-label="Inscreva-se no curso de Anotações de Enfermagem">Quero me inscrever</a>
 </nav>
 
 <!-- HERO -->
@@ -1280,7 +1284,7 @@
       O curso que transforma a forma como você registra — com clareza, precisão e responsabilidade profissional.
     </p>
     <div class="hero-actions">
-      <button class="btn-primary" aria-label="Garantir vaga no curso de Anotações de Enfermagem">Garantir minha vaga</button>
+      <a href="https://pay.hotmart.com/Q105434911B" target="_blank" rel="noopener" class="btn-primary" aria-label="Garantir vaga no curso de Anotações de Enfermagem">Garantir minha vaga</a>
       <button class="btn-ghost" aria-label="Ver conteúdo programático completo do curso">Ver conteúdo programático</button>
     </div>
     <div class="hero-stats" role="list" aria-label="Estatísticas do curso">
@@ -1695,7 +1699,7 @@
     <h2 class="cta-title reveal reveal-delay-1">Registre com <em>precisão.</em><br>Cuide com segurança.</h2>
     <p class="cta-sub reveal reveal-delay-2">Junte-se a mais de 3.000 profissionais que transformaram a forma de registrar — e elevaram o padrão do seu cuidado.</p>
     <div class="cta-btn-wrap reveal reveal-delay-3">
-      <button class="btn-primary" style="font-size:17px; padding: 20px 56px;">Quero me inscrever agora</button>
+      <a href="https://pay.hotmart.com/Q105434911B" target="_blank" rel="noopener" class="btn-primary" style="font-size:17px; padding: 20px 56px;">Quero me inscrever agora</a>
     </div>
     <div class="cta-note reveal reveal-delay-4">Acesso imediato · Certificado incluso · Suporte da instrutora</div>
   </div>
@@ -1793,14 +1797,9 @@ document.querySelectorAll('.faq-q').forEach(btn => {
   });
 });
 
-// ── SMOOTH SCROLL para botões de conteúdo
+// ── SMOOTH SCROLL para botão de conteúdo
 document.querySelector('.btn-ghost')?.addEventListener('click', () => {
   document.getElementById('conteudo')?.scrollIntoView({ behavior: 'smooth' });
-});
-document.querySelectorAll('.btn-primary, .nav-cta').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.getElementById('perguntas-frequentes')?.scrollIntoView({ behavior: 'smooth' });
-  });
 });
 
 // ── WEB VITALS: reportar LCP/CLS (estrutura para integração GA4)
