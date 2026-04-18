@@ -937,16 +937,16 @@ footer { background: #060f0e; padding: 64px 0 32px; }
     </div>
     <div class="hero-stats">
       <div class="hero-stat">
-        <div class="hero-stat-num">3k+</div>
+        <div class="hero-stat-num"><span id="cnt-alunos">0</span>+</div>
         <div class="hero-stat-lbl">Alunos formados</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-num">20</div>
+        <div class="hero-stat-num"><span id="cnt-anos">0</span></div>
         <div class="hero-stat-lbl">Anos de experiência</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-num">4.9★</div>
-        <div class="hero-stat-lbl">Avaliação média</div>
+        <div class="hero-stat-num">100%</div>
+        <div class="hero-stat-lbl">Online</div>
       </div>
     </div>
   </div>
@@ -1200,6 +1200,38 @@ footer { background: #060f0e; padding: 64px 0 32px; }
 </main>
 
 <script>
+// Contador animado
+function animateCounter(id, target, duration) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const start = 0;
+  const step = target / (duration / 16);
+  let current = start;
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) {
+      current = target;
+      clearInterval(timer);
+    }
+    el.textContent = Math.floor(current).toLocaleString('pt-BR');
+  }, 16);
+}
+
+// Disparar contador quando hero-stats entrar na tela
+const statsEl = document.querySelector('.hero-stats');
+let counted = false;
+const statsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !counted) {
+      counted = true;
+      animateCounter('cnt-alunos', 3000, 1800);
+      animateCounter('cnt-anos', 20, 1200);
+      statsObs.disconnect();
+    }
+  });
+}, { threshold: 0.5 });
+if (statsEl) statsObs.observe(statsEl);
+
 function toggleMenu() {
   document.getElementById('hamburger').classList.toggle('open');
   document.getElementById('mobileMenu').classList.toggle('open');
