@@ -1,14 +1,14 @@
 {
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
+      "src": "/(.*)",
       "has": [
         {
           "type": "host",
           "value": "anotacoes.pulsoenfermagem.com.br"
         }
       ],
-      "destination": "/lp-anotacoes.html"
+      "dest": "/anotacoes/index.html"
     }
   ]
 }
