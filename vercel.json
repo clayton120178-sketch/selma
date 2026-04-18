@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "anotacoes.pulsoenfermagem.com.br"
+        }
+      ],
+      "destination": "/lp-anotacoes.html"
+    }
+  ]
+}
