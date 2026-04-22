@@ -415,7 +415,7 @@ nav.scrolled {
 }
 .nav-links { display: none; list-style: none; margin-left: 36px; gap: 28px; }
 .nav-links a {
-  font-size: 13px; font-weight: 500; color: var(--text-dim); text-decoration: none;
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.85); text-decoration: none;
   letter-spacing: .02em; transition: color .2s; position: relative;
 }
 .nav-links a::after {
@@ -481,14 +481,14 @@ nav.scrolled {
   position: absolute; inset: 0; z-index: 1;
   background:
     linear-gradient(to bottom,
-      rgba(5,13,11,0.55) 0%,
-      rgba(5,13,11,0.42) 50%,
-      rgba(5,13,11,0.60) 100%
+      rgba(5,13,11,0.42) 0%,
+      rgba(5,13,11,0.28) 50%,
+      rgba(5,13,11,0.45) 100%
     ),
     linear-gradient(to right,
-      rgba(5,13,11,0.65) 0%,
-      rgba(5,13,11,0.40) 60%,
-      rgba(5,13,11,0.10) 100%
+      rgba(5,13,11,0.52) 0%,
+      rgba(5,13,11,0.28) 60%,
+      rgba(5,13,11,0.05) 100%
     );
 }
 .hero-grid {
@@ -557,8 +557,8 @@ nav.scrolled {
 .btn-main:hover { background: var(--teal-light); transform: translateY(-2px); box-shadow: 0 12px 36px var(--teal-glow); }
 .btn-ghost {
   display: inline-flex; align-items: center; gap: 10px;
-  font-size: 15px; font-weight: 500; color: var(--text-dim); background: transparent;
-  border: 1.5px solid var(--border); cursor: pointer; padding: 14px 32px; border-radius: 999px;
+  font-size: 15px; font-weight: 500; color: #ffffff; background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.45); cursor: pointer; padding: 14px 32px; border-radius: 999px;
   transition: border-color .25s, color .25s, background .25s; text-decoration: none;
 }
 .btn-ghost:hover { border-color: var(--teal-border); color: var(--teal); background: var(--teal-dim); }
