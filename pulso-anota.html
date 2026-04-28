@@ -2,1303 +2,567 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Pulso Anota</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --teal:       #0D9488;
-  --teal-light: #14B8A6;
-  --teal-dim:   rgba(13,148,136,0.15);
-  --teal-border:rgba(13,148,136,0.35);
-  --verde:      #16A34A;
-  --verde-dim:  rgba(22,163,74,0.12);
-  --verde-border:rgba(22,163,74,0.40);
-  --vermelho:   #EF4444;
-  --vermelho-dim:rgba(239,68,68,0.12);
-  --amarelo:    #CA8A04;
-  --amarelo-dim:rgba(202,138,4,0.12);
-
-  --bg:         #070d0b;
-  --bg2:        #0d1612;
-  --bg3:        #111e19;
-  --bg4:        #172520;
-  --surface:    rgba(13,148,136,0.06);
-  --surface2:   rgba(13,148,136,0.10);
-  --border:     rgba(13,148,136,0.18);
-  --border2:    rgba(13,148,136,0.28);
-
-  --text:       #e8f5f2;
-  --text2:      rgba(232,245,242,0.70);
-  --text3:      rgba(232,245,242,0.40);
-
-  --font:       'Nunito', sans-serif;
-  --mono:       'JetBrains Mono', monospace;
-  --r:          10px;
-  --r2:         16px;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── TOPBAR ── */
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
-  height: 56px;
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.topbar-left { display: flex; align-items: center; gap: 12px; }
-.logo-mark {
-  width: 32px; height: 32px;
-  background: var(--teal);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-}
-.logo-mark svg { width: 18px; height: 18px; }
-.logo-name { font-size: 17px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
-.logo-name span { color: var(--teal-light); }
-.badge-simulador {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
-  background: var(--teal-dim);
-  border: 1px solid var(--teal-border);
-  color: var(--teal-light);
-  padding: 2px 8px;
-  border-radius: 20px;
-  text-transform: uppercase;
-}
-.topbar-right { display: flex; align-items: center; gap: 10px; }
-.status-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--verde);
-  box-shadow: 0 0 8px var(--verde);
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-@keyframes pulse-dot {
-  0%,100% { opacity: 1; } 50% { opacity: 0.4; }
-}
-.status-txt { font-size: 11px; color: var(--text2); font-weight: 600; }
-
-/* ── LAYOUT ── */
-.app-layout {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-  height: calc(100vh - 56px);
-}
-
-/* ── SIDEBAR ── */
-.sidebar {
-  width: 260px;
-  min-width: 260px;
-  background: var(--bg2);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-}
-.sidebar-section { padding: 16px 16px 8px; }
-.sidebar-label {
-  font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
-  color: var(--text3); text-transform: uppercase;
-  padding: 0 4px 8px;
-}
-.sidebar-btn {
-  width: 100%;
-  display: flex; align-items: center; gap: 10px;
-  padding: 9px 12px;
-  border-radius: var(--r);
-  border: 1px solid transparent;
-  background: transparent;
-  cursor: pointer;
-  font-family: var(--font);
-  font-size: 13px; font-weight: 600;
-  color: var(--text2);
-  text-align: left;
-  transition: all .18s;
-  margin-bottom: 2px;
-}
-.sidebar-btn:hover { background: var(--surface); color: var(--text); }
-.sidebar-btn.active {
-  background: var(--teal-dim);
-  border-color: var(--teal-border);
-  color: var(--teal-light);
-}
-.sidebar-btn .icon {
-  width: 28px; height: 28px;
-  border-radius: 7px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
-  background: var(--surface);
-  flex-shrink: 0;
-}
-.sidebar-btn.active .icon { background: var(--teal-dim); }
-.sidebar-count {
-  margin-left: auto;
-  font-size: 10px; font-weight: 700;
-  background: var(--surface2);
-  color: var(--teal-light);
-  padding: 2px 7px;
-  border-radius: 20px;
-}
-
-.cat-header {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
-  color: var(--text3); text-transform: uppercase;
-  padding: 12px 16px 4px;
-  display: flex; align-items: center; gap: 6px;
-}
-.cat-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-}
-
-/* ── MAIN PANEL ── */
-.main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* ── PATIENT BAR ── */
-.patient-bar {
-  background: var(--bg3);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 24px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-.patient-field { display: flex; flex-direction: column; gap: 2px; }
-.patient-field-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; }
-.patient-field-val { font-size: 13px; font-weight: 700; color: var(--text); }
-.patient-field-val.mono { font-family: var(--mono); font-size: 12px; color: var(--teal-light); }
-.sep { width: 1px; height: 32px; background: var(--border); }
-.patient-chip {
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-size: 11px; font-weight: 700;
-  border: 1px solid;
-}
-.chip-verde  { background: var(--verde-dim);   border-color: var(--verde-border);   color: #4ade80; }
-.chip-teal   { background: var(--teal-dim);    border-color: var(--teal-border);    color: var(--teal-light); }
-.chip-amarelo{ background: var(--amarelo-dim); border-color: rgba(202,138,4,0.4);   color: #fbbf24; }
-
-/* ── CONTENT AREA ── */
-.content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* ── STEP HEADER ── */
-.step-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.step-num {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: var(--teal);
-  color: #fff;
-  font-size: 15px; font-weight: 800;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.step-title { font-size: 18px; font-weight: 800; color: var(--text); }
-.step-sub   { font-size: 12px; font-weight: 600; color: var(--text3); margin-top: 2px; }
-
-/* ── SELECTOR GRID ── */
-.selector-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 10px;
-}
-.sel-card {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 14px 16px;
-  cursor: pointer;
-  transition: all .18s;
-  display: flex; align-items: center; gap: 10px;
-}
-.sel-card:hover {
-  background: var(--surface);
-  border-color: var(--teal-border);
-  transform: translateY(-1px);
-}
-.sel-card.selected {
-  background: var(--teal-dim);
-  border-color: var(--teal);
-  box-shadow: 0 0 0 1px var(--teal);
-}
-.sel-card-icon {
-  width: 34px; height: 34px;
-  border-radius: 9px;
-  background: var(--surface2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  flex-shrink: 0;
-}
-.sel-card.selected .sel-card-icon { background: rgba(13,148,136,0.25); }
-.sel-card-txt { font-size: 13px; font-weight: 700; color: var(--text2); line-height: 1.3; }
-.sel-card.selected .sel-card-txt { color: var(--teal-light); }
-
-/* ── CONTEXT TABS ── */
-.ctx-tabs {
-  display: flex; gap: 8px; flex-wrap: wrap;
-}
-.ctx-tab {
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg3);
-  font-family: var(--font);
-  font-size: 13px; font-weight: 700;
-  color: var(--text2);
-  cursor: pointer;
-  transition: all .18s;
-  display: flex; align-items: center; gap: 7px;
-}
-.ctx-tab:hover { background: var(--surface); border-color: var(--teal-border); color: var(--text); }
-.ctx-tab.selected {
-  background: var(--teal-dim);
-  border-color: var(--teal);
-  color: var(--teal-light);
-}
-
-/* ── FORM CARD ── */
-.form-card {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  overflow: hidden;
-}
-.form-card-header {
-  padding: 14px 20px;
-  background: var(--bg4);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 10px;
-}
-.form-card-title { font-size: 13px; font-weight: 800; color: var(--text); }
-.form-card-badge {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
-  background: var(--teal-dim); border: 1px solid var(--teal-border);
-  color: var(--teal-light);
-  padding: 2px 8px; border-radius: 20px;
-  text-transform: uppercase;
-}
-.form-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.form-row.full { grid-template-columns: 1fr; }
-.field-group { display: flex; flex-direction: column; gap: 6px; }
-.field-label {
-  font-size: 11px; font-weight: 700; color: var(--text3);
-  text-transform: uppercase; letter-spacing: 0.7px;
-}
-.field-input {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 9px 12px;
-  font-family: var(--font);
-  font-size: 13px; font-weight: 600;
-  color: var(--text);
-  outline: none;
-  transition: border-color .15s;
-  width: 100%;
-}
-.field-input:focus { border-color: var(--teal); }
-.field-input::placeholder { color: var(--text3); }
-.field-select {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 9px 12px;
-  font-family: var(--font);
-  font-size: 13px; font-weight: 600;
-  color: var(--text);
-  outline: none;
-  cursor: pointer;
-  width: 100%;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%230D9488' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  transition: border-color .15s;
-}
-.field-select:focus { border-color: var(--teal); }
-.field-select option { background: #0d1612; color: var(--text); }
-
-.scale-group { display: flex; gap: 6px; flex-wrap: wrap; }
-.scale-btn {
-  width: 36px; height: 36px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg2);
-  font-family: var(--font);
-  font-size: 13px; font-weight: 700;
-  color: var(--text2);
-  cursor: pointer;
-  transition: all .15s;
-  display: flex; align-items: center; justify-content: center;
-}
-.scale-btn:hover { border-color: var(--teal-border); color: var(--text); }
-.scale-btn.sel { background: var(--teal); border-color: var(--teal); color: #fff; }
-.scale-btn.sel-high { background: var(--vermelho); border-color: var(--vermelho); color: #fff; }
-.scale-btn.sel-mid  { background: var(--amarelo);  border-color: var(--amarelo);  color: #fff; }
-.scale-btn.sel-low  { background: var(--verde);    border-color: var(--verde);    color: #fff; }
-
-/* ── OUTPUT CARD ── */
-.output-card {
-  background: var(--bg2);
-  border: 1px solid var(--verde-border);
-  border-radius: var(--r2);
-  overflow: hidden;
-  animation: slide-up .3s ease;
-}
-@keyframes slide-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.output-header {
-  padding: 12px 20px;
-  background: var(--verde-dim);
-  border-bottom: 1px solid var(--verde-border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.output-title {
-  font-size: 12px; font-weight: 800;
-  color: #4ade80; text-transform: uppercase; letter-spacing: 0.8px;
-  display: flex; align-items: center; gap: 8px;
-}
-.output-body {
-  padding: 20px;
-  font-family: var(--mono);
-  font-size: 13px; line-height: 1.9;
-  color: var(--text);
-  border-left: 3px solid var(--verde);
-  margin: 16px;
-  border-radius: 0 var(--r) var(--r) 0;
-  background: rgba(22,163,74,0.04);
-}
-.output-actions {
-  padding: 12px 20px;
-  border-top: 1px solid var(--border);
-  display: flex; gap: 10px;
-}
-
-/* ── BUTTONS ── */
-.btn {
-  padding: 9px 18px;
-  border-radius: var(--r);
-  font-family: var(--font);
-  font-size: 13px; font-weight: 700;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all .18s;
-  display: flex; align-items: center; gap: 7px;
-}
-.btn-primary {
-  background: var(--teal);
-  color: #fff;
-  border-color: var(--teal);
-}
-.btn-primary:hover { background: var(--teal-light); }
-.btn-secondary {
-  background: var(--surface);
-  color: var(--text2);
-  border-color: var(--border);
-}
-.btn-secondary:hover { background: var(--surface2); border-color: var(--teal-border); color: var(--text); }
-.btn-ghost {
-  background: transparent;
-  color: var(--text3);
-  border-color: transparent;
-}
-.btn-ghost:hover { color: var(--text); background: var(--surface); }
-.btn-verde {
-  background: var(--verde-dim);
-  color: #4ade80;
-  border-color: var(--verde-border);
-}
-.btn-verde:hover { background: rgba(22,163,74,0.2); }
-.btn-lg { padding: 12px 24px; font-size: 14px; border-radius: 12px; }
-
-/* ── TIMELINE / HISTORY ── */
-.timeline { display: flex; flex-direction: column; gap: 0; }
-.tl-item {
-  display: flex; gap: 14px;
-  position: relative;
-}
-.tl-item:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  left: 15px; top: 32px;
-  width: 2px;
-  height: calc(100% - 16px);
-  background: var(--border);
-}
-.tl-dot {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  background: var(--bg4);
-  border: 2px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px;
-  flex-shrink: 0;
-  z-index: 1;
-}
-.tl-dot.verde  { border-color: var(--verde);    background: var(--verde-dim); }
-.tl-dot.teal   { border-color: var(--teal);     background: var(--teal-dim); }
-.tl-dot.amarelo{ border-color: var(--amarelo);  background: var(--amarelo-dim); }
-.tl-content {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 14px 16px;
-  margin-bottom: 12px;
-  flex: 1;
-}
-.tl-meta {
-  font-size: 11px; font-weight: 700; color: var(--text3);
-  margin-bottom: 6px;
-  display: flex; gap: 12px; align-items: center;
-}
-.tl-meta span { color: var(--teal-light); }
-.tl-text {
-  font-family: var(--mono);
-  font-size: 12px; line-height: 1.8;
-  color: var(--text2);
-}
-
-/* ── VITALS MINI ── */
-.vitals-row {
-  display: flex; gap: 10px; flex-wrap: wrap;
-}
-.vital-box {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 10px 14px;
-  display: flex; flex-direction: column; gap: 2px;
-  min-width: 90px;
-}
-.vital-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.6px; }
-.vital-val   { font-size: 18px; font-weight: 800; color: var(--text); font-family: var(--mono); }
-.vital-unit  { font-size: 10px; color: var(--text3); }
-.vital-box.alerta { border-color: rgba(239,68,68,0.4); background: var(--vermelho-dim); }
-.vital-box.alerta .vital-val { color: #f87171; }
-
-/* ── LOADING ── */
-.loading {
-  display: flex; align-items: center; gap: 10px;
-  padding: 20px;
-  color: var(--text2);
-  font-size: 13px; font-weight: 600;
-}
-.spinner {
-  width: 18px; height: 18px;
-  border: 2px solid var(--border);
-  border-top-color: var(--teal);
-  border-radius: 50%;
-  animation: spin .7s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── EMPTY / ERROR ── */
-.empty-state {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 12px; padding: 48px 24px;
-  text-align: center;
-}
-.empty-icon { font-size: 48px; opacity: 0.3; }
-.empty-title { font-size: 16px; font-weight: 800; color: var(--text2); }
-.empty-sub   { font-size: 13px; color: var(--text3); max-width: 320px; line-height: 1.6; }
-
-/* ── DIVIDER ── */
-.divider {
-  height: 1px; background: var(--border);
-  margin: 4px 0;
-}
-
-/* ── VIEWS ── */
-.view { display: none; flex-direction: column; gap: 20px; animation: fade-in .2s ease; }
-.view.active { display: flex; }
-@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--teal-border); }
-
-/* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 24px; right: 24px;
-  background: var(--bg2);
-  border: 1px solid var(--verde-border);
-  border-radius: var(--r);
-  padding: 12px 18px;
-  font-size: 13px; font-weight: 700;
-  color: #4ade80;
-  display: flex; align-items: center; gap: 8px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  z-index: 999;
-  animation: toast-in .3s ease;
-  pointer-events: none;
-}
-@keyframes toast-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── ANAMNESE HEADER ── */
-.section-card {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  overflow: hidden;
-}
-.section-card-header {
-  padding: 12px 18px;
-  background: var(--bg4);
-  border-bottom: 1px solid var(--border);
-  font-size: 12px; font-weight: 800;
-  color: var(--text2);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  display: flex; align-items: center; gap: 8px;
-}
-.section-card-body { padding: 18px; }
+:root{--teal:#0D9488;--teal-light:#14B8A6;--teal-dim:#E6F7F6;--teal-mid:#CCEFED;--verde:#16A34A;--verde-dim:#DCFCE7;--vermelho:#EF4444;--vermelho-dim:#FEE2E2;--amarelo:#D97706;--amarelo-dim:#FEF3C7;--bg:#F8FAFA;--surface:#FFFFFF;--surface2:#F1F5F5;--border:#E2ECEC;--border2:#CBD5D5;--text:#0F2A28;--text2:#4A6B68;--text3:#8AA8A5;--sidebar-w:240px;--topbar-h:56px;--bottom-nav-h:64px;--font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;--r:10px;--r2:16px;--shadow:0 1px 4px rgba(13,148,136,.08),0 4px 16px rgba(13,148,136,.06);--shadow2:0 2px 8px rgba(13,148,136,.12),0 8px 32px rgba(13,148,136,.08)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;overflow:hidden}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--topbar-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--teal),var(--teal-light));border-radius:9px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(13,148,136,.3)}
+.logo-icon svg{width:18px;height:18px}
+.logo-name{font-size:16px;font-weight:700;color:var(--text)}
+.logo-name span{color:var(--teal)}
+.badge{font-size:10px;font-weight:600;letter-spacing:.6px;background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-mid);padding:2px 8px;border-radius:20px;text-transform:uppercase}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.hamburger{display:none;width:36px;height:36px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+.hamburger span{display:block;width:16px;height:2px;background:var(--text2);border-radius:2px}
+.clock{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text2);background:var(--surface2);padding:5px 12px;border-radius:8px;border:1px solid var(--border)}
+.status{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--verde)}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--verde);box-shadow:0 0 0 2px var(--verde-dim);animation:pdot 2s ease-in-out infinite}
+@keyframes pdot{0%,100%{opacity:1}50%{opacity:.4}}
+.layout{display:flex;margin-top:var(--topbar-h);height:calc(100vh - var(--topbar-h))}
+.sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;transition:transform .25s ease}
+.sidebar-section{padding:16px 12px 8px}
+.sidebar-label{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--text3);text-transform:uppercase;padding:0 6px 8px}
+.nav-btn{width:100%;display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r);border:none;background:transparent;cursor:pointer;font-family:var(--font);font-size:13px;font-weight:600;color:var(--text2);text-align:left;transition:all .15s;margin-bottom:2px}
+.nav-btn:hover{background:var(--surface2);color:var(--text)}
+.nav-btn.active{background:var(--teal-dim);color:var(--teal)}
+.nav-btn .ni{width:30px;height:30px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.nav-btn.active .ni{background:var(--teal-mid)}
+.nav-count{margin-left:auto;font-size:11px;font-weight:700;background:var(--teal);color:white;padding:1px 7px;border-radius:20px}
+.cat-label{font-size:10px;font-weight:700;letter-spacing:.8px;color:var(--text3);text-transform:uppercase;padding:12px 16px 4px;display:flex;align-items:center;gap:6px}
+.cat-pip{width:5px;height:5px;border-radius:50%}
+.sdiv{height:1px;background:var(--border);margin:6px 12px}
+.patient-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;overflow-x:auto;flex-shrink:0}
+.pf{display:flex;flex-direction:column;gap:1px;padding:0 16px}
+.pf:first-child{padding-left:0}
+.pf+.pf{border-left:1px solid var(--border)}
+.pf-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.7px}
+.pf-val{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap}
+.pf-val.mono{font-family:var(--mono);font-size:12px;color:var(--teal)}
+.chip{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.chip-verde{background:var(--verde-dim);color:var(--verde)}
+.chip-teal{background:var(--teal-dim);color:var(--teal)}
+.chip-red{background:var(--vermelho-dim);color:var(--vermelho)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.content{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px}
+.view{display:none;flex-direction:column;gap:18px;animation:fadein .2s ease}
+.view.active{display:flex}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.step-row{display:flex;align-items:center;gap:12px}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--teal);color:white;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-title{font-size:16px;font-weight:700;color:var(--text)}
+.step-sub{font-size:12px;font-weight:500;color:var(--text3);margin-top:1px}
+.oco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.oco-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r2);padding:14px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);width:100%;font-family:var(--font)}
+.oco-card:hover{border-color:var(--teal-light);box-shadow:var(--shadow2);transform:translateY(-1px)}
+.oco-card.selected{border-color:var(--teal);background:var(--teal-dim);box-shadow:0 0 0 3px var(--teal-mid)}
+.oco-icon{width:36px;height:36px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.oco-card.selected .oco-icon{background:var(--teal-mid)}
+.oco-name{font-size:12px;font-weight:700;color:var(--text2);line-height:1.3;text-align:left}
+.oco-card.selected .oco-name{color:var(--teal)}
+.ctx-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.ctx-tab{padding:8px 16px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:7px;box-shadow:var(--shadow)}
+.ctx-tab:hover{border-color:var(--teal-light);color:var(--text)}
+.ctx-tab.selected{background:var(--teal);border-color:var(--teal);color:white}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow)}
+.card-header{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface2)}
+.card-title{font-size:13px;font-weight:700;color:var(--text)}
+.card-badge{font-size:10px;font-weight:700;letter-spacing:.5px;background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-mid);padding:2px 8px;border-radius:20px;text-transform:uppercase}
+.card-body{padding:18px}
+/* BODY MAP */
+.bm-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--shadow);overflow:hidden}
+.bm-header{padding:12px 18px;border-bottom:1px solid var(--border);background:var(--surface2);font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.bm-body{display:grid;grid-template-columns:140px 1fr}
+.bm-figure{padding:20px 16px;display:flex;flex-direction:column;align-items:center;border-right:1px solid var(--border);background:linear-gradient(180deg,#f0f9f8,#e6f7f6)}
+.bm-fig-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px}
+.body-svg{width:100px;cursor:pointer}
+.br{cursor:pointer;transition:all .15s;fill:#D4EAE8;stroke:#0D9488;stroke-width:.8}
+.br:hover{fill:#A7D5D1}
+.br.sel{fill:var(--teal)}
+.bm-list{padding:12px;display:flex;flex-direction:column;gap:5px;overflow-y:auto;max-height:300px}
+.rchip{padding:7px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:7px;width:100%;font-family:var(--font);text-align:left}
+.rchip:hover{border-color:var(--teal-light);color:var(--teal)}
+.rchip.sel{background:var(--teal);border-color:var(--teal);color:white}
+.rdot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+/* FORM */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fg.full{grid-template-columns:1fr}
+.field{display:flex;flex-direction:column;gap:5px}
+.field-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px}
+.field-input,.field-select{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:9px 12px;font-family:var(--font);font-size:13px;font-weight:500;color:var(--text);outline:none;width:100%;transition:border-color .15s}
+.field-input:focus,.field-select:focus{border-color:var(--teal)}
+.field-input::placeholder{color:var(--text3)}
+.field-select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%230D9488' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.scale-wrap{display:flex;gap:5px;flex-wrap:wrap}
+.scale-btn{width:38px;height:38px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center}
+.scale-btn:hover{border-color:var(--teal-light);color:var(--teal)}
+.s0{background:#DCFCE7;border-color:#16A34A;color:#16A34A}
+.s-low{background:#FEF9C3;border-color:#CA8A04;color:#92400E}
+.s-mid{background:#FFEDD5;border-color:#EA580C;color:#C2410C}
+.s-high{background:#FEE2E2;border-color:#EF4444;color:#DC2626}
+.btn{padding:9px 18px;border-radius:var(--r);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid transparent;transition:all .15s;display:inline-flex;align-items:center;gap:7px}
+.btn-primary{background:var(--teal);color:white;border-color:var(--teal)}
+.btn-primary:hover{background:#0B7A6E}
+.btn-outline{background:var(--surface);color:var(--text2);border-color:var(--border)}
+.btn-outline:hover{border-color:var(--teal);color:var(--teal)}
+.btn-verde{background:var(--verde-dim);color:var(--verde);border-color:#86EFAC}
+.btn-verde:hover{background:#BBF7D0}
+.btn-lg{padding:12px 24px;font-size:14px;border-radius:12px}
+.output-wrap{background:var(--surface);border:1.5px solid #86EFAC;border-radius:var(--r2);overflow:hidden;box-shadow:0 4px 20px rgba(22,163,74,.12);animation:fadein .3s ease}
+.output-header{padding:12px 18px;background:var(--verde-dim);border-bottom:1px solid #BBF7D0;display:flex;align-items:center;justify-content:space-between}
+.output-title{font-size:12px;font-weight:800;color:var(--verde);text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:7px}
+.output-text{padding:18px 20px;font-family:var(--mono);font-size:13px;line-height:1.9;color:var(--text);border-left:3px solid var(--verde);margin:16px;border-radius:0 var(--r) var(--r) 0;background:#F0FDF4}
+.output-actions{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap}
+.vitals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
+.vital-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px;box-shadow:var(--shadow)}
+.vital-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px}
+.vital-val{font-size:22px;font-weight:800;font-family:var(--mono);color:var(--text);line-height:1.2;margin-top:3px}
+.vital-unit{font-size:11px;color:var(--text3)}
+.vital-card.alerta{border-color:#FCA5A5;background:#FFF5F5}
+.vital-card.alerta .vital-val{color:var(--vermelho)}
+.tl{display:flex;flex-direction:column}
+.tl-item{display:flex;gap:14px;position:relative}
+.tl-item:not(:last-child)::after{content:'';position:absolute;left:15px;top:34px;width:2px;height:calc(100% - 18px);background:var(--border)}
+.tl-dot{width:32px;height:32px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;z-index:1}
+.tl-dot.verde{border-color:#86EFAC;background:var(--verde-dim)}
+.tl-dot.teal{border-color:var(--teal-mid);background:var(--teal-dim)}
+.tl-dot.amarelo{border-color:#FDE68A;background:var(--amarelo-dim)}
+.tl-body{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:12px 14px;margin-bottom:12px;flex:1;box-shadow:var(--shadow)}
+.tl-meta{font-size:11px;font-weight:600;color:var(--text3);margin-bottom:5px;display:flex;gap:10px}
+.tl-meta span{color:var(--teal)}
+.tl-txt{font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--text2)}
+.loading{display:flex;align-items:center;gap:10px;padding:24px;color:var(--text2);font-size:13px}
+.spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:48px;text-align:center}
+.empty-icon{font-size:40px;opacity:.3}
+.empty-title{font-size:15px;font-weight:700;color:var(--text2)}
+.empty-sub{font-size:13px;color:var(--text3);max-width:280px;line-height:1.6}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--text);color:white;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;z-index:999;pointer-events:none;animation:fadein .25s ease;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;height:var(--bottom-nav-h);background:var(--surface);border-top:1px solid var(--border);box-shadow:0 -2px 12px rgba(0,0,0,.08);justify-content:space-around;align-items:center;padding:0 8px}
+.bn-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 16px;border-radius:12px;border:none;background:transparent;cursor:pointer;font-family:var(--font);font-size:10px;font-weight:700;color:var(--text3);transition:all .15s}
+.bn-btn.active{color:var(--teal);background:var(--teal-dim)}
+.bn-icon{font-size:20px}
+.sidebar-overlay{display:none;position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.3);backdrop-filter:blur(2px)}
+@media(max-width:768px){
+  .sidebar{position:fixed;left:0;top:var(--topbar-h);bottom:0;z-index:160;transform:translateX(-100%);box-shadow:4px 0 20px rgba(0,0,0,.12)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .hamburger{display:flex}
+  .bottom-nav{display:flex}
+  .status{display:none}
+  .content{padding:14px;padding-bottom:calc(var(--bottom-nav-h) + 14px)}
+  .oco-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+  .bm-body{grid-template-columns:1fr}
+  .bm-figure{border-right:none;border-bottom:1px solid var(--border)}
+  .fg{grid-template-columns:1fr}
+  .patient-bar{display:none}
+}
+@media(min-width:769px){.bottom-nav{display:none}}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 </style>
 </head>
 <body>
-
-<!-- TOPBAR -->
-<div class="topbar">
+<header class="topbar">
   <div class="topbar-left">
-    <div class="logo-mark">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-        <polyline points="2,12 6,12 8,4 10,20 12,10 14,16 16,12 22,12"/>
-      </svg>
+    <button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+    <div class="logo">
+      <div class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><polyline points="2,12 6,12 8,4 10,20 12,10 14,16 16,12 22,12"/></svg></div>
+      <span class="logo-name">Pulso <span>Anota</span></span>
+      <span class="badge">Simulador</span>
     </div>
-    <span class="logo-name">Pulso <span>Anota</span></span>
-    <span class="badge-simulador">Simulador</span>
   </div>
   <div class="topbar-right">
-    <div class="status-dot"></div>
-    <span class="status-txt">Sistema online</span>
+    <div class="status"><div class="status-dot"></div>Online</div>
+    <div class="clock" id="clock">--:--</div>
   </div>
-</div>
+</header>
 
-<!-- LAYOUT -->
-<div class="app-layout">
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-  <!-- SIDEBAR -->
+<div class="layout">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">Navegação</div>
-      <button class="sidebar-btn active" onclick="showView('nova-anotacao', this)">
-        <div class="icon">📝</div> Nova Anotação
-      </button>
-      <button class="sidebar-btn" onclick="showView('historico', this)">
-        <div class="icon">📋</div> Histórico
-        <span class="sidebar-count" id="hist-count">0</span>
-      </button>
-      <button class="sidebar-btn" onclick="showView('prontuario', this)">
-        <div class="icon">🏥</div> Prontuário
-      </button>
+      <button class="nav-btn active" onclick="showView('nova',this)"><div class="ni">📝</div>Nova Anotação</button>
+      <button class="nav-btn" onclick="showView('historico',this)"><div class="ni">📋</div>Histórico<span class="nav-count" id="hc" style="display:none">0</span></button>
+      <button class="nav-btn" onclick="showView('prontuario',this)"><div class="ni">🏥</div>Prontuário</button>
     </div>
-
-    <div class="divider" style="margin: 4px 16px;"></div>
-
-    <div class="cat-header">
-      <div class="cat-dot" style="background:#EF4444"></div>
-      Intercorrências
+    <div class="sdiv"></div>
+    <div class="cat-label"><div class="cat-pip" style="background:#EF4444"></div>Intercorrências</div>
+    <div style="padding:0 8px">
+      <button class="nav-btn" onclick="atalho('queda')"><div class="ni">🫴</div>Queda</button>
+      <button class="nav-btn" onclick="atalho('convulsao')"><div class="ni">⚡</div>Convulsão</button>
+      <button class="nav-btn" onclick="atalho('reacao_alergica')"><div class="ni">⚠️</div>Reação Alérgica</button>
+      <button class="nav-btn" onclick="atalho('dor_toracica')"><div class="ni">❤️</div>Dor Torácica</button>
     </div>
-    <div style="padding: 0 10px;">
-      <button class="sidebar-btn" onclick="atalhoOcorrencia('queda')"><div class="icon">🫴</div> Queda</button>
-      <button class="sidebar-btn" onclick="atalhoOcorrencia('convulsao')"><div class="icon">⚡</div> Convulsão</button>
-      <button class="sidebar-btn" onclick="atalhoOcorrencia('reacao_alergica')"><div class="icon">⚠️</div> Reação Alérgica</button>
-      <button class="sidebar-btn" onclick="atalhoOcorrencia('dor_toracica')"><div class="icon">❤️</div> Dor Torácica</button>
+    <div class="cat-label"><div class="cat-pip" style="background:#0D9488"></div>Sinais Vitais</div>
+    <div style="padding:0 8px">
+      <button class="nav-btn" onclick="atalho('dor')"><div class="ni">🩹</div>Dor</button>
+      <button class="nav-btn" onclick="atalho('febre')"><div class="ni">🌡️</div>Febre</button>
+      <button class="nav-btn" onclick="atalho('alteracao_pressao')"><div class="ni">💓</div>Pressão Arterial</button>
+      <button class="nav-btn" onclick="atalho('dispneia')"><div class="ni">🫁</div>Dispneia</button>
     </div>
-
-    <div class="cat-header">
-      <div class="cat-dot" style="background:#0D9488"></div>
-      Sinais Vitais
-    </div>
-    <div style="padding: 0 10px;">
-      <button class="sidebar-btn" onclick="atalhoOcorrencia('dor')"><div class="icon">🩹</div> Dor</button>
-      <button class="sidebar-btn" onclick="atalhoOcorrencia('febre')"><div class="icon">🌡️</div> Febre</button>
-      <button class="sidebar-btn" onclick="atalhoOcorrencia('alteracao_pressao')"><div class="icon">💓</div> Pressão</button>
-      <button class="sidebar-btn" onclick="atalhoOcorrencia('dispneia')"><div class="icon">🫁</div> Dispneia</button>
-    </div>
-
-    <div class="cat-header">
-      <div class="cat-dot" style="background:#16A34A"></div>
-      Procedimentos
-    </div>
-    <div style="padding: 0 10px;">
-      <button class="sidebar-btn" onclick="atalhoOcorrencia('admissao')"><div class="icon">🚪</div> Admissão</button>
-      <button class="sidebar-btn" onclick="atalhoOcorrencia('acesso_venoso')"><div class="icon">💉</div> Acesso Venoso</button>
-      <button class="sidebar-btn" onclick="atalhoOcorrencia('administracao_medicacao')"><div class="icon">💊</div> Medicação</button>
-      <button class="sidebar-btn" onclick="atalhoOcorrencia('alta_transferencia')"><div class="icon">🚑</div> Alta/Transfer.</button>
+    <div class="cat-label"><div class="cat-pip" style="background:#16A34A"></div>Procedimentos</div>
+    <div style="padding:0 8px">
+      <button class="nav-btn" onclick="atalho('admissao')"><div class="ni">🚪</div>Admissão</button>
+      <button class="nav-btn" onclick="atalho('acesso_venoso')"><div class="ni">💉</div>Acesso Venoso</button>
+      <button class="nav-btn" onclick="atalho('administracao_medicacao')"><div class="ni">💊</div>Medicação</button>
+      <button class="nav-btn" onclick="atalho('alta_transferencia')"><div class="ni">🚑</div>Alta / Transfer.</button>
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
-
-    <!-- PATIENT BAR -->
     <div class="patient-bar">
-      <div class="patient-field">
-        <div class="patient-field-label">Paciente</div>
-        <div class="patient-field-val">José da Silva</div>
-      </div>
-      <div class="sep"></div>
-      <div class="patient-field">
-        <div class="patient-field-label">Reg.</div>
-        <div class="patient-field-val mono">PSA-2024-0847</div>
-      </div>
-      <div class="sep"></div>
-      <div class="patient-field">
-        <div class="patient-field-label">Leito</div>
-        <div class="patient-field-val">12-A</div>
-      </div>
-      <div class="sep"></div>
-      <div class="patient-field">
-        <div class="patient-field-label">Unidade</div>
-        <div class="patient-field-val">Clínica Médica</div>
-      </div>
-      <div class="sep"></div>
-      <div class="patient-field">
-        <div class="patient-field-label">Plantão</div>
-        <div class="patient-field-val mono" id="hora-plantao">--:--</div>
-      </div>
-      <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
-        <span class="patient-chip chip-verde">Estável</span>
-        <span class="patient-chip chip-teal">Internado</span>
-      </div>
+      <div class="pf"><div class="pf-label">Paciente</div><div class="pf-val">José da Silva</div></div>
+      <div class="pf"><div class="pf-label">Reg.</div><div class="pf-val mono">PSA-2024-0847</div></div>
+      <div class="pf"><div class="pf-label">Leito</div><div class="pf-val">12-A</div></div>
+      <div class="pf"><div class="pf-label">Unidade</div><div class="pf-val">Clínica Médica</div></div>
+      <div class="pf"><div class="pf-label">Alergias</div><div class="pf-val"><span class="chip chip-red">Penicilina</span></div></div>
+      <div class="pf" style="margin-left:auto"><div class="pf-label">Status</div><div class="pf-val"><span class="chip chip-verde">Estável</span></div></div>
     </div>
 
-    <!-- CONTENT -->
     <div class="content">
 
-      <!-- VIEW: NOVA ANOTAÇÃO -->
-      <div class="view active" id="view-nova-anotacao">
-
-        <!-- STEP 1: OCORRÊNCIA -->
-        <div class="step-header">
+      <!-- NOVA ANOTAÇÃO -->
+      <div class="view active" id="view-nova">
+        <div class="step-row">
           <div class="step-num">1</div>
-          <div>
-            <div class="step-title">Selecione a ocorrência</div>
-            <div class="step-sub">O que aconteceu com o paciente?</div>
-          </div>
+          <div><div class="step-title">Selecione a ocorrência</div><div class="step-sub">O que aconteceu com o paciente?</div></div>
         </div>
+        <div id="oco-grid" class="oco-grid"><div class="loading"><div class="spinner"></div>Carregando...</div></div>
 
-        <div id="ocorrencias-grid" class="selector-grid">
-          <div class="loading"><div class="spinner"></div> Carregando ocorrências...</div>
-        </div>
-
-        <!-- STEP 2: CONTEXTO -->
-        <div id="step2-wrap" style="display:none; flex-direction:column; gap:14px;">
-          <div class="step-header">
-            <div class="step-num">2</div>
-            <div>
-              <div class="step-title">Contexto clínico</div>
-              <div class="step-sub">Em qual unidade o paciente está?</div>
-            </div>
-          </div>
+        <div id="step2" style="display:none;flex-direction:column;gap:12px">
+          <div class="step-row"><div class="step-num">2</div><div><div class="step-title">Contexto clínico</div><div class="step-sub">Em qual unidade está o paciente?</div></div></div>
           <div class="ctx-tabs" id="ctx-tabs"></div>
         </div>
 
-        <!-- STEP 3: FORMULÁRIO -->
-        <div id="step3-wrap" style="display:none; flex-direction:column; gap:16px;">
-          <div class="step-header">
-            <div class="step-num">3</div>
-            <div>
-              <div class="step-title">Preencha os dados</div>
-              <div class="step-sub">Selecione ou preencha cada campo abaixo</div>
+        <div id="step3" style="display:none;flex-direction:column;gap:14px">
+          <div class="step-row"><div class="step-num">3</div><div><div class="step-title">Preencha os dados</div><div class="step-sub">Selecione ou preencha cada campo</div></div></div>
+
+          <div id="body-map" style="display:none" class="bm-wrap">
+            <div class="bm-header">🫀 Localização no corpo — toque ou clique na região</div>
+            <div class="bm-body">
+              <div class="bm-figure">
+                <div class="bm-fig-label">Vista frontal</div>
+                <svg class="body-svg" viewBox="0 0 100 280" xmlns="http://www.w3.org/2000/svg">
+                  <ellipse cx="50" cy="22" rx="16" ry="20" class="br" data-region="Cabeça" onclick="selRegion(this)"/>
+                  <rect x="43" y="40" width="14" height="12" rx="4" class="br" data-region="Pescoço" onclick="selRegion(this)"/>
+                  <rect x="28" y="52" width="44" height="50" rx="6" class="br" data-region="Tórax" onclick="selRegion(this)"/>
+                  <rect x="30" y="104" width="40" height="38" rx="5" class="br" data-region="Abdome" onclick="selRegion(this)"/>
+                  <rect x="28" y="144" width="44" height="24" rx="5" class="br" data-region="Pelve / quadril" onclick="selRegion(this)"/>
+                  <rect x="8" y="54" width="18" height="52" rx="7" class="br" data-region="Braço direito" onclick="selRegion(this)"/>
+                  <rect x="74" y="54" width="18" height="52" rx="7" class="br" data-region="Braço esquerdo" onclick="selRegion(this)"/>
+                  <rect x="6" y="108" width="16" height="38" rx="6" class="br" data-region="Antebraço direito" onclick="selRegion(this)"/>
+                  <rect x="78" y="108" width="16" height="38" rx="6" class="br" data-region="Antebraço esquerdo" onclick="selRegion(this)"/>
+                  <ellipse cx="14" cy="158" rx="8" ry="10" class="br" data-region="Mão direita" onclick="selRegion(this)"/>
+                  <ellipse cx="86" cy="158" rx="8" ry="10" class="br" data-region="Mão esquerda" onclick="selRegion(this)"/>
+                  <rect x="29" y="170" width="18" height="52" rx="7" class="br" data-region="Coxa direita" onclick="selRegion(this)"/>
+                  <rect x="53" y="170" width="18" height="52" rx="7" class="br" data-region="Coxa esquerda" onclick="selRegion(this)"/>
+                  <rect x="30" y="224" width="16" height="40" rx="6" class="br" data-region="Perna direita" onclick="selRegion(this)"/>
+                  <rect x="54" y="224" width="16" height="40" rx="6" class="br" data-region="Perna esquerda" onclick="selRegion(this)"/>
+                  <ellipse cx="38" cy="270" rx="10" ry="7" class="br" data-region="Pé direito" onclick="selRegion(this)"/>
+                  <ellipse cx="62" cy="270" rx="10" ry="7" class="br" data-region="Pé esquerdo" onclick="selRegion(this)"/>
+                </svg>
+              </div>
+              <div class="bm-list" id="region-list"></div>
             </div>
           </div>
-          <div class="form-card">
-            <div class="form-card-header">
-              <span id="form-title" class="form-card-title">Dados da ocorrência</span>
-              <span class="form-card-badge">Campos obrigatórios</span>
-            </div>
-            <div class="form-body" id="form-body"></div>
+
+          <div class="card">
+            <div class="card-header"><span class="card-title" id="form-title">Dados da ocorrência</span><span class="card-badge">Preencha todos</span></div>
+            <div class="card-body"><div id="form-body" style="display:flex;flex-direction:column;gap:14px"></div></div>
           </div>
-          <div style="display:flex; gap:10px; justify-content:flex-end;">
-            <button class="btn btn-secondary" onclick="resetForm()">↩ Recomeçar</button>
-            <button class="btn btn-primary btn-lg" onclick="gerarAnotacao()">
-              ✦ Gerar Anotação Profissional
-            </button>
+          <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+            <button class="btn btn-outline" onclick="resetForm()">↩ Recomeçar</button>
+            <button class="btn btn-primary btn-lg" onclick="gerarAnotacao()">✦ Gerar Anotação</button>
           </div>
         </div>
+        <div id="output" style="display:none"></div>
+      </div>
 
-        <!-- OUTPUT -->
-        <div id="output-wrap" style="display:none;"></div>
-
-      </div><!-- /view nova-anotacao -->
-
-      <!-- VIEW: HISTÓRICO -->
+      <!-- HISTÓRICO -->
       <div class="view" id="view-historico">
-        <div class="step-header">
-          <div class="step-num">📋</div>
-          <div>
-            <div class="step-title">Histórico de Anotações</div>
-            <div class="step-sub">Todas as anotações geradas nesta sessão</div>
+        <div class="step-row"><div class="step-num" style="background:var(--teal)">📋</div><div><div class="step-title">Histórico de Anotações</div><div class="step-sub">Anotações geradas nesta sessão</div></div></div>
+        <div class="tl" id="hist-list"><div class="empty"><div class="empty-icon">📋</div><div class="empty-title">Nenhuma anotação ainda</div><div class="empty-sub">Gere sua primeira anotação e ela aparecerá aqui</div></div></div>
+      </div>
+
+      <!-- PRONTUÁRIO -->
+      <div class="view" id="view-prontuario">
+        <div class="step-row"><div class="step-num" style="background:var(--teal)">🏥</div><div><div class="step-title">Prontuário do Paciente</div><div class="step-sub">José da Silva · Leito 12-A · Clínica Médica</div></div></div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">💓 Sinais Vitais — 06:00</span><span class="card-badge">Turno manhã</span></div>
+          <div class="card-body">
+            <div class="vitals-grid">
+              <div class="vital-card"><div class="vital-label">PA</div><div class="vital-val">130<span style="font-size:14px">/</span>80</div><div class="vital-unit">mmHg</div></div>
+              <div class="vital-card"><div class="vital-label">FC</div><div class="vital-val">88</div><div class="vital-unit">bpm</div></div>
+              <div class="vital-card"><div class="vital-label">FR</div><div class="vital-val">18</div><div class="vital-unit">irpm</div></div>
+              <div class="vital-card"><div class="vital-label">SpO2</div><div class="vital-val">97</div><div class="vital-unit">%</div></div>
+              <div class="vital-card alerta"><div class="vital-label">Tax</div><div class="vital-val">38.4</div><div class="vital-unit">°C ↑</div></div>
+              <div class="vital-card"><div class="vital-label">Dor</div><div class="vital-val">3</div><div class="vital-unit">/10</div></div>
+            </div>
           </div>
         </div>
-        <div class="timeline" id="historico-list">
-          <div class="empty-state">
-            <div class="empty-icon">📋</div>
-            <div class="empty-title">Nenhuma anotação ainda</div>
-            <div class="empty-sub">Gere sua primeira anotação na aba "Nova Anotação"</div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">📄 Dados Clínicos</span></div>
+          <div class="card-body">
+            <div class="fg">
+              <div class="field"><div class="field-label">Diagnóstico</div><div style="font-size:14px;font-weight:700">Pneumonia Bacteriana</div></div>
+              <div class="field"><div class="field-label">Internação</div><div style="font-size:14px;font-weight:700">22/04/2024 · 3º dia</div></div>
+              <div class="field"><div class="field-label">Alergias</div><div style="font-size:14px;font-weight:700;color:var(--vermelho)">Penicilina</div></div>
+              <div class="field"><div class="field-label">Dieta</div><div style="font-size:14px;font-weight:700">Oral branda</div></div>
+              <div class="field"><div class="field-label">Acesso venoso</div><div style="font-size:14px;font-weight:700">PVP antebraço D · pérvio</div></div>
+              <div class="field"><div class="field-label">Médico</div><div style="font-size:14px;font-weight:700">Dr. Roberto Almeida</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">📝 Últimas Anotações</span></div>
+          <div class="card-body">
+            <div class="tl">
+              <div class="tl-item"><div class="tl-dot teal">💊</div><div class="tl-body"><div class="tl-meta"><span>07:30</span>Turno Manhã · Téc. Maria Santos</div><div class="tl-txt">Administrado Dipirona 1g EV às 07:30 conforme prescrição. Paciente refere melhora da dor após 30 min. Sem intercorrências.</div></div></div>
+              <div class="tl-item"><div class="tl-dot amarelo">🌡️</div><div class="tl-body"><div class="tl-meta"><span>06:00</span>Turno Manhã · Téc. Maria Santos</div><div class="tl-txt">Paciente apresenta Tax 38.4°C, acompanhada de sudorese. Administrado Paracetamol 500mg VO. Realizado compressa fria. Reavaliado: Tax 37.8°C.</div></div></div>
+              <div class="tl-item"><div class="tl-dot verde">✅</div><div class="tl-body"><div class="tl-meta"><span>00:15</span>Turno Noite · Téc. Carlos Lima</div><div class="tl-txt">Paciente em repouso, sem queixas. Sinais vitais dentro dos parâmetros. Acesso venoso pérvio verificado. Sem intercorrências.</div></div></div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- VIEW: PRONTUÁRIO -->
-      <div class="view" id="view-prontuario">
-        <div class="step-header">
-          <div class="step-num">🏥</div>
-          <div>
-            <div class="step-title">Prontuário do Paciente</div>
-            <div class="step-sub">Visão geral do paciente simulado</div>
-          </div>
-        </div>
-
-        <!-- Vitais -->
-        <div class="section-card">
-          <div class="section-card-header">💓 Sinais Vitais — Última Verificação</div>
-          <div class="section-card-body">
-            <div class="vitals-row">
-              <div class="vital-box">
-                <div class="vital-label">PA</div>
-                <div class="vital-val">130<span style="font-size:12px">/</span>80</div>
-                <div class="vital-unit">mmHg</div>
-              </div>
-              <div class="vital-box">
-                <div class="vital-label">FC</div>
-                <div class="vital-val">88</div>
-                <div class="vital-unit">bpm</div>
-              </div>
-              <div class="vital-box">
-                <div class="vital-label">FR</div>
-                <div class="vital-val">18</div>
-                <div class="vital-unit">irpm</div>
-              </div>
-              <div class="vital-box">
-                <div class="vital-label">SpO2</div>
-                <div class="vital-val">97</div>
-                <div class="vital-unit">%</div>
-              </div>
-              <div class="vital-box alerta">
-                <div class="vital-label">Tax</div>
-                <div class="vital-val">38.4</div>
-                <div class="vital-unit">°C ↑</div>
-              </div>
-              <div class="vital-box">
-                <div class="vital-label">Dor</div>
-                <div class="vital-val">3</div>
-                <div class="vital-unit">/10</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dados clínicos -->
-        <div class="section-card">
-          <div class="section-card-header">📄 Dados Clínicos</div>
-          <div class="section-card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-            <div class="field-group">
-              <div class="field-label">Diagnóstico principal</div>
-              <div style="font-size:14px; font-weight:700; color:var(--text);">Pneumonia Bacteriana</div>
-            </div>
-            <div class="field-group">
-              <div class="field-label">Data de Internação</div>
-              <div style="font-size:14px; font-weight:700; color:var(--text);">22/04/2024 — 3º dia</div>
-            </div>
-            <div class="field-group">
-              <div class="field-label">Alergias</div>
-              <div style="font-size:14px; font-weight:700; color:#f87171;">Penicilina</div>
-            </div>
-            <div class="field-group">
-              <div class="field-label">Dieta</div>
-              <div style="font-size:14px; font-weight:700; color:var(--text);">Oral branda</div>
-            </div>
-            <div class="field-group">
-              <div class="field-label">Acesso venoso</div>
-              <div style="font-size:14px; font-weight:700; color:var(--text);">PVP antebraço D — pérvio</div>
-            </div>
-            <div class="field-group">
-              <div class="field-label">Médico responsável</div>
-              <div style="font-size:14px; font-weight:700; color:var(--text);">Dr. Roberto Almeida</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Anotações recentes no prontuário -->
-        <div class="section-card">
-          <div class="section-card-header">📝 Últimas Anotações de Enfermagem</div>
-          <div class="section-card-body">
-            <div class="timeline" id="prontuario-timeline">
-              <div class="tl-item">
-                <div class="tl-dot teal">💊</div>
-                <div class="tl-content">
-                  <div class="tl-meta"><span>07:30</span> Turno Manhã · Téc. Maria Santos</div>
-                  <div class="tl-text">Administrado Dipirona 1g EV às 07:30 conforme prescrição. Paciente refere melhora da dor após 30 min. Sem intercorrências.</div>
-                </div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-dot amarelo">🌡️</div>
-                <div class="tl-content">
-                  <div class="tl-meta"><span>06:00</span> Turno Manhã · Téc. Maria Santos</div>
-                  <div class="tl-text">Paciente apresenta Tax 38.4°C, acompanhada de sudorese. Administrado Paracetamol 500mg VO conforme prescrição. Realizado compressa fria. Reavaliado após 60min: Tax 37.8°C.</div>
-                </div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-dot verde">✅</div>
-                <div class="tl-content">
-                  <div class="tl-meta"><span>00:15</span> Turno Noite · Téc. Carlos Lima</div>
-                  <div class="tl-text">Paciente em repouso, sem queixas. Sinais vitais dentro dos parâmetros esperados. Acesso venoso pérvio verificado. Sem intercorrências no turno.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div><!-- /view prontuario -->
-
-    </div><!-- /content -->
+    </div>
   </main>
-</div><!-- /app-layout -->
+</div>
 
-<!-- TOAST -->
-<div class="toast" id="toast" style="display:none;"></div>
+<nav class="bottom-nav">
+  <button class="bn-btn active" onclick="showView('nova',this)" id="bn-nova"><div class="bn-icon">📝</div>Anotar</button>
+  <button class="bn-btn" onclick="showView('historico',this)" id="bn-historico"><div class="bn-icon">📋</div>Histórico</button>
+  <button class="bn-btn" onclick="showView('prontuario',this)" id="bn-prontuario"><div class="bn-icon">🏥</div>Prontuário</button>
+</nav>
+
+<div class="toast" id="toast" style="display:none"></div>
 
 <script>
-// ── CONFIG SUPABASE ──
-const SUPA_URL = 'https://tjuzmzywntgfnvhzzlsb.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqdXptenl3bnRnZm52aHp6bHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNzM1MDIsImV4cCI6MjA5Mjk0OTUwMn0.2OMUKx3Mv8ivEOAH_o6re_cepdKrvTB01rldwarRemg';
+const SUPA_URL='https://tjuzmzywntgfnvhzzlsb.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqdXptenl3bnRnZm52aHp6bHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNzM1MDIsImV4cCI6MjA5Mjk0OTUwMn0.2OMUKx3Mv8ivEOAH_o6re_cepdKrvTB01rldwarRemg';
+const ICONS={dor:'🩹',febre:'🌡️',alteracao_pressao:'💓',dispneia:'🫁',nausea_vomito:'🤢',queda:'🫴',convulsao:'⚡',agitacao_confusao:'🧠',reacao_alergica:'⚠️',dor_toracica:'❤️',trauma:'🚑',acesso_venoso:'💉',administracao_medicacao:'💊',balanco_hidrico:'💧',eliminacoes:'🚿',aceitacao_alimentar:'🍽️',ulcera_pressao:'🩺',admissao:'🚪',alta_transferencia:'📤',ventilacao_mecanica:'🫧',sedacao:'😴'};
+const CTX_ICONS={adulto_clinico:'🏥',uti:'⚕️',pediatria:'🧒',geriatria:'👴',pronto_atendimento:'🚨'};
+const REGIOES=['Cabeça','Pescoço','Tórax','Abdome','Pelve / quadril','Braço direito','Braço esquerdo','Antebraço direito','Antebraço esquerdo','Mão direita','Mão esquerda','Coxa direita','Coxa esquerda','Perna direita','Perna esquerda','Pé direito','Pé esquerdo','Difusa / generalizada'];
+let oco=[],selOco=null,selCtx=null,tpl=null,hist=[],selReg='';
 
-async function sbGet(path) {
-  const r = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
-    headers: {
-      'apikey': SUPA_KEY,
-      'Authorization': `Bearer ${SUPA_KEY}`,
-      'Content-Type': 'application/json'
-    }
-  });
+setInterval(()=>{const d=new Date();document.getElementById('clock').textContent=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;},1000);
+
+async function sbGet(p){
+  const r=await fetch(`${SUPA_URL}/rest/v1/${p}`,{headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`}});
+  if(!r.ok)throw new Error(await r.text());
   return r.json();
 }
 
-// ── ESTADO ──
-let ocorrencias = [];
-let contextos   = [];
-let templates   = {};
-let selectedOco  = null;
-let selectedCtx  = null;
-let currentTemplate = null;
-let historico    = [];
-
-const ICONS = {
-  dor:'🩹', febre:'🌡️', alteracao_pressao:'💓', dispneia:'🫁',
-  nausea_vomito:'🤢', queda:'🫴', convulsao:'⚡', agitacao_confusao:'🧠',
-  reacao_alergica:'⚠️', dor_toracica:'❤️', trauma:'🚑', acesso_venoso:'💉',
-  administracao_medicacao:'💊', balanco_hidrico:'💧', eliminacoes:'🚿',
-  aceitacao_alimentar:'🍽️', ulcera_pressao:'🩺', admissao:'🚪',
-  alta_transferencia:'📤', ventilacao_mecanica:'🫧', sedacao:'😴'
-};
-const CTX_ICONS = {
-  adulto_clinico:'🏥', uti:'⚕️', pediatria:'🧒', geriatria:'👴', pronto_atendimento:'🚨'
-};
-const CAT_LABELS = {
-  vital:'Sinais Vitais', intercorrencia:'Intercorrências',
-  neurologica:'Neurológico', procedimento:'Procedimentos', eliminacao:'Eliminações'
-};
-
-// ── HORA PLANTÃO ──
-function updateClock() {
-  const d = new Date();
-  const h = String(d.getHours()).padStart(2,'0');
-  const m = String(d.getMinutes()).padStart(2,'0');
-  document.getElementById('hora-plantao').textContent = `${h}:${m}`;
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-// ── INIT ──
-async function init() {
-  try {
-    [ocorrencias, contextos] = await Promise.all([
-      sbGet('ocorrencias?select=*&order=categoria,nome'),
-      sbGet('contextos?select=*&order=id')
-    ]);
-    renderOcorrencias();
-  } catch(e) {
-    document.getElementById('ocorrencias-grid').innerHTML =
-      `<div class="empty-state"><div class="empty-icon">⚠️</div>
-       <div class="empty-title">Erro de conexão</div>
-       <div class="empty-sub">Não foi possível conectar ao banco de dados.</div></div>`;
-  }
+async function init(){
+  try{
+    oco=await sbGet('ocorrencias?select=*&order=categoria,nome');
+    const g=document.getElementById('oco-grid');g.innerHTML='';
+    oco.forEach(o=>{
+      const c=document.createElement('button');
+      c.className='oco-card';c.dataset.slug=o.slug;c.dataset.id=o.id;
+      c.innerHTML=`<div class="oco-icon">${ICONS[o.slug]||'📄'}</div><div class="oco-name">${o.nome}</div>`;
+      c.onclick=()=>selectOco(o,c);g.appendChild(c);
+    });
+  }catch(e){document.getElementById('oco-grid').innerHTML=`<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">Erro de conexão</div><div class="empty-sub">${e.message}</div></div>`;}
 }
 
-// ── RENDER OCORRÊNCIAS ──
-function renderOcorrencias() {
-  const grid = document.getElementById('ocorrencias-grid');
-  grid.innerHTML = '';
-  ocorrencias.forEach(o => {
-    const card = document.createElement('button');
-    card.className = 'sel-card';
-    card.dataset.id = o.id;
-    card.dataset.slug = o.slug;
-    card.innerHTML = `
-      <div class="sel-card-icon">${ICONS[o.slug]||'📄'}</div>
-      <div class="sel-card-txt">${o.nome}</div>`;
-    card.onclick = () => selectOcorrencia(o, card);
-    grid.appendChild(card);
-  });
+async function selectOco(o,el){
+  document.querySelectorAll('.oco-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');selOco=o;selCtx=null;tpl=null;selReg='';
+  document.getElementById('step3').style.display='none';
+  document.getElementById('output').style.display='none';
+  document.getElementById('step2').style.display='flex';
+  const tabs=document.getElementById('ctx-tabs');
+  tabs.innerHTML='<div class="loading"><div class="spinner"></div>Carregando...</div>';
+  try{
+    const data=await sbGet(`templates?select=contexto_id,contextos(id,slug,nome)&ocorrencia_id=eq.${o.id}`);
+    tabs.innerHTML='';
+    data.forEach(d=>{
+      const c=d.contextos;if(!c)return;
+      const btn=document.createElement('button');
+      btn.className='ctx-tab';btn.dataset.id=c.id;
+      btn.innerHTML=`${CTX_ICONS[c.slug]||'🏥'} ${c.nome}`;
+      btn.onclick=()=>selectCtx(c,btn,o);tabs.appendChild(btn);
+    });
+  }catch(e){tabs.innerHTML=`<span style="color:var(--vermelho);font-size:13px">Erro: ${e.message}</span>`;}
+  document.getElementById('step2').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-// ── SELECIONAR OCORRÊNCIA ──
-async function selectOcorrencia(o, el) {
-  document.querySelectorAll('.sel-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedOco = o;
-  selectedCtx = null;
-  currentTemplate = null;
-
-  document.getElementById('step3-wrap').style.display = 'none';
-  document.getElementById('output-wrap').style.display = 'none';
-
-  // Carregar contextos disponíveis
-  const step2 = document.getElementById('step2-wrap');
-  step2.style.display = 'flex';
-  const tabs = document.getElementById('ctx-tabs');
-  tabs.innerHTML = '<div class="loading"><div class="spinner"></div> Carregando...</div>';
-
-  const data = await sbGet(
-    `templates?select=contexto_id,contextos(id,slug,nome)&ocorrencia_id=eq.${o.id}`
-  );
-  const ctxDisp = data.map(d => d.contextos).filter(Boolean);
-
-  tabs.innerHTML = '';
-  ctxDisp.forEach(c => {
-    const btn = document.createElement('button');
-    btn.className = 'ctx-tab';
-    btn.dataset.id = c.id;
-    btn.innerHTML = `${CTX_ICONS[c.slug]||'🏥'} ${c.nome}`;
-    btn.onclick = () => selectContexto(c, btn, o);
-    tabs.appendChild(btn);
-  });
-
-  step2.scrollIntoView({ behavior:'smooth', block:'nearest' });
+async function selectCtx(c,el,o){
+  document.querySelectorAll('.ctx-tab').forEach(t=>t.classList.remove('selected'));
+  el.classList.add('selected');selCtx=c;
+  document.getElementById('output').style.display='none';
+  try{
+    const data=await sbGet(`templates?select=*&ocorrencia_id=eq.${o.id}&contexto_id=eq.${c.id}&limit=1`);
+    if(!data||!data.length)return;
+    tpl=data[0];renderForm(tpl,o,c);
+    document.getElementById('step3').style.display='flex';
+    document.getElementById('step3').scrollIntoView({behavior:'smooth',block:'nearest'});
+  }catch(e){showToast('❌ Erro ao carregar template');}
 }
 
-// ── SELECIONAR CONTEXTO ──
-async function selectContexto(c, el, o) {
-  document.querySelectorAll('.ctx-tab').forEach(t => t.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedCtx = c;
-
-  document.getElementById('output-wrap').style.display = 'none';
-
-  // Buscar template
-  const data = await sbGet(
-    `templates?select=*&ocorrencia_id=eq.${o.id}&contexto_id=eq.${c.id}&limit=1`
-  );
-  if (!data || !data.length) return;
-  currentTemplate = data[0];
-
-  renderForm(currentTemplate, o, c);
-  const step3 = document.getElementById('step3-wrap');
-  step3.style.display = 'flex';
-  step3.scrollIntoView({ behavior:'smooth', block:'nearest' });
-}
-
-// ── RENDER FORM ──
-function renderForm(tpl, o, c) {
-  document.getElementById('form-title').textContent =
-    `${ICONS[o.slug]||'📄'} ${o.nome} — ${c.nome}`;
-
-  const body = document.getElementById('form-body');
-  body.innerHTML = '';
-
-  const campos = typeof tpl.campos === 'string' ? JSON.parse(tpl.campos) : tpl.campos;
-
-  campos.forEach(campo => {
-    const wrap = document.createElement('div');
-    wrap.className = 'form-row full';
-
-    const group = document.createElement('div');
-    group.className = 'field-group';
-
-    const label = document.createElement('div');
-    label.className = 'field-label';
-    label.textContent = campo.label;
-    group.appendChild(label);
-
-    if (campo.tipo === 'opcoes') {
-      const sel = document.createElement('select');
-      sel.className = 'field-select';
-      sel.dataset.id = campo.id;
-      sel.innerHTML = `<option value="">— Selecione —</option>`;
-      (campo.opcoes||[]).forEach(op => {
-        const opt = document.createElement('option');
-        opt.value = op; opt.textContent = op;
-        sel.appendChild(opt);
-      });
-      group.appendChild(sel);
-
-    } else if (campo.tipo === 'escala_10') {
-      const scaleWrap = document.createElement('div');
-      scaleWrap.className = 'scale-group';
-      scaleWrap.dataset.fieldId = campo.id;
-      scaleWrap.dataset.selected = '';
-      for (let i = 0; i <= 10; i++) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'scale-btn';
-        btn.textContent = i;
-        btn.onclick = () => {
-          scaleWrap.querySelectorAll('.scale-btn').forEach(b => {
-            b.className = 'scale-btn';
-          });
-          let cls = 'scale-btn sel';
-          if (i >= 7) cls = 'scale-btn sel-high';
-          else if (i >= 4) cls = 'scale-btn sel-mid';
-          else if (i > 0) cls = 'scale-btn sel-low';
-          else cls = 'scale-btn sel';
-          btn.className = cls;
-          scaleWrap.dataset.selected = i;
-        };
-        scaleWrap.appendChild(btn);
+function renderForm(t,o,c){
+  document.getElementById('form-title').textContent=`${ICONS[o.slug]||'📄'} ${o.nome} · ${c.nome}`;
+  const campos=typeof t.campos==='string'?JSON.parse(t.campos):t.campos;
+  const body=document.getElementById('form-body');body.innerHTML='';
+  const bm=document.getElementById('body-map');
+  if(o.slug==='dor'){bm.style.display='block';renderRegioes();}else{bm.style.display='none';}
+  campos.forEach(f=>{
+    if(o.slug==='dor'&&f.id==='localizacao')return;
+    const w=document.createElement('div');w.className='field';
+    const l=document.createElement('div');l.className='field-label';l.textContent=f.label;w.appendChild(l);
+    if(f.tipo==='opcoes'){
+      const s=document.createElement('select');s.className='field-select';s.dataset.id=f.id;
+      s.innerHTML=`<option value="">— Selecione —</option>`;
+      (f.opcoes||[]).forEach(op=>s.innerHTML+=`<option value="${op}">${op}</option>`);
+      w.appendChild(s);
+    }else if(f.tipo==='escala_10'){
+      const sw=document.createElement('div');sw.className='scale-wrap';sw.dataset.fieldId=f.id;sw.dataset.selected='';
+      for(let i=0;i<=10;i++){
+        const b=document.createElement('button');b.type='button';b.className='scale-btn';b.textContent=i;
+        b.onclick=()=>{sw.querySelectorAll('.scale-btn').forEach(x=>x.className='scale-btn');b.className=`scale-btn ${i===0?'s0':i<=3?'s-low':i<=6?'s-mid':'s-high'}`;sw.dataset.selected=i;};
+        sw.appendChild(b);
       }
-      group.appendChild(scaleWrap);
-
-    } else if (campo.tipo === 'escala_glasgow') {
-      const sel = document.createElement('select');
-      sel.className = 'field-select';
-      sel.dataset.id = campo.id;
-      sel.innerHTML = `<option value="">— Glasgow —</option>`;
-      for (let i = 3; i <= 15; i++) {
-        sel.innerHTML += `<option value="${i}">${i} pts</option>`;
-      }
-      group.appendChild(sel);
-
-    } else if (campo.tipo === 'escala_rass') {
-      const sel = document.createElement('select');
-      sel.className = 'field-select';
-      sel.dataset.id = campo.id;
-      const rass = [
-        ['-5','Não responsivo'],
-        ['-4','Sedação profunda'],
-        ['-3','Sedação moderada'],
-        ['-2','Sedação leve'],
-        ['-1','Sonolento'],
-        ['0','Alerta e calmo'],
-        ['+1','Inquieto'],
-        ['+2','Agitado'],
-        ['+3','Muito agitado'],
-        ['+4','Combativo'],
-      ];
-      sel.innerHTML = `<option value="">— RASS —</option>`;
-      rass.forEach(([v,l]) => {
-        sel.innerHTML += `<option value="${v}">${v} — ${l}</option>`;
-      });
-      group.appendChild(sel);
-
-    } else {
-      const inp = document.createElement('input');
-      inp.className = 'field-input';
-      inp.dataset.id = campo.id;
-      inp.placeholder = campo.tipo === 'numero' ? '0' :
-                        campo.tipo === 'tempo'  ? 'ex: 30 minutos / 2 horas' :
-                        'Digite aqui...';
-      inp.type = campo.tipo === 'numero' ? 'number' : 'text';
-      group.appendChild(inp);
+      w.appendChild(sw);
+    }else if(f.tipo==='escala_glasgow'){
+      const s=document.createElement('select');s.className='field-select';s.dataset.id=f.id;
+      s.innerHTML=`<option value="">— Glasgow (3-15) —</option>`;
+      for(let i=3;i<=15;i++)s.innerHTML+=`<option value="${i}">${i} pontos</option>`;
+      w.appendChild(s);
+    }else if(f.tipo==='escala_rass'){
+      const s=document.createElement('select');s.className='field-select';s.dataset.id=f.id;
+      [[-5,'Não responsivo'],[-4,'Sedação profunda'],[-3,'Sedação moderada'],[-2,'Sedação leve'],[-1,'Sonolento'],[0,'Alerta e calmo'],[1,'Inquieto'],[2,'Agitado'],[3,'Muito agitado'],[4,'Combativo']].forEach(([v,lbl])=>s.innerHTML+=`<option value="${v}">${v>0?'+':''}${v} — ${lbl}</option>`);
+      s.innerHTML=`<option value="">— RASS —</option>`+s.innerHTML;
+      w.appendChild(s);
+    }else{
+      const inp=document.createElement('input');inp.className='field-input';inp.dataset.id=f.id;
+      inp.type=f.tipo==='numero'?'number':'text';
+      inp.placeholder=f.tipo==='numero'?'0':f.tipo==='tempo'?'ex: 30 minutos':'Digite aqui...';
+      w.appendChild(inp);
     }
-
-    wrap.appendChild(group);
-    body.appendChild(wrap);
+    body.appendChild(w);
   });
 }
 
-// ── GERAR ANOTAÇÃO ──
-function gerarAnotacao() {
-  if (!currentTemplate) return;
-
-  const campos = typeof currentTemplate.campos === 'string'
-    ? JSON.parse(currentTemplate.campos) : currentTemplate.campos;
-
-  let texto = currentTemplate.template;
-  let ok = true;
-
-  campos.forEach(campo => {
-    let val = '';
-
-    if (campo.tipo === 'escala_10') {
-      const sw = document.querySelector(`.scale-group[data-field-id="${campo.id}"]`);
-      val = sw ? sw.dataset.selected : '';
-    } else if (['opcoes','escala_glasgow','escala_rass'].includes(campo.tipo)) {
-      const el = document.querySelector(`[data-id="${campo.id}"]`);
-      val = el ? el.value : '';
-    } else {
-      const el = document.querySelector(`[data-id="${campo.id}"]`);
-      val = el ? el.value.trim() : '';
-    }
-
-    if (!val && val !== '0') {
-      ok = false;
-      // highlight missing
-      const el = document.querySelector(`[data-id="${campo.id}"], [data-field-id="${campo.id}"]`);
-      if (el) { el.style.borderColor = '#EF4444'; setTimeout(()=>el.style.borderColor='',2000); }
-    }
-    texto = texto.replaceAll(`[${campo.id}]`, val || `[${campo.label}]`);
+function renderRegioes(){
+  const list=document.getElementById('region-list');list.innerHTML='';
+  REGIOES.forEach(r=>{
+    const c=document.createElement('button');c.className='rchip';c.dataset.r=r;
+    c.innerHTML=`<div class="rdot"></div>${r}`;
+    c.onclick=()=>{
+      document.querySelectorAll('.rchip').forEach(x=>x.classList.remove('sel'));
+      document.querySelectorAll('.br').forEach(x=>x.classList.remove('sel'));
+      c.classList.add('sel');selReg=r;
+      document.querySelectorAll(`.br[data-region="${r}"]`).forEach(x=>x.classList.add('sel'));
+    };
+    list.appendChild(c);
   });
+}
 
-  if (!ok) {
-    showToast('⚠️ Preencha todos os campos');
-    return;
+function selRegion(el){
+  document.querySelectorAll('.br').forEach(c=>c.classList.remove('sel'));
+  document.querySelectorAll('.rchip').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');selReg=el.dataset.region;
+  const chip=document.querySelector(`.rchip[data-r="${selReg}"]`);
+  if(chip){chip.classList.add('sel');chip.scrollIntoView({behavior:'smooth',block:'nearest'});}
+}
+
+function gerarAnotacao(){
+  if(!tpl)return;
+  const campos=typeof tpl.campos==='string'?JSON.parse(tpl.campos):tpl.campos;
+  let texto=tpl.template;let ok=true;
+  if(selOco&&selOco.slug==='dor'){
+    if(!selReg){showToast('⚠️ Selecione a localização no corpo');return;}
+    texto=texto.replaceAll('[localizacao]',selReg);
   }
-
-  // Hora atual
-  const agora = new Date();
-  const hora = `${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}`;
-  const texto_final = `${hora} — ${texto}`;
-
-  // Salvar histórico
-  const entry = {
-    hora,
-    ocorrencia: selectedOco.nome,
-    contexto: selectedCtx.nome,
-    texto: texto_final,
-    icon: ICONS[selectedOco.slug]||'📄'
-  };
-  historico.unshift(entry);
-  document.getElementById('hist-count').textContent = historico.length;
-  renderHistorico();
-
-  // Mostrar output
-  const outWrap = document.getElementById('output-wrap');
-  outWrap.style.display = 'block';
-  outWrap.innerHTML = `
-    <div class="output-card">
-      <div class="output-header">
-        <div class="output-title">✅ Anotação Gerada</div>
-        <span style="font-size:11px; color:var(--text3); font-weight:600;">${hora} · ${selectedOco.nome} · ${selectedCtx.nome}</span>
-      </div>
-      <div class="output-body">${texto_final}</div>
-      <div class="output-actions">
-        <button class="btn btn-verde" onclick="copiarTexto(this, \`${texto_final.replace(/`/g,"'")}\`)">
-          📋 Copiar Anotação
-        </button>
-        <button class="btn btn-secondary" onclick="novaAnotacao()">
-          ➕ Nova Anotação
-        </button>
-      </div>
-    </div>`;
-  outWrap.scrollIntoView({ behavior:'smooth', block:'nearest' });
-  showToast('✅ Anotação gerada com sucesso!');
-}
-
-// ── COPIAR ──
-function copiarTexto(btn, txt) {
-  navigator.clipboard.writeText(txt).then(() => {
-    btn.textContent = '✓ Copiado!';
-    setTimeout(() => btn.innerHTML = '📋 Copiar Anotação', 2000);
-    showToast('📋 Anotação copiada');
+  campos.forEach(f=>{
+    if(selOco&&selOco.slug==='dor'&&f.id==='localizacao')return;
+    let val='';
+    if(f.tipo==='escala_10'){const sw=document.querySelector(`.scale-wrap[data-field-id="${f.id}"]`);val=sw?sw.dataset.selected:'';}
+    else if(['opcoes','escala_glasgow','escala_rass'].includes(f.tipo)){const el=document.querySelector(`[data-id="${f.id}"]`);val=el?el.value:'';}
+    else{const el=document.querySelector(`[data-id="${f.id}"]`);val=el?el.value.trim():'';}
+    if(!val&&val!=='0'){
+      ok=false;
+      const el=document.querySelector(`[data-id="${f.id}"], [data-field-id="${f.id}"]`);
+      if(el){el.style.borderColor='#EF4444';setTimeout(()=>el.style.borderColor='',2500);}
+    }
+    texto=texto.replaceAll(`[${f.id}]`,val||`[${f.label}]`);
   });
+  if(!ok){showToast('⚠️ Preencha todos os campos');return;}
+  const d=new Date();
+  const hora=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  const final=`${hora} — ${texto}`;
+  hist.unshift({hora,ocorrencia:selOco.nome,contexto:selCtx.nome,texto:final,icon:ICONS[selOco.slug]||'📄'});
+  const hc=document.getElementById('hc');hc.textContent=hist.length;hc.style.display='';
+  renderHist();
+  const out=document.getElementById('output');out.style.display='block';
+  const safe=final.replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');
+  out.innerHTML=`<div class="output-wrap"><div class="output-header"><div class="output-title">✅ Anotação gerada</div><span style="font-size:11px;font-weight:600;color:var(--verde)">${hora} · ${selOco.nome}</span></div><div class="output-text">${final}</div><div class="output-actions"><button class="btn btn-verde" onclick="copiar(this,\`${safe}\`)">📋 Copiar</button><button class="btn btn-outline" onclick="resetForm()">➕ Nova anotação</button></div></div>`;
+  out.scrollIntoView({behavior:'smooth',block:'nearest'});
+  showToast('✅ Anotação gerada!');
 }
 
-// ── RENDER HISTÓRICO ──
-function renderHistorico() {
-  const list = document.getElementById('historico-list');
-  if (!historico.length) {
-    list.innerHTML = `<div class="empty-state">
-      <div class="empty-icon">📋</div>
-      <div class="empty-title">Nenhuma anotação ainda</div>
-      <div class="empty-sub">Gere sua primeira anotação na aba "Nova Anotação"</div>
-    </div>`;
-    return;
-  }
-  list.innerHTML = historico.map((e,i) => `
-    <div class="tl-item">
-      <div class="tl-dot teal">${e.icon}</div>
-      <div class="tl-content">
-        <div class="tl-meta">
-          <span>${e.hora}</span>
-          ${e.ocorrencia} · ${e.contexto}
-        </div>
-        <div class="tl-text">${e.texto}</div>
-      </div>
-    </div>
-  `).join('');
+function copiar(btn,txt){
+  navigator.clipboard.writeText(txt).then(()=>{btn.textContent='✓ Copiado!';setTimeout(()=>btn.innerHTML='📋 Copiar',2000);showToast('📋 Copiado!');});
 }
 
-// ── ATALHO SIDEBAR ──
-function atalhoOcorrencia(slug) {
-  showView('nova-anotacao', document.querySelector('.sidebar-btn[onclick*="nova-anotacao"]'));
-  const oco = ocorrencias.find(o => o.slug === slug);
-  if (!oco) return;
-  const cards = document.querySelectorAll('.sel-card');
-  cards.forEach(c => { if (c.dataset.slug === slug) { selectOcorrencia(oco, c); } });
+function renderHist(){
+  const list=document.getElementById('hist-list');
+  if(!hist.length){list.innerHTML=`<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">Nenhuma anotação ainda</div></div>`;return;}
+  list.innerHTML=hist.map(e=>`<div class="tl-item"><div class="tl-dot teal">${e.icon}</div><div class="tl-body"><div class="tl-meta"><span>${e.hora}</span>${e.ocorrencia} · ${e.contexto}</div><div class="tl-txt">${e.texto}</div></div></div>`).join('');
 }
 
-// ── SHOW VIEW ──
-function showView(id, btn) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+function atalho(slug){
+  showView('nova',document.querySelector('.nav-btn[onclick*="nova"]'));
+  const o=oco.find(x=>x.slug===slug);if(!o)return;
+  setTimeout(()=>{const card=document.querySelector(`.oco-card[data-slug="${slug}"]`);if(card)selectOco(o,card);},100);
+  closeSidebar();
+}
+
+function showView(id,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(`view-${id}`).classList.add('active');
-  if (btn) {
-    document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  }
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  document.querySelectorAll('.bn-btn').forEach(b=>b.classList.remove('active'));
+  const bn=document.getElementById(`bn-${id}`);if(bn)bn.classList.add('active');
+  closeSidebar();
 }
 
-// ── RESET FORM ──
-function resetForm() {
-  selectedOco = null; selectedCtx = null; currentTemplate = null;
-  document.querySelectorAll('.sel-card').forEach(c => c.classList.remove('selected'));
-  document.getElementById('step2-wrap').style.display = 'none';
-  document.getElementById('step3-wrap').style.display = 'none';
-  document.getElementById('output-wrap').style.display = 'none';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+function resetForm(){
+  selOco=null;selCtx=null;tpl=null;selReg='';
+  document.querySelectorAll('.oco-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('step2').style.display='none';
+  document.getElementById('step3').style.display='none';
+  document.getElementById('output').style.display='none';
+  document.getElementById('body-map').style.display='none';
+  document.querySelector('.content').scrollTo({top:0,behavior:'smooth'});
 }
 
-function novaAnotacao() { resetForm(); }
-
-// ── TOAST ──
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display = 'flex';
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => { t.style.display = 'none'; }, 2800);
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.display='flex';
+  clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2600);
 }
 
-// ── START ──
 init();
 </script>
 </body>
