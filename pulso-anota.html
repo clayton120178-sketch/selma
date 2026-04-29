@@ -379,12 +379,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
         </div>
         <div id="step3" style="display:none;flex-direction:column;gap:14px">
           <div class="step-row"><div class="step-num">3</div><div><div class="step-title">Preencha os dados</div><div class="step-sub">Selecione ou preencha cada campo</div></div></div>
-          <div id="body-map" style="display:none;background:white;border:1px solid #E2ECEC;border-radius:16px;overflow:hidden;box-shadow:0 1px 4px rgba(13,148,136,.08)">
+          <div id="body-map" style="display:none;flex-direction:column;width:100%;background:white;border:1px solid #E2ECEC;border-radius:16px;box-shadow:0 1px 4px rgba(13,148,136,.08)">
             <div style="padding:12px 18px;border-bottom:1px solid #E2ECEC;background:#F1F5F5;font-size:13px;font-weight:700;color:#0F2A28;display:flex;align-items:center;gap:8px">🫀 Localização no corpo — toque na região</div>
-            <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-              <div style="display:flex;flex-direction:row;min-width:320px;width:100%">
+            <div style="width:100%">
+              <div style="display:flex;flex-wrap:wrap;width:100%">
                 <!-- FRONTAL -->
-                <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:14px 8px;background:linear-gradient(180deg,#f0f9f8,#e6f7f6);border-right:1px solid #E2ECEC">
+                <div style="flex:1;min-width:140px;display:flex;flex-direction:column;align-items:center;padding:14px 8px;background:linear-gradient(180deg,#f0f9f8,#e6f7f6);border-right:1px solid #E2ECEC;border-bottom:1px solid #E2ECEC">
                   <div style="font-size:10px;font-weight:700;color:#8AA8A5;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Vista frontal</div>
                   <svg width="120" height="315" viewBox="0 0 160 420" xmlns="http://www.w3.org/2000/svg">
                     <ellipse cx="80" cy="28" rx="22" ry="26" class="br" data-region="Cabeça" onclick="selRegion(this)"/>
@@ -409,7 +409,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
                   </svg>
                 </div>
                 <!-- POSTERIOR -->
-                <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:14px 8px;background:linear-gradient(180deg,#f0f9f8,#e6f7f6)">
+                <div style="flex:1;min-width:140px;display:flex;flex-direction:column;align-items:center;padding:14px 8px;background:linear-gradient(180deg,#f0f9f8,#e6f7f6);border-bottom:1px solid #E2ECEC">
                   <div style="font-size:10px;font-weight:700;color:#8AA8A5;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Vista posterior</div>
                   <svg width="120" height="315" viewBox="0 0 160 420" xmlns="http://www.w3.org/2000/svg">
                     <ellipse cx="80" cy="28" rx="22" ry="26" class="br" data-region="Cabeça (posterior)" onclick="selRegion(this)"/>
@@ -788,7 +788,7 @@ function renderForm(t,o,c){
   const campos=typeof t.campos==='string'?JSON.parse(t.campos):t.campos;
   const body=document.getElementById('form-body');body.innerHTML='';
   const bm=document.getElementById('body-map');
-  if(o.slug==='dor'){bm.style.display='block';renderRegioes();}else{bm.style.display='none';}
+  if(o.slug==='dor'){bm.style.display='flex';bm.style.flexDirection='column';bm.style.width='100%';renderRegioes();}else{bm.style.display='none';}
   campos.forEach(f=>{
     if(o.slug==='dor'&&f.id==='localizacao')return;
     const w=document.createElement('div');w.className='field';
