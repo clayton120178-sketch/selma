@@ -232,6 +232,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 <body>
 
 <!-- AUTH: LOGIN -->
+<div id="loading-oauth" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#0a1f1d,#0d2e2a);z-index:2000;align-items:center;justify-content:center;flex-direction:column;gap:16px">
+  <div style="width:44px;height:44px;border:3px solid rgba(255,255,255,.2);border-top-color:#14B8A6;border-radius:50%;animation:spin .7s linear infinite"></div>
+  <div style="color:white;font-size:15px;font-weight:600;font-family:var(--font)">Entrando na sua conta...</div>
+</div>
+
 <div class="auth-screen" id="auth-login">
   <div class="auth-card">
     <div class="auth-logo">
@@ -484,6 +489,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 <div class="toast" id="toast" style="display:none"></div>
 
 <script>
+// Detectar retorno do OAuth imediatamente
+(function(){
+  const h = window.location.hash;
+  if(h && (h.includes('access_token') || h.includes('error_description'))){
+    const el = document.getElementById('loading-oauth');
+    if(el) el.style.display='flex';
+    // Esconder tela de login enquanto processa
+    const login = document.getElementById('auth-login');
+    if(login) login.style.display='none';
+  }
+})();
+
 const SUPA_URL='https://tjuzmzywntgfnvhzzlsb.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqdXptenl3bnRnZm52aHp6bHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNzM1MDIsImV4cCI6MjA5Mjk0OTUwMn0.2OMUKx3Mv8ivEOAH_o6re_cepdKrvTB01rldwarRemg';
 const {createClient}=supabase;
@@ -566,16 +583,23 @@ async function verificarAcesso(){
 }
 
 function mostrarLogin(){
+  const lo = document.getElementById('loading-oauth');
+  if(lo) lo.style.display='none';
   hideAll();
   document.getElementById('auth-login').style.display='flex';
 }
 
 function mostrarBloqueio(){
+  const lo = document.getElementById('loading-oauth');
+  if(lo) lo.style.display='none';
   hideAll();
   document.getElementById('blocked-screen').style.display='flex';
 }
 
 function mostrarApp(dados){
+  // Esconder loading OAuth se estiver visível
+  const lo = document.getElementById('loading-oauth');
+  if(lo) lo.style.display='none';
   hideAll();
   document.getElementById('topbar').style.display='flex';
   document.getElementById('app-layout').style.display='flex';
@@ -612,6 +636,8 @@ function mostrarApp(dados){
 }
 
 function hideAll(){
+  const lo = document.getElementById('loading-oauth');
+  if(lo) lo.style.display='none';
   document.getElementById('auth-login').style.display='none';
   document.getElementById('auth-cadastro').style.display='none';
   document.getElementById('blocked-screen').style.display='none';
