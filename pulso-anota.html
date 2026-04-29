@@ -488,23 +488,47 @@ async function sbGet(p){
 
 // ── AUTH ──
 sb.auth.onAuthStateChange(async(event,session)=>{
-  if(session?.user){
-    currentUser=session.user;
-    await verificarAcesso();
-  } else {
+  if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='USER_UPDATED'){
+    if(session?.user){
+      currentUser=session.user;
+      await verificarAcesso();
+    }
+  } else if(event==='SIGNED_OUT'){
     currentUser=null;
+    currentUsuario=null;
     mostrarLogin();
+  } else if(event==='INITIAL_SESSION'){
+    if(session?.user){
+      currentUser=session.user;
+      await verificarAcesso();
+    } else {
+      mostrarLogin();
+    }
   }
 });
 
 async function verificarAcesso(){
   try{
-    // Buscar dados do usuário
-    const {data,error}=await sb.from('acesso_status').select('*').eq('id',currentUser.id).single();
-    if(error||!data){
-      // Novo usuário — aguardar trigger criar registro
-      await new Promise(r=>setTimeout(r,1500));
-      return verificarAcesso();
+    let tentativas=0;
+    let data=null;
+    // Aguarda até 5s pelo trigger criar o registro
+    while(!data && tentativas<5){
+      const res=await sb.from('acesso_status').select('*').eq('id',currentUser.id).maybeSingle();
+      if(res.data){data=res.data;break;}
+      tentativas++;
+      await new Promise(r=>setTimeout(r,1000));
+    }
+    if(!data){
+      // Criar registro manualmente como fallback
+      await sb.from('usuarios').insert({
+        id:currentUser.id,
+        email:currentUser.email,
+        nome:currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||currentUser.email.split('@')[0]
+      }).onConflict('id').ignore();
+      await new Promise(r=>setTimeout(r,1000));
+      const res2=await sb.from('acesso_status').select('*').eq('id',currentUser.id).maybeSingle();
+      data=res2.data;
+      if(!data){mostrarLogin();return;}
     }
     currentUsuario=data;
     // Atualizar ultimo acesso
@@ -580,7 +604,7 @@ function hideAll(){
 async function loginGoogle(){
   const {error}=await sb.auth.signInWithOAuth({
     provider:'google',
-    options:{redirectTo:window.location.href}
+    options:{redirectTo:'https://anota.pulsoenfermagem.com.br/pulso-anota.html'}
   });
   if(error)showToast('❌ Erro ao conectar com Google');
 }
