@@ -524,25 +524,29 @@ async function sbGet(p){
 }
 
 // ── AUTH ──
-sb.auth.onAuthStateChange(async(event,session)=>{
-  if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'||event==='USER_UPDATED'){
-    if(session?.user){
-      currentUser=session.user;
-      await verificarAcesso();
-    }
-  } else if(event==='SIGNED_OUT'){
-    currentUser=null;
-    currentUsuario=null;
+// Inicialização imediata — não espera evento, pega sessão direto
+async function iniciarAuth(){
+  // 1. Tentar pegar sessão existente imediatamente
+  const {data:{session}} = await sb.auth.getSession();
+  if(session?.user){
+    currentUser = session.user;
+    await verificarAcesso();
+  } else {
     mostrarLogin();
-  } else if(event==='INITIAL_SESSION'){
-    if(session?.user){
+  }
+  // 2. Ouvir mudanças subsequentes (logout, refresh)
+  sb.auth.onAuthStateChange(async(event,session)=>{
+    if(event==='SIGNED_OUT'){
+      currentUser=null; currentUsuario=null; mostrarLogin();
+    } else if(event==='SIGNED_IN'&&!currentUser){
       currentUser=session.user;
       await verificarAcesso();
-    } else {
-      mostrarLogin();
+    } else if(event==='TOKEN_REFRESHED'&&session?.user){
+      currentUser=session.user;
     }
-  }
-});
+  });
+}
+iniciarAuth();
 
 async function verificarAcesso(){
   try{
