@@ -132,8 +132,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .card-body{padding:18px}
 .bm-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--shadow);overflow:hidden}
 .bm-header{padding:12px 18px;border-bottom:1px solid var(--border);background:var(--surface2);font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
-.bm-body{display:grid;grid-template-columns:140px 1fr}
-.bm-figure{padding:20px 16px;display:flex;flex-direction:column;align-items:center;border-right:1px solid var(--border);background:linear-gradient(180deg,#f0f9f8,#e6f7f6)}
+.bm-body{display:grid;grid-template-columns:1fr 1fr}
+.bm-figure{padding:12px 8px;display:flex;flex-direction:column;align-items:center;background:linear-gradient(180deg,#f0f9f8,#e6f7f6)}
 .bm-fig-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px}
 .body-svg{width:100px;cursor:pointer}
 .br{cursor:pointer;transition:all .15s;fill:#D4EAE8;stroke:#0D9488;stroke-width:.8}
@@ -223,8 +223,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   .bottom-nav{display:flex}
   .content{padding:14px;padding-bottom:calc(var(--bottom-nav-h) + 14px)}
   .oco-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
-  .bm-body{grid-template-columns:1fr}
-  .bm-figure{border-right:none;border-bottom:1px solid var(--border)}
   .fg{grid-template-columns:1fr}
   .patient-bar{display:none}
   .auth-card{padding:28px 24px}
@@ -383,11 +381,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
           <div class="step-row"><div class="step-num">3</div><div><div class="step-title">Preencha os dados</div><div class="step-sub">Selecione ou preencha cada campo</div></div></div>
           <div id="body-map" style="display:none" class="bm-wrap">
             <div class="bm-header">🫀 Localização no corpo — toque ou clique na região</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)">
+            <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);min-width:0">
               <!-- FRONTAL -->
-              <div class="bm-figure" style="border-right:1px solid var(--border)">
+              <div class="bm-figure" style="border-right:1px solid var(--border);padding:12px 8px">
                 <div class="bm-fig-label">Vista frontal</div>
-                <svg viewBox="0 0 160 420" xmlns="http://www.w3.org/2000/svg" style="width:110px;cursor:pointer">
+                <svg viewBox="0 0 160 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:110px;cursor:pointer">
                   <ellipse cx="80" cy="28" rx="22" ry="26" class="br" data-region="Cabeça" onclick="selRegion(this)"/>
                   <path d="M72 53 Q70 60 70 66 Q75 68 80 68 Q85 68 90 66 Q90 60 88 53Z" class="br" data-region="Pescoço" onclick="selRegion(this)"/>
                   <ellipse cx="54" cy="80" rx="14" ry="10" class="br" data-region="Ombro direito" onclick="selRegion(this)"/>
@@ -410,9 +408,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
                 </svg>
               </div>
               <!-- POSTERIOR -->
-              <div class="bm-figure">
+              <div class="bm-figure" style="padding:12px 8px">
                 <div class="bm-fig-label">Vista posterior</div>
-                <svg viewBox="0 0 160 420" xmlns="http://www.w3.org/2000/svg" style="width:110px;cursor:pointer">
+                <svg viewBox="0 0 160 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:110px;cursor:pointer">
                   <!-- Cabeça posterior -->
                   <ellipse cx="80" cy="28" rx="22" ry="26" class="br" data-region="Cabeça (posterior)" onclick="selRegion(this)"/>
                   <!-- Pescoço posterior -->
