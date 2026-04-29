@@ -379,13 +379,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
         </div>
         <div id="step3" style="display:none;flex-direction:column;gap:14px">
           <div class="step-row"><div class="step-num">3</div><div><div class="step-title">Preencha os dados</div><div class="step-sub">Selecione ou preencha cada campo</div></div></div>
-          <div id="body-map" style="display:none" class="bm-wrap">
-            <div class="bm-header">🫀 Localização no corpo — toque ou clique na região</div>
-            <div style="display:flex;flex-direction:row;border-bottom:1px solid var(--border);width:100%;min-height:200px">
+          <div id="body-map" style="display:none;background:white;border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--shadow)">
+            <div style="padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface2);font-size:13px;font-weight:700;color:var(--text)">🫀 Localização — toque na região ou selecione abaixo</div>
+            <!-- VISTAS: dois SVGs com tamanho FIXO, garantido no mobile -->
+            <div style="display:flex;flex-direction:row;justify-content:space-around;align-items:flex-start;padding:12px 4px;background:linear-gradient(180deg,#f0f9f8,#e8f7f5);gap:4px">
               <!-- FRONTAL -->
-              <div class="bm-figure" style="flex:1;border-right:1px solid var(--border);padding:12px 6px;min-width:0">
-                <div class="bm-fig-label">Vista frontal</div>
-                <svg viewBox="0 0 160 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:120px;height:auto;aspect-ratio:160/420;cursor:pointer;display:block;margin:0 auto">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1">
+                <div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px">Vista frontal</div>
+                <svg width="120" height="315" viewBox="0 0 160 420" xmlns="http://www.w3.org/2000/svg">
                   <ellipse cx="80" cy="28" rx="22" ry="26" class="br" data-region="Cabeça" onclick="selRegion(this)"/>
                   <path d="M72 53 Q70 60 70 66 Q75 68 80 68 Q85 68 90 66 Q90 60 88 53Z" class="br" data-region="Pescoço" onclick="selRegion(this)"/>
                   <ellipse cx="54" cy="80" rx="14" ry="10" class="br" data-region="Ombro direito" onclick="selRegion(this)"/>
@@ -407,52 +408,43 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
                   <path d="M102 360 C104 368 103 376 99 382 C95 386 88 387 81 385 C76 382 74 376 76 370 C78 364 84 360 90 360Z" class="br" data-region="Pé esquerdo" onclick="selRegion(this)"/>
                 </svg>
               </div>
+              <!-- SEPARADOR -->
+              <div style="width:1px;background:var(--border);align-self:stretch;margin:4px 0"></div>
               <!-- POSTERIOR -->
-              <div class="bm-figure" style="flex:1;padding:12px 6px;min-width:0">
-                <div class="bm-fig-label">Vista posterior</div>
-                <svg viewBox="0 0 160 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:120px;height:auto;aspect-ratio:160/420;cursor:pointer;display:block;margin:0 auto">
-                  <!-- Cabeça posterior -->
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1">
+                <div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px">Vista posterior</div>
+                <svg width="120" height="315" viewBox="0 0 160 420" xmlns="http://www.w3.org/2000/svg">
                   <ellipse cx="80" cy="28" rx="22" ry="26" class="br" data-region="Cabeça (posterior)" onclick="selRegion(this)"/>
-                  <!-- Pescoço posterior -->
                   <path d="M72 53 Q70 60 70 66 Q75 68 80 68 Q85 68 90 66 Q90 60 88 53Z" class="br" data-region="Pescoço (posterior)" onclick="selRegion(this)"/>
-                  <!-- Ombro D posterior -->
                   <ellipse cx="54" cy="80" rx="14" ry="10" class="br" data-region="Ombro direito (posterior)" onclick="selRegion(this)"/>
-                  <!-- Ombro E posterior -->
                   <ellipse cx="106" cy="80" rx="14" ry="10" class="br" data-region="Ombro esquerdo (posterior)" onclick="selRegion(this)"/>
-                  <!-- Região dorsal (tórax posterior) -->
                   <path d="M66 70 Q60 76 58 90 Q56 106 58 120 Q64 126 80 127 Q96 126 102 120 Q104 106 102 90 Q100 76 94 70 Q87 73 80 73 Q73 73 66 70Z" class="br" data-region="Dorso / região torácica posterior" onclick="selRegion(this)"/>
-                  <!-- Região lombar -->
                   <path d="M58 122 Q56 136 57 150 Q58 162 62 168 Q70 172 80 172 Q90 172 98 168 Q102 162 103 150 Q104 136 102 122 Q96 126 80 127 Q64 126 58 122Z" class="br" data-region="Região lombar" onclick="selRegion(this)"/>
-                  <!-- Região sacral / glútea -->
                   <path d="M62 170 Q56 180 56 192 Q57 202 66 206 Q72 208 80 208 Q88 208 94 206 Q103 202 104 192 Q104 180 98 170 Q90 172 80 172 Q70 172 62 170Z" class="br" data-region="Região sacral / glútea" onclick="selRegion(this)"/>
-                  <!-- Braço D posterior -->
                   <path d="M56 78 C46 82 40 92 38 106 C36 120 38 134 42 144 C46 150 52 151 57 147 C62 143 64 132 64 118 C64 104 62 88 56 78Z" class="br" data-region="Braço direito (posterior)" onclick="selRegion(this)"/>
-                  <!-- Braço E posterior -->
                   <path d="M104 78 C114 82 120 92 122 106 C124 120 122 134 118 144 C114 150 108 151 103 147 C98 143 96 132 96 118 C96 104 98 88 104 78Z" class="br" data-region="Braço esquerdo (posterior)" onclick="selRegion(this)"/>
-                  <!-- Antebraço D posterior -->
                   <path d="M41 146 C37 156 36 168 37 180 C38 192 42 200 48 204 C53 206 58 203 61 196 C64 188 63 176 61 164 C59 154 55 146 49 144Z" class="br" data-region="Antebraço direito (posterior)" onclick="selRegion(this)"/>
-                  <!-- Antebraço E posterior -->
                   <path d="M119 146 C123 156 124 168 123 180 C122 192 118 200 112 204 C107 206 102 203 99 196 C96 188 97 176 99 164 C101 154 105 146 111 144Z" class="br" data-region="Antebraço esquerdo (posterior)" onclick="selRegion(this)"/>
-                  <!-- Mão D posterior -->
                   <ellipse cx="48" cy="218" rx="11" ry="14" class="br" data-region="Mão direita (posterior)" onclick="selRegion(this)"/>
-                  <!-- Mão E posterior -->
                   <ellipse cx="112" cy="218" rx="11" ry="14" class="br" data-region="Mão esquerda (posterior)" onclick="selRegion(this)"/>
-                  <!-- Coxa D posterior -->
                   <path d="M62 206 C56 216 54 232 54 248 C54 264 57 278 63 288 C67 294 74 295 79 291 C84 287 85 275 84 260 C83 244 80 228 75 214 C72 208 67 205 62 206Z" class="br" data-region="Coxa direita (posterior)" onclick="selRegion(this)"/>
-                  <!-- Coxa E posterior -->
                   <path d="M98 206 C104 216 106 232 106 248 C106 264 103 278 97 288 C93 294 86 295 81 291 C76 287 75 275 76 260 C77 244 80 228 85 214 C88 208 93 205 98 206Z" class="br" data-region="Coxa esquerda (posterior)" onclick="selRegion(this)"/>
-                  <!-- Perna D posterior -->
                   <path d="M63 290 C59 302 58 318 59 332 C60 346 64 356 70 360 C75 362 80 360 82 354 C84 347 84 333 82 319 C80 306 76 294 70 290Z" class="br" data-region="Perna direita (posterior)" onclick="selRegion(this)"/>
-                  <!-- Perna E posterior -->
                   <path d="M97 290 C101 302 102 318 101 332 C100 346 96 356 90 360 C85 362 80 360 78 354 C76 347 76 333 78 319 C80 306 84 294 90 290Z" class="br" data-region="Perna esquerda (posterior)" onclick="selRegion(this)"/>
-                  <!-- Pé D posterior -->
                   <path d="M58 360 C56 368 57 376 61 382 C65 386 72 387 79 385 C84 382 86 376 84 370 C82 364 76 360 70 360Z" class="br" data-region="Pé direito (posterior)" onclick="selRegion(this)"/>
-                  <!-- Pé E posterior -->
                   <path d="M102 360 C104 368 103 376 99 382 C95 386 88 387 81 385 C76 382 74 376 76 370 C78 364 84 360 90 360Z" class="br" data-region="Pé esquerdo (posterior)" onclick="selRegion(this)"/>
                 </svg>
               </div>
             </div>
-            <div class="bm-list" id="region-list" style="max-height:220px;overflow-y:auto"></div>
+            <!-- REGIÃO SELECIONADA -->
+            <div id="regiao-selecionada" style="display:none;margin:0 12px;padding:8px 14px;background:var(--teal-dim);border:1px solid var(--teal-mid);border-radius:var(--r);font-size:13px;font-weight:700;color:var(--teal)">
+              📍 <span id="regiao-label">—</span>
+            </div>
+            <!-- LISTA DE REGIÕES EM CHIPS -->
+            <div style="padding:10px 12px;border-top:1px solid var(--border)">
+              <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px">Ou selecione pela lista</div>
+              <div id="region-list" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+            </div>
           </div>
           <div class="card">
             <div class="card-header"><span class="card-title" id="form-title">Dados da ocorrência</span><span class="card-badge">Preencha todos</span></div>
@@ -846,13 +838,21 @@ function renderForm(t,o,c){
 function renderRegioes(){
   const list=document.getElementById('region-list');list.innerHTML='';
   REGIOES.forEach(r=>{
-    const c=document.createElement('button');c.className='rchip';c.dataset.r=r;
-    c.innerHTML=`<div class="rdot"></div>${r}`;
+    const c=document.createElement('button');
+    c.style.cssText='padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap';
+    c.dataset.r=r;
+    c.textContent=r;
     c.onclick=()=>{
-      document.querySelectorAll('.rchip').forEach(x=>x.classList.remove('sel'));
+      document.querySelectorAll('#region-list button').forEach(x=>{
+        x.style.background='var(--surface)';x.style.borderColor='var(--border)';x.style.color='var(--text2)';
+      });
       document.querySelectorAll('.br').forEach(x=>x.classList.remove('sel'));
-      c.classList.add('sel');selReg=r;
+      c.style.background='var(--teal)';c.style.borderColor='var(--teal)';c.style.color='white';
+      selReg=r;
       document.querySelectorAll(`.br[data-region="${r}"]`).forEach(x=>x.classList.add('sel'));
+      const rs=document.getElementById('regiao-selecionada');
+      document.getElementById('regiao-label').textContent=r;
+      rs.style.display='block';
     };
     list.appendChild(c);
   });
@@ -860,10 +860,20 @@ function renderRegioes(){
 
 function selRegion(el){
   document.querySelectorAll('.br').forEach(c=>c.classList.remove('sel'));
-  document.querySelectorAll('.rchip').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel');selReg=el.dataset.region;
-  const chip=document.querySelector(`.rchip[data-r="${selReg}"]`);
-  if(chip){chip.classList.add('sel');chip.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  el.classList.add('sel');
+  selReg=el.dataset.region;
+  // Sincronizar lista
+  document.querySelectorAll('#region-list button').forEach(b=>{
+    if(b.dataset.r===selReg){
+      b.style.background='var(--teal)';b.style.borderColor='var(--teal)';b.style.color='white';
+      b.scrollIntoView({behavior:'smooth',block:'nearest'});
+    } else {
+      b.style.background='var(--surface)';b.style.borderColor='var(--border)';b.style.color='var(--text2)';
+    }
+  });
+  const rs=document.getElementById('regiao-selecionada');
+  document.getElementById('regiao-label').textContent=selReg;
+  rs.style.display='block';
 }
 
 function gerarAnotacao(){
