@@ -792,7 +792,7 @@ function renderForm(t,o,c){
       w.appendChild(s);
     }else{
       const inp=document.createElement('input');inp.className='field-input';inp.dataset.id=f.id;
-      inp.type=f.tipo==='numero'?'number':'text';
+      inp.type=f.tipo==='numero'?'number':'text';if(f.tipo==='numero'){inp.min='0';}
       inp.placeholder=f.tipo==='numero'?'0':f.tipo==='tempo'?'ex: 30 minutos':'Digite aqui...';
       w.appendChild(inp);
     }
