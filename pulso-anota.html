@@ -809,14 +809,26 @@ function renderForm(t,o,c){
   const body=document.getElementById('form-body');body.innerHTML='';
   const bm=document.getElementById('body-map');
   if(o.slug==='dor'){bm.style.display='block';renderRegioes();}else{bm.style.display='none';}
+  function atualizarVisibilidade(body){
+    body.querySelectorAll('.field[data-depende-de]').forEach(w=>{
+      const pai=w.dataset.dependeDe;
+      const vals=(w.dataset.dependeValor||'').split('|').map(v=>v.trim().toLowerCase());
+      const elPai=body.querySelector(`[data-id="${pai}"]`);
+      const valAtual=elPai?elPai.value.toLowerCase():'';
+      const visivel=vals.some(v=>valAtual.includes(v));
+      w.style.display=visivel?'':'none';
+    });
+  }
   campos.forEach(f=>{
     if(o.slug==='dor'&&f.id==='localizacao')return;
     const w=document.createElement('div');w.className='field';
+    if(f.depende_de){w.dataset.dependeDe=f.depende_de;w.dataset.dependeValor=f.depende_valor||'';w.style.display='none';}
     const l=document.createElement('div');l.className='field-label';l.textContent=f.label;w.appendChild(l);
     if(f.tipo==='opcoes'){
       const s=document.createElement('select');s.className='field-select';s.dataset.id=f.id;
       s.innerHTML=`<option value="">— Selecione —</option>`;
       (f.opcoes||[]).forEach(op=>s.innerHTML+=`<option value="${op}">${op}</option>`);
+      s.addEventListener('change',()=>atualizarVisibilidade(body));
       w.appendChild(s);
     }else if(f.tipo==='escala_10'){
       const sw=document.createElement('div');sw.className='scale-wrap';sw.dataset.fieldId=f.id;sw.dataset.selected='';
