@@ -429,6 +429,235 @@
     box-shadow: 0 8px 32px rgba(13,148,136,0.4);
   }
 
+  /* ── BLOCO DO APP ── */
+  .app-block {
+    padding: 100px 60px;
+    background: linear-gradient(160deg, #0a1a18 0%, #051310 60%, #0a1a18 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .app-block::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 480px; height: 480px;
+    background: radial-gradient(circle, rgba(13,148,136,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .app-block-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .app-block-text {}
+  .app-block-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 20px;
+  }
+  .app-block-heading {
+    font-family: var(--serif);
+    font-size: clamp(30px, 4vw, 44px);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+  .app-block-heading em {
+    font-style: italic;
+    color: var(--teal-light);
+  }
+  .app-block-desc {
+    font-size: 16px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    margin-bottom: 32px;
+  }
+  .app-features {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .app-feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .app-feature-icon {
+    width: 32px; height: 32px;
+    background: rgba(13,148,136,0.15);
+    border: 1px solid var(--teal-border);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 15px;
+    margin-top: 2px;
+  }
+  .app-feature-text strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .app-feature-text span {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .app-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+  }
+  .app-phone-mockup {
+    width: 260px;
+    background: #0e1f1d;
+    border: 1px solid rgba(13,148,136,0.3);
+    border-radius: 28px;
+    padding: 16px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(13,148,136,0.15);
+    position: relative;
+  }
+  .app-phone-mockup::before {
+    content: '';
+    display: block;
+    width: 60px; height: 6px;
+    background: rgba(13,148,136,0.4);
+    border-radius: 3px;
+    margin: 0 auto 16px;
+  }
+  .app-screen {
+    background: #0a1512;
+    border-radius: 16px;
+    padding: 20px 16px;
+    min-height: 360px;
+  }
+  .app-screen-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(13,148,136,0.2);
+  }
+  .app-screen-logo {
+    width: 28px; height: 28px;
+    background: var(--teal);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: var(--mono);
+    color: white;
+  }
+  .app-screen-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--sans);
+  }
+  .app-screen-sub {
+    font-size: 10px;
+    color: var(--teal);
+    font-family: var(--mono);
+  }
+  .app-situation {
+    background: rgba(13,148,136,0.08);
+    border: 1px solid rgba(13,148,136,0.2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .app-situation-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 6px;
+  }
+  .app-situation-text {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+    font-family: var(--sans);
+  }
+  .app-response {
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .app-response-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 6px;
+  }
+  .app-response-text {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+    font-family: var(--sans);
+  }
+  .app-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .app-chip {
+    background: rgba(13,148,136,0.15);
+    border: 1px solid rgba(13,148,136,0.25);
+    border-radius: 50px;
+    padding: 4px 10px;
+    font-size: 10px;
+    color: var(--teal-light);
+    font-family: var(--mono);
+  }
+  .app-badge-coming {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(13,148,136,0.1);
+    border: 1px solid var(--teal-border);
+    border-radius: 50px;
+    padding: 8px 18px;
+    font-size: 12px;
+    color: var(--teal-light);
+    font-family: var(--mono);
+    letter-spacing: 0.05em;
+  }
+  .app-badge-dot {
+    width: 7px; height: 7px;
+    background: var(--teal);
+    border-radius: 50%;
+    animation: blink 1.4s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  @media (max-width: 860px) {
+    .app-block { padding: 60px 24px; }
+    .app-block-inner { grid-template-columns: 1fr; gap: 48px; }
+    .app-visual { order: -1; }
+    .app-phone-mockup { width: 220px; }
+  }
+
   /* ── SECTIONS BASE ── */
   section {
     position: relative;
@@ -1410,12 +1639,13 @@
   <div class="hero-glow" aria-hidden="true"></div>
   <div style="position:relative; z-index:2; max-width: 900px;">
     
+    <p class="hero-eyebrow">Para técnicos e enfermeiros em atuação</p>
     <h1 class="hero-title">
-      <em>Anotações de</em><br>Enfermagem
-      <span class="line2">Do registro correto ao cuidado seguro</span>
+      Travou na hora de escrever<br><em>a anotação no plantão?</em>
+      <span class="line2">Saiba exatamente o que registrar em cada situação, com total segurança</span>
     </h1>
     <p class="hero-sub">
-      O curso que transforma a forma como você registra — com clareza, precisão e responsabilidade profissional.
+      A maioria dos profissionais anota "por cima" — com medo de errar, sem saber o que realmente precisa constar. Esse curso muda isso: você aprende a registrar com clareza, em qualquer situação, sem travar.
     </p>
     <div class="hero-actions">
       <a href="https://pay.hotmart.com/Q105434911B" target="_blank" rel="noopener" class="btn-primary" aria-label="Garantir vaga no curso de Anotações de Enfermagem">Garantir minha vaga</a>
@@ -1444,7 +1674,74 @@
 
 <div class="divider"></div>
 
-<!-- SOBRE O CURSO -->
+<!-- BLOCO DO APP -->
+<section class="app-block" id="app" aria-labelledby="app-heading">
+  <div class="app-block-inner">
+    <div class="app-block-text reveal">
+      <div class="app-block-eyebrow">Pulso Anota · Disponível em breve</div>
+      <h2 class="app-block-heading" id="app-heading">
+        Na hora da dúvida,<br>você não fica <em>sozinho</em>
+      </h2>
+      <p class="app-block-desc">
+        O Pulso Anota é o aplicativo de apoio que acompanha o curso. Em vez de travar na frente do prontuário, você abre o app, descreve a situação e recebe uma orientação clara sobre o que considerar na anotação.
+      </p>
+      <div class="app-features">
+        <div class="app-feature-item">
+          <div class="app-feature-icon">🩺</div>
+          <div class="app-feature-text">
+            <strong>Te orienta no momento certo</strong>
+            <span>Quando a dúvida aparece no plantão — não depois, não em casa. Ali, naquele instante.</span>
+          </div>
+        </div>
+        <div class="app-feature-item">
+          <div class="app-feature-icon">📋</div>
+          <div class="app-feature-text">
+            <strong>Mostra o que não pode faltar</strong>
+            <span>Sinais vitais relevantes, mudança de estado, intercorrências — o app te dá um caminho claro.</span>
+          </div>
+        </div>
+        <div class="app-feature-item">
+          <div class="app-feature-icon">🔒</div>
+          <div class="app-feature-text">
+            <strong>Reduz a dúvida, não substitui você</strong>
+            <span>O julgamento clínico é seu. O app te ajuda a organizar o que você já sabe — sem copiar e colar.</span>
+          </div>
+        </div>
+      </div>
+      <div class="app-badge-coming">
+        <span class="app-badge-dot"></span>
+        Incluso no curso · Lançamento em breve
+      </div>
+    </div>
+    <div class="app-visual reveal reveal-delay-2">
+      <div class="app-phone-mockup">
+        <div class="app-screen">
+          <div class="app-screen-header">
+            <div class="app-screen-logo">PA</div>
+            <div>
+              <div class="app-screen-title">Pulso Anota</div>
+              <div class="app-screen-sub">Apoio ao registro clínico</div>
+            </div>
+          </div>
+          <div class="app-situation">
+            <div class="app-situation-label">Situação descrita</div>
+            <div class="app-situation-text">Paciente de 78 anos, pós-operatório de quadril, relata dor 7/10 e apresenta edema leve no membro operado</div>
+          </div>
+          <div class="app-response">
+            <div class="app-response-label">O que considerar na anotação</div>
+            <div class="app-response-text">Registre a queixa com as palavras do paciente, a intensidade (escala de dor), localização, e as condições observadas no membro. Inclua a hora da avaliação e as medidas tomadas ou comunicadas à equipe.</div>
+          </div>
+          <div class="app-chips">
+            <span class="app-chip">dor</span>
+            <span class="app-chip">edema</span>
+            <span class="app-chip">pós-op</span>
+            <span class="app-chip">comunicação</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="sobre" id="sobre" aria-labelledby="sobre-heading">
   <div class="section-inner">
     <div class="reveal">
