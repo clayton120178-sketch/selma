@@ -54,6 +54,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .blocked-logout{margin-top:16px;font-size:13px;color:var(--text3)}
 .blocked-logout a{color:var(--teal);cursor:pointer;font-weight:600}
 
+/* MODAL ÚLTIMO DIA TRIAL */
+.trial-modal-overlay{position:fixed;inset:0;background:rgba(10,31,29,.55);backdrop-filter:blur(3px);z-index:800;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadein .25s ease}
+.trial-modal-card{background:white;border-radius:20px;padding:36px 32px 28px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.25);position:relative;animation:modal-up .3s cubic-bezier(.34,1.3,.64,1)}
+@keyframes modal-up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.trial-modal-icon{font-size:36px;margin-bottom:12px;line-height:1}
+.trial-modal-title{font-size:20px;font-weight:800;color:var(--text);margin-bottom:10px;line-height:1.3}
+.trial-modal-body{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:24px}
+.trial-modal-body strong{color:var(--text);font-weight:700}
+.trial-modal-cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:12px;background:var(--teal);color:white;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;border:none;text-decoration:none;transition:all .15s;margin-bottom:14px}
+.trial-modal-cta:hover{background:#0B7A6E;transform:translateY(-1px)}
+.trial-modal-dismiss{text-align:center;font-size:13px;color:var(--text3)}
+.trial-modal-dismiss a{color:var(--text3);cursor:pointer;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.trial-modal-dismiss a:hover{color:var(--text2)}
+
 /* TOPBAR */
 .topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--topbar-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .topbar-left{display:flex;align-items:center;gap:10px}
@@ -293,6 +307,23 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
     <div class="blocked-desc">Você utilizou seus 7 dias gratuitos do Pulso Anota.<br>Para continuar com acesso completo por 1 ano, adquira o Treinamento de Anotações de Enfermagem.</div>
     <a href="https://anotacoes.pulsoenfermagem.com.br/" target="_blank" class="btn-cta">🎓 Quero acesso completo</a>
     <div class="blocked-logout"><a onclick="logout()">Sair da conta</a></div>
+  </div>
+</div>
+
+<!-- MODAL ÚLTIMO DIA TRIAL -->
+<div id="trial-modal" style="display:none" class="trial-modal-overlay" onclick="fecharTrialModal(event)">
+  <div class="trial-modal-card">
+    <div class="trial-modal-icon">⏳</div>
+    <div class="trial-modal-title">Seu acesso gratuito encerra hoje</div>
+    <div class="trial-modal-body">
+      Nesses 7 dias você treinou anotações reais — queda, febre, medicação, acesso venoso.<br><br>
+      O simulador vai continuar existindo. Para continuar acessando, basta garantir o
+      <strong>Treinamento de Anotações de Enfermagem</strong>, que é o curso que libera seu acesso completo ao app.
+    </div>
+    <a href="https://anotacoes.pulsoenfermagem.com.br/" target="_blank" class="trial-modal-cta">
+      Quero continuar com o acesso →
+    </a>
+    <div class="trial-modal-dismiss"><a onclick="fecharTrialModal(null)">Entendi, continuar usando hoje</a></div>
   </div>
 </div>
 
@@ -633,6 +664,17 @@ function mostrarApp(dados){
 
   // Carregar dados
   if(!oco.length) init();
+
+  // Modal último dia de trial
+  if(dados.status==='trial' && dados.dias_restantes_trial===0){
+    const chave='pulso_trial_modal_'+currentUser.id+'_'+new Date().toDateString();
+    if(!sessionStorage.getItem(chave)){
+      setTimeout(()=>{
+        document.getElementById('trial-modal').style.display='flex';
+      },800);
+      sessionStorage.setItem(chave,'1');
+    }
+  }
 }
 
 function hideAll(){
@@ -641,6 +683,7 @@ function hideAll(){
   document.getElementById('auth-login').style.display='none';
   document.getElementById('auth-cadastro').style.display='none';
   document.getElementById('blocked-screen').style.display='none';
+  document.getElementById('trial-modal').style.display='none';
   document.getElementById('topbar').style.display='none';
   document.getElementById('app-layout').style.display='none';
   document.querySelector('.bottom-nav').style.display='none';
@@ -970,6 +1013,12 @@ function resetForm(){
   document.getElementById('output').style.display='none';
   document.getElementById('body-map').style.display='none';
   document.querySelector('.content').scrollTo({top:0,behavior:'smooth'});
+}
+
+function fecharTrialModal(e){
+  if(e===null||e.target===document.getElementById('trial-modal')){
+    document.getElementById('trial-modal').style.display='none';
+  }
 }
 
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open');}
