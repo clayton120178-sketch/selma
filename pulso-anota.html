@@ -800,7 +800,7 @@ function showScreen(id){
 // ── CORE APP ──
 async function init(){
   try{
-    oco=await sbGet('ocorrencias?select=*&order=categoria,nome');
+    oco=await sbGet('ocorrencias?select=*&order=nome');
     const g=document.getElementById('oco-grid');g.innerHTML='';
     oco.forEach(o=>{
       const c=document.createElement('button');
