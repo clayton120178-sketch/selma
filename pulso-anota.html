@@ -531,7 +531,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 
       <!-- CALCULAR DOSE -->
       <div class="view" id="view-calcular">
-        <div class="step-row"><div class="step-num" style="background:var(--teal)">🧮</div><div><div class="step-title">Calculadora de Medicamentos</div><div class="step-sub">Cálculo seguro no plantão — injetável, comprimido, gotejamento e bomba</div></div></div>
+        <div class="step-row"><div class="step-num" style="background:var(--teal)">🧮</div><div><div class="step-title">Calculadora de Medicamentos</div><div class="step-sub">Cálculo seguro no plantão — injetável, comprimido, gotejamento, bomba e insulina</div></div></div>
 
         <!-- TABS -->
         <div class="calc-tabs">
@@ -539,6 +539,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
           <button class="calc-tab" onclick="showCalc('comprimido',this)">💊 Comprimido</button>
           <button class="calc-tab" onclick="showCalc('gotejamento',this)">💧 Gotejamento</button>
           <button class="calc-tab" onclick="showCalc('bomba',this)">⚙️ Bomba (ml/h)</button>
+          <button class="calc-tab" onclick="showCalc('insulina',this)">🩸 Insulina</button>
         </div>
 
         <!-- PAINEL: INJETÁVEL -->
@@ -651,6 +652,43 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
             <div class="calc-steps" id="bm-steps"></div>
           </div>
           <button class="btn-limpar" onclick="limparCalc('bomba')">↺ Limpar</button>
+        </div>
+
+        <!-- PAINEL: INSULINA -->
+        <div class="calc-panel card" id="calc-insulina" style="padding:18px">
+          <div style="background:var(--amarelo-dim);border:1.5px solid #FDE68A;border-radius:var(--r);padding:10px 14px;font-size:12px;font-weight:600;color:var(--amarelo);display:flex;align-items:flex-start;gap:8px;line-height:1.5">
+            ⚠️ <span>Insulina é medicamento de alta vigilância. Sempre confirme o tipo de seringa disponível antes de aspirar.</span>
+          </div>
+          <div class="fg">
+            <div class="field">
+              <div class="field-label">Dose prescrita (UI)</div>
+              <input class="field-input" id="ins-dose" type="number" min="0" step="any" placeholder="Ex: 20" oninput="calcInsulina()">
+            </div>
+            <div class="field">
+              <div class="field-label">Concentração do frasco</div>
+              <select class="field-select" id="ins-conc" onchange="calcInsulina()">
+                <option value="100">U-100 (100 UI/ml) — padrão</option>
+                <option value="40">U-40 (40 UI/ml) — uso veterinário / antigo</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label">Tipo de seringa disponível</div>
+            <div class="equipo-row">
+              <button class="equipo-btn active" id="ins-ser-insulina" onclick="selecionarSeringa('insulina')">Seringa de insulina<br><span style="font-size:10px;font-weight:500;color:inherit;opacity:.75">Escala em UI</span></button>
+              <button class="equipo-btn" id="ins-ser-comum" onclick="selecionarSeringa('comum')">Seringa comum (ml)<br><span style="font-size:10px;font-weight:500;color:inherit;opacity:.75">Escala em ml</span></button>
+            </div>
+          </div>
+          <div class="calc-error" id="ins-error">⚠️ Preencha a dose com um valor válido.</div>
+          <div class="calc-result" id="ins-result">
+            <div class="calc-result-label" id="ins-result-label">Volume a aspirar</div>
+            <div class="calc-result-main"><div class="calc-result-val" id="ins-val">—</div><div class="calc-result-unit" id="ins-unit">UI</div></div>
+            <div class="calc-steps" id="ins-steps"></div>
+            <div id="ins-aviso-seringa" style="display:none;background:#FEE2E2;border:1.5px solid #FCA5A5;border-radius:var(--r);padding:10px 14px;font-size:12px;font-weight:600;color:var(--vermelho);line-height:1.5">
+              🚨 <strong>Atenção:</strong> Ao usar seringa comum com frasco U-40, o risco de erro de dose é alto. Prefira sempre a seringa de insulina calibrada para U-40 quando disponível.
+            </div>
+          </div>
+          <button class="btn-limpar" onclick="limparCalc('insulina')">↺ Limpar</button>
         </div>
 
       </div>
@@ -1191,6 +1229,7 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 // ===================== CALCULADORA DE MEDICAMENTOS =====================
 
 let equipoAtivo = 'macro';
+let seringaAtiva = 'insulina';
 
 function showCalc(id, btn) {
   document.querySelectorAll('.calc-panel').forEach(p => p.classList.remove('active'));
@@ -1204,6 +1243,13 @@ function selecionarEquipo(tipo) {
   document.getElementById('equipo-macro').classList.toggle('active', tipo === 'macro');
   document.getElementById('equipo-micro').classList.toggle('active', tipo === 'micro');
   calcGotejamento();
+}
+
+function selecionarSeringa(tipo) {
+  seringaAtiva = tipo;
+  document.getElementById('ins-ser-insulina').classList.toggle('active', tipo === 'insulina');
+  document.getElementById('ins-ser-comum').classList.toggle('active', tipo === 'comum');
+  calcInsulina();
 }
 
 function fmt(n) {
@@ -1318,22 +1364,64 @@ function calcBomba() {
   `;
 }
 
+function calcInsulina() {
+  const dose = parseFloat(document.getElementById('ins-dose').value);
+  const conc = parseFloat(document.getElementById('ins-conc').value);
+  const err = document.getElementById('ins-error');
+  const res = document.getElementById('ins-result');
+  const aviso = document.getElementById('ins-aviso-seringa');
+
+  if (!dose || dose <= 0) { err.classList.remove('show'); res.classList.remove('show'); return; }
+
+  err.classList.remove('show');
+  res.classList.add('show');
+  aviso.style.display = 'none';
+
+  if (seringaAtiva === 'insulina') {
+    // Seringa de insulina: lê direto em UI — SEM conversão
+    document.getElementById('ins-result-label').textContent = 'Marcar na seringa de insulina';
+    document.getElementById('ins-val').textContent = fmt(dose);
+    document.getElementById('ins-unit').textContent = 'UI';
+    document.getElementById('ins-steps').innerHTML = `
+      <div class="calc-step"><span class="calc-step-icon">✓</span>Seringa de insulina U-${conc}: escala já está em UI</div>
+      <div class="calc-step"><span class="calc-step-icon">✓</span>Aspire até a marca <strong>${fmt(dose)} UI</strong> na seringa — sem conversão necessária</div>
+      <div class="calc-step"><span class="calc-step-icon">⚠</span>Confirme que a seringa é <strong>U-${conc}</strong>, compatível com o frasco</div>
+    `;
+    if (conc === 40) {
+      aviso.style.display = 'block';
+      aviso.innerHTML = '⚠️ <strong>Atenção:</strong> Frasco U-40 é menos comum. Certifique-se que a seringa também é U-40. Misturar seringa U-100 com frasco U-40 causa subdose de 60%.';
+    }
+  } else {
+    // Seringa comum (ml): precisa converter
+    const volMl = dose / conc;
+    document.getElementById('ins-result-label').textContent = 'Volume a aspirar na seringa comum';
+    document.getElementById('ins-val').textContent = fmt(parseFloat(volMl.toFixed(3)));
+    document.getElementById('ins-unit').textContent = 'ml';
+    document.getElementById('ins-steps').innerHTML = `
+      <div class="calc-step"><span class="calc-step-icon">1.</span>Fórmula: <strong>Volume (ml) = UI prescritas ÷ concentração (UI/ml)</strong></div>
+      <div class="calc-step"><span class="calc-step-icon">2.</span>Dose prescrita: <strong>${fmt(dose)} UI</strong></div>
+      <div class="calc-step"><span class="calc-step-icon">3.</span>Frasco ${conc === 100 ? 'U-100' : 'U-40'}: <strong>${conc} UI/ml</strong></div>
+      <div class="calc-step"><span class="calc-step-icon">=</span>${fmt(dose)} ÷ ${conc} = <strong>${fmt(parseFloat(volMl.toFixed(3)))} ml</strong></div>
+    `;
+    if (conc === 40) aviso.style.display = 'block';
+  }
+}
+
 function limparCalc(tipo) {
   const campos = {
     injetavel: ['inj-prescrito','inj-disponivel','inj-volume'],
     comprimido: ['cp-prescrito','cp-disponivel'],
     gotejamento: ['gt-volume','gt-tempo'],
-    bomba: ['bm-volume','bm-tempo']
+    bomba: ['bm-volume','bm-tempo'],
+    insulina: ['ins-dose']
   };
   (campos[tipo]||[]).forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
-  const res = document.getElementById(tipo.replace('injetavel','inj').replace('comprimido','cp').replace('gotejamento','gt').replace('bomba','bm') + '-result');
-  if (res) res.classList.remove('show');
-  // mapas de id correto
-  const errMap = {injetavel:'inj-error',comprimido:'cp-error',gotejamento:'gt-error',bomba:'bm-error'};
-  const resMap = {injetavel:'inj-result',comprimido:'cp-result',gotejamento:'gt-result',bomba:'bm-result'};
+  const errMap = {injetavel:'inj-error',comprimido:'cp-error',gotejamento:'gt-error',bomba:'bm-error',insulina:'ins-error'};
+  const resMap = {injetavel:'inj-result',comprimido:'cp-result',gotejamento:'gt-result',bomba:'bm-result',insulina:'ins-result'};
   document.getElementById(errMap[tipo]).classList.remove('show');
   document.getElementById(resMap[tipo]).classList.remove('show');
   if (tipo === 'comprimido') document.getElementById('cp-warn').style.display = 'none';
+  if (tipo === 'insulina') document.getElementById('ins-aviso-seringa').style.display = 'none';
 }
 </script>
 </body>
