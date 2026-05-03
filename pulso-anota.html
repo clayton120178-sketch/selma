@@ -167,6 +167,41 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .btn-primary:hover{background:#0B7A6E}
 .btn-outline{background:var(--surface);color:var(--text2);border-color:var(--border)}
 .btn-outline:hover{border-color:var(--teal);color:var(--teal)}
+
+/* CALCULADORA DE MEDICAMENTOS */
+.calc-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.calc-tab{padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+.calc-tab:hover{border-color:var(--teal-light);color:var(--text)}
+.calc-tab.active{background:var(--teal);border-color:var(--teal);color:white}
+.calc-panel{display:none;flex-direction:column;gap:16px;animation:fadein .2s ease}
+.calc-panel.active{display:flex}
+.calc-result{background:var(--teal-dim);border:1.5px solid var(--teal-mid);border-radius:var(--r2);padding:18px;display:none;flex-direction:column;gap:12px}
+.calc-result.show{display:flex}
+.calc-result-main{display:flex;align-items:baseline;gap:8px}
+.calc-result-val{font-size:40px;font-weight:800;color:var(--teal);font-family:var(--mono);line-height:1}
+.calc-result-unit{font-size:16px;font-weight:700;color:var(--teal)}
+.calc-result-label{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.calc-steps{border-top:1px solid var(--teal-mid);padding-top:12px;display:flex;flex-direction:column;gap:6px}
+.calc-step{font-size:13px;color:var(--text2);display:flex;align-items:center;gap:8px;line-height:1.5}
+.calc-step-icon{font-size:11px;color:var(--teal);font-weight:800;flex-shrink:0;width:16px}
+.calc-step strong{color:var(--text);font-weight:700}
+.calc-warn{background:var(--amarelo-dim);border:1.5px solid #FDE68A;border-radius:var(--r);padding:10px 14px;font-size:12px;font-weight:600;color:var(--amarelo);display:flex;align-items:center;gap:8px}
+.calc-error{background:var(--vermelho-dim);border:1.5px solid #FCA5A5;border-radius:var(--r);padding:10px 14px;font-size:12px;font-weight:600;color:var(--vermelho);display:none}
+.calc-error.show{display:flex;align-items:center;gap:8px}
+.unit-select-row{display:flex;gap:6px;align-items:flex-end}
+.unit-select-row .field-input{flex:1}
+.unit-pill{padding:9px 12px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:700;color:var(--teal);cursor:default;white-space:nowrap;flex-shrink:0}
+.equipo-row{display:flex;gap:8px}
+.equipo-btn{flex:1;padding:10px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;transition:all .15s;text-align:center}
+.equipo-btn:hover{border-color:var(--teal-light);color:var(--text)}
+.equipo-btn.active{background:var(--teal-dim);border-color:var(--teal);color:var(--teal)}
+.calc-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.calc-result-item{background:white;border-radius:var(--r);padding:12px;border:1px solid var(--teal-mid)}
+.calc-result-item .calc-result-val{font-size:28px}
+.btn-calcular{width:100%;padding:12px;border-radius:var(--r);border:none;background:var(--teal);color:white;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-calcular:hover{background:#0B7A6E}
+.btn-limpar{width:100%;padding:9px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);color:var(--text3);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-limpar:hover{border-color:var(--border2);color:var(--text2)}
 .btn-verde{background:var(--verde-dim);color:var(--verde);border-color:#86EFAC}
 .btn-verde:hover{background:#BBF7D0}
 .btn-lg{padding:12px 24px;font-size:14px;border-radius:12px}
@@ -364,6 +399,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
       <button class="nav-btn active" onclick="showView('nova',this)"><div class="ni">📝</div>Nova Anotação</button>
       <button class="nav-btn" onclick="showView('historico',this)"><div class="ni">📋</div>Histórico<span class="nav-count" id="hc" style="display:none">0</span></button>
       <button class="nav-btn" onclick="showView('prontuario',this)"><div class="ni">🏥</div>Prontuário</button>
+      <button class="nav-btn" id="nav-calcular" onclick="showView('calcular',this)"><div class="ni">🧮</div>Calcular Dose</button>
     </div>
     <div class="sdiv"></div>
     <div class="cat-label"><div class="cat-pip" style="background:#EF4444"></div>Intercorrências</div>
@@ -493,6 +529,132 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
         <div class="card"><div class="card-header"><span class="card-title">📝 Últimas Anotações</span></div><div class="card-body"><div class="tl"><div class="tl-item"><div class="tl-dot teal">💊</div><div class="tl-body"><div class="tl-meta"><span>07:30</span>Turno Manhã · Téc. Maria Santos</div><div class="tl-txt">Administrado Dipirona 1g EV às 07:30 conforme prescrição. Paciente refere melhora da dor após 30 min. Sem intercorrências.</div></div></div><div class="tl-item"><div class="tl-dot amarelo">🌡️</div><div class="tl-body"><div class="tl-meta"><span>06:00</span>Turno Manhã · Téc. Maria Santos</div><div class="tl-txt">Paciente apresenta Tax 38.4°C, acompanhada de sudorese. Administrado Paracetamol 500mg VO. Realizado compressa fria. Reavaliado: Tax 37.8°C.</div></div></div><div class="tl-item"><div class="tl-dot verde">✅</div><div class="tl-body"><div class="tl-meta"><span>00:15</span>Turno Noite · Téc. Carlos Lima</div><div class="tl-txt">Paciente em repouso, sem queixas. Sinais vitais dentro dos parâmetros. Acesso venoso pérvio verificado. Sem intercorrências.</div></div></div></div></div></div>
       </div>
 
+      <!-- CALCULAR DOSE -->
+      <div class="view" id="view-calcular">
+        <div class="step-row"><div class="step-num" style="background:var(--teal)">🧮</div><div><div class="step-title">Calculadora de Medicamentos</div><div class="step-sub">Cálculo seguro no plantão — injetável, comprimido, gotejamento e bomba</div></div></div>
+
+        <!-- TABS -->
+        <div class="calc-tabs">
+          <button class="calc-tab active" onclick="showCalc('injetavel',this)">💉 Injetável / Ampola</button>
+          <button class="calc-tab" onclick="showCalc('comprimido',this)">💊 Comprimido</button>
+          <button class="calc-tab" onclick="showCalc('gotejamento',this)">💧 Gotejamento</button>
+          <button class="calc-tab" onclick="showCalc('bomba',this)">⚙️ Bomba (ml/h)</button>
+        </div>
+
+        <!-- PAINEL: INJETÁVEL -->
+        <div class="calc-panel active card" id="calc-injetavel" style="padding:18px">
+          <div class="fg">
+            <div class="field">
+              <div class="field-label">Dose prescrita</div>
+              <div class="unit-select-row">
+                <input class="field-input" id="inj-prescrito" type="number" min="0" step="any" placeholder="Ex: 300" oninput="calcInjetavel()">
+                <select class="field-select" id="inj-unidade" style="width:90px;flex-shrink:0" onchange="calcInjetavel()">
+                  <option>mg</option><option>mcg</option><option>g</option><option>UI</option><option>mEq</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <div class="field-label">Concentração disponível no frasco</div>
+              <div class="unit-select-row">
+                <input class="field-input" id="inj-disponivel" type="number" min="0" step="any" placeholder="Ex: 500" oninput="calcInjetavel()">
+                <div class="unit-pill" id="inj-unidade-disp">mg</div>
+              </div>
+            </div>
+            <div class="field">
+              <div class="field-label">Volume do frasco (ml)</div>
+              <input class="field-input" id="inj-volume" type="number" min="0" step="any" placeholder="Ex: 10" oninput="calcInjetavel()">
+            </div>
+          </div>
+          <div class="calc-error" id="inj-error">⚠️ Preencha todos os campos com valores válidos.</div>
+          <div class="calc-result" id="inj-result">
+            <div class="calc-result-label">Volume a administrar</div>
+            <div class="calc-result-main"><div class="calc-result-val" id="inj-val">—</div><div class="calc-result-unit">ml</div></div>
+            <div class="calc-steps" id="inj-steps"></div>
+          </div>
+          <button class="btn-limpar" onclick="limparCalc('injetavel')">↺ Limpar</button>
+        </div>
+
+        <!-- PAINEL: COMPRIMIDO -->
+        <div class="calc-panel card" id="calc-comprimido" style="padding:18px">
+          <div class="fg">
+            <div class="field">
+              <div class="field-label">Dose prescrita</div>
+              <div class="unit-select-row">
+                <input class="field-input" id="cp-prescrito" type="number" min="0" step="any" placeholder="Ex: 500" oninput="calcComprimido()">
+                <select class="field-select" id="cp-unidade" style="width:90px;flex-shrink:0" onchange="calcComprimido()">
+                  <option>mg</option><option>mcg</option><option>g</option><option>UI</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <div class="field-label">Dose do comprimido disponível</div>
+              <div class="unit-select-row">
+                <input class="field-input" id="cp-disponivel" type="number" min="0" step="any" placeholder="Ex: 250" oninput="calcComprimido()">
+                <div class="unit-pill" id="cp-unidade-disp">mg</div>
+              </div>
+            </div>
+          </div>
+          <div class="calc-error" id="cp-error">⚠️ Preencha todos os campos com valores válidos.</div>
+          <div class="calc-result" id="cp-result">
+            <div class="calc-result-label">Quantidade de comprimidos</div>
+            <div class="calc-result-main"><div class="calc-result-val" id="cp-val">—</div><div class="calc-result-unit">comprimido(s)</div></div>
+            <div class="calc-steps" id="cp-steps"></div>
+            <div class="calc-warn" id="cp-warn" style="display:none">⚠️ Resultado fracionado — confirme com a prescrição ou cheque se há apresentação adequada.</div>
+          </div>
+          <button class="btn-limpar" onclick="limparCalc('comprimido')">↺ Limpar</button>
+        </div>
+
+        <!-- PAINEL: GOTEJAMENTO -->
+        <div class="calc-panel card" id="calc-gotejamento" style="padding:18px">
+          <div class="fg">
+            <div class="field">
+              <div class="field-label">Volume total (ml)</div>
+              <input class="field-input" id="gt-volume" type="number" min="0" step="any" placeholder="Ex: 500" oninput="calcGotejamento()">
+            </div>
+            <div class="field">
+              <div class="field-label">Tempo de infusão (horas)</div>
+              <input class="field-input" id="gt-tempo" type="number" min="0" step="any" placeholder="Ex: 6" oninput="calcGotejamento()">
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label">Tipo de equipo</div>
+            <div class="equipo-row">
+              <button class="equipo-btn active" id="equipo-macro" onclick="selecionarEquipo('macro')">Macroequipo<br><span style="font-size:10px;font-weight:500;color:inherit;opacity:.75">20 gotas/ml</span></button>
+              <button class="equipo-btn" id="equipo-micro" onclick="selecionarEquipo('micro')">Microequipo<br><span style="font-size:10px;font-weight:500;color:inherit;opacity:.75">60 microgotas/ml</span></button>
+            </div>
+          </div>
+          <div class="calc-error" id="gt-error">⚠️ Preencha todos os campos com valores válidos.</div>
+          <div class="calc-result" id="gt-result">
+            <div class="calc-result-label">Resultado da infusão</div>
+            <div class="calc-result-grid" id="gt-grid"></div>
+            <div class="calc-steps" id="gt-steps"></div>
+          </div>
+          <button class="btn-limpar" onclick="limparCalc('gotejamento')">↺ Limpar</button>
+        </div>
+
+        <!-- PAINEL: BOMBA -->
+        <div class="calc-panel card" id="calc-bomba" style="padding:18px">
+          <div class="fg">
+            <div class="field">
+              <div class="field-label">Volume total (ml)</div>
+              <input class="field-input" id="bm-volume" type="number" min="0" step="any" placeholder="Ex: 250" oninput="calcBomba()">
+            </div>
+            <div class="field">
+              <div class="field-label">Tempo de infusão (horas)</div>
+              <input class="field-input" id="bm-tempo" type="number" min="0" step="any" placeholder="Ex: 8" oninput="calcBomba()">
+            </div>
+          </div>
+          <div class="calc-error" id="bm-error">⚠️ Preencha todos os campos com valores válidos.</div>
+          <div class="calc-result" id="bm-result">
+            <div class="calc-result-label">Velocidade de infusão</div>
+            <div class="calc-result-main"><div class="calc-result-val" id="bm-val">—</div><div class="calc-result-unit">ml/h</div></div>
+            <div class="calc-steps" id="bm-steps"></div>
+          </div>
+          <button class="btn-limpar" onclick="limparCalc('bomba')">↺ Limpar</button>
+        </div>
+
+      </div>
+
       <!-- ADMIN -->
       <div class="view" id="view-admin">
         <div class="step-row"><div class="step-num" style="background:var(--teal)">⚙️</div><div><div class="step-title">Painel Administrativo</div><div class="step-sub">Gerenciar acessos dos usuários</div></div></div>
@@ -515,6 +677,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   <button class="bn-btn active" onclick="showView('nova',this)" id="bn-nova"><div class="bn-icon">📝</div>Anotar</button>
   <button class="bn-btn" onclick="showView('historico',this)" id="bn-historico"><div class="bn-icon">📋</div>Histórico</button>
   <button class="bn-btn" onclick="showView('prontuario',this)" id="bn-prontuario"><div class="bn-icon">🏥</div>Prontuário</button>
+  <button class="bn-btn" onclick="showView('calcular',this)" id="bn-calcular"><div class="bn-icon">🧮</div>Calcular</button>
 </nav>
 
 <div class="toast" id="toast" style="display:none"></div>
@@ -1024,6 +1187,154 @@ function fecharTrialModal(e){
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='flex';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2600);}
+
+// ===================== CALCULADORA DE MEDICAMENTOS =====================
+
+let equipoAtivo = 'macro';
+
+function showCalc(id, btn) {
+  document.querySelectorAll('.calc-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.calc-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('calc-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+function selecionarEquipo(tipo) {
+  equipoAtivo = tipo;
+  document.getElementById('equipo-macro').classList.toggle('active', tipo === 'macro');
+  document.getElementById('equipo-micro').classList.toggle('active', tipo === 'micro');
+  calcGotejamento();
+}
+
+function fmt(n) {
+  if (n === Math.floor(n)) return String(n);
+  return parseFloat(n.toFixed(4)).toString();
+}
+
+function fracaoLegivel(n) {
+  const inteiro = Math.floor(n);
+  const decimal = n - inteiro;
+  const tol = 0.04;
+  const fracoes = [[1,2,'½'],[1,4,'¼'],[3,4,'¾'],[1,3,'⅓'],[2,3,'⅔']];
+  for (const [num, den, simb] of fracoes) {
+    if (Math.abs(decimal - num/den) < tol) {
+      return inteiro > 0 ? `${inteiro} ${simb}` : simb;
+    }
+  }
+  return fmt(n);
+}
+
+function calcInjetavel() {
+  const D = parseFloat(document.getElementById('inj-prescrito').value);
+  const H = parseFloat(document.getElementById('inj-disponivel').value);
+  const Q = parseFloat(document.getElementById('inj-volume').value);
+  const un = document.getElementById('inj-unidade').value;
+  document.getElementById('inj-unidade-disp').textContent = un;
+  const err = document.getElementById('inj-error');
+  const res = document.getElementById('inj-result');
+  if (!D || !H || !Q || D <= 0 || H <= 0 || Q <= 0) { err.classList.remove('show'); res.classList.remove('show'); return; }
+  const V = (D * Q) / H;
+  err.classList.remove('show');
+  res.classList.add('show');
+  document.getElementById('inj-val').textContent = fmt(V);
+  document.getElementById('inj-steps').innerHTML = `
+    <div class="calc-step"><span class="calc-step-icon">1.</span>Fórmula: <strong>V = (D × Q) ÷ H</strong></div>
+    <div class="calc-step"><span class="calc-step-icon">2.</span>Dose prescrita (D): <strong>${D} ${un}</strong></div>
+    <div class="calc-step"><span class="calc-step-icon">3.</span>Concentração disponível (H): <strong>${H} ${un}</strong></div>
+    <div class="calc-step"><span class="calc-step-icon">4.</span>Volume do frasco (Q): <strong>${Q} ml</strong></div>
+    <div class="calc-step"><span class="calc-step-icon">=</span>V = (${D} × ${Q}) ÷ ${H} = <strong>${fmt(V)} ml</strong></div>
+  `;
+}
+
+function calcComprimido() {
+  const D = parseFloat(document.getElementById('cp-prescrito').value);
+  const H = parseFloat(document.getElementById('cp-disponivel').value);
+  const un = document.getElementById('cp-unidade').value;
+  document.getElementById('cp-unidade-disp').textContent = un;
+  const err = document.getElementById('cp-error');
+  const res = document.getElementById('cp-result');
+  const warn = document.getElementById('cp-warn');
+  if (!D || !H || D <= 0 || H <= 0) { err.classList.remove('show'); res.classList.remove('show'); return; }
+  const qtd = D / H;
+  err.classList.remove('show');
+  res.classList.add('show');
+  document.getElementById('cp-val').textContent = fracaoLegivel(qtd);
+  const ehFracao = Math.abs(qtd - Math.round(qtd)) > 0.05;
+  warn.style.display = ehFracao ? 'flex' : 'none';
+  document.getElementById('cp-steps').innerHTML = `
+    <div class="calc-step"><span class="calc-step-icon">1.</span>Fórmula: <strong>Qtd = Dose prescrita ÷ Dose do comprimido</strong></div>
+    <div class="calc-step"><span class="calc-step-icon">2.</span>Dose prescrita: <strong>${D} ${un}</strong></div>
+    <div class="calc-step"><span class="calc-step-icon">3.</span>Dose do comprimido: <strong>${H} ${un}</strong></div>
+    <div class="calc-step"><span class="calc-step-icon">=</span>${D} ÷ ${H} = <strong>${fracaoLegivel(qtd)} comprimido(s)</strong></div>
+  `;
+}
+
+function calcGotejamento() {
+  const V = parseFloat(document.getElementById('gt-volume').value);
+  const T = parseFloat(document.getElementById('gt-tempo').value);
+  const err = document.getElementById('gt-error');
+  const res = document.getElementById('gt-result');
+  if (!V || !T || V <= 0 || T <= 0) { err.classList.remove('show'); res.classList.remove('show'); return; }
+  const Tmin = T * 60;
+  const fatorGota = equipoAtivo === 'macro' ? 20 : 60;
+  const nomeGota = equipoAtivo === 'macro' ? 'gotas' : 'microgotas';
+  const gotasMin = (V * fatorGota) / Tmin;
+  const mlH = V / T;
+  err.classList.remove('show');
+  res.classList.add('show');
+  document.getElementById('gt-grid').innerHTML = `
+    <div class="calc-result-item">
+      <div class="calc-result-label">${nomeGota}/min</div>
+      <div class="calc-result-main"><div class="calc-result-val">${fmt(Math.round(gotasMin))}</div><div class="calc-result-unit">${nomeGota}/min</div></div>
+    </div>
+    <div class="calc-result-item">
+      <div class="calc-result-label">Equivalente</div>
+      <div class="calc-result-main"><div class="calc-result-val">${fmt(mlH)}</div><div class="calc-result-unit">ml/h</div></div>
+    </div>
+  `;
+  document.getElementById('gt-steps').innerHTML = `
+    <div class="calc-step"><span class="calc-step-icon">1.</span>Fórmula: <strong>${nomeGota}/min = (V × fator) ÷ (T × 60)</strong></div>
+    <div class="calc-step"><span class="calc-step-icon">2.</span>Volume: <strong>${V} ml</strong> · Tempo: <strong>${T}h (${Tmin} min)</strong></div>
+    <div class="calc-step"><span class="calc-step-icon">3.</span>Equipo: <strong>${equipoAtivo === 'macro' ? 'Macroequipo (20 gotas/ml)' : 'Microequipo (60 microgotas/ml)'}</strong></div>
+    <div class="calc-step"><span class="calc-step-icon">=</span>(${V} × ${fatorGota}) ÷ ${Tmin} = <strong>${fmt(Math.round(gotasMin))} ${nomeGota}/min</strong></div>
+  `;
+}
+
+function calcBomba() {
+  const V = parseFloat(document.getElementById('bm-volume').value);
+  const T = parseFloat(document.getElementById('bm-tempo').value);
+  const err = document.getElementById('bm-error');
+  const res = document.getElementById('bm-result');
+  if (!V || !T || V <= 0 || T <= 0) { err.classList.remove('show'); res.classList.remove('show'); return; }
+  const mlH = V / T;
+  err.classList.remove('show');
+  res.classList.add('show');
+  document.getElementById('bm-val').textContent = fmt(mlH);
+  document.getElementById('bm-steps').innerHTML = `
+    <div class="calc-step"><span class="calc-step-icon">1.</span>Fórmula: <strong>Velocidade (ml/h) = Volume ÷ Tempo</strong></div>
+    <div class="calc-step"><span class="calc-step-icon">2.</span>Volume total: <strong>${V} ml</strong></div>
+    <div class="calc-step"><span class="calc-step-icon">3.</span>Tempo de infusão: <strong>${T} hora(s)</strong></div>
+    <div class="calc-step"><span class="calc-step-icon">=</span>${V} ÷ ${T} = <strong>${fmt(mlH)} ml/h</strong> → programar na bomba</div>
+  `;
+}
+
+function limparCalc(tipo) {
+  const campos = {
+    injetavel: ['inj-prescrito','inj-disponivel','inj-volume'],
+    comprimido: ['cp-prescrito','cp-disponivel'],
+    gotejamento: ['gt-volume','gt-tempo'],
+    bomba: ['bm-volume','bm-tempo']
+  };
+  (campos[tipo]||[]).forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  const res = document.getElementById(tipo.replace('injetavel','inj').replace('comprimido','cp').replace('gotejamento','gt').replace('bomba','bm') + '-result');
+  if (res) res.classList.remove('show');
+  // mapas de id correto
+  const errMap = {injetavel:'inj-error',comprimido:'cp-error',gotejamento:'gt-error',bomba:'bm-error'};
+  const resMap = {injetavel:'inj-result',comprimido:'cp-result',gotejamento:'gt-result',bomba:'bm-result'};
+  document.getElementById(errMap[tipo]).classList.remove('show');
+  document.getElementById(resMap[tipo]).classList.remove('show');
+  if (tipo === 'comprimido') document.getElementById('cp-warn').style.display = 'none';
+}
 </script>
 </body>
 </html>
