@@ -267,7 +267,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   .hamburger{display:flex}
   .bottom-nav{display:flex}
   .layout{height:calc(100vh - var(--topbar-h) - var(--bottom-nav-h))}
-  .content{padding:14px;padding-bottom:14px}
+  .content{padding:14px;padding-bottom:calc(var(--bottom-nav-h) + 14px)}
   .oco-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
   .fg{grid-template-columns:1fr}
   .patient-bar{display:none}
