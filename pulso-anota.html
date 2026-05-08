@@ -277,6 +277,32 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ── PAYMENT MODAL ────────────────────────────────────────────────────────── */
+.payment-modal-overlay{position:fixed;inset:0;background:rgba(10,31,29,.7);backdrop-filter:blur(4px);z-index:1100;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadein .25s ease}
+.payment-modal-card{background:white;border-radius:20px;padding:32px 28px 24px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.35);position:relative;animation:modal-up .3s cubic-bezier(.34,1.3,.64,1);max-height:90vh;overflow-y:auto}
+.pm-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;gap:12px}
+.pm-title{font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px}
+.pm-subtitle{font-size:13px;color:var(--text2)}
+.pm-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;font-size:16px;color:var(--text2);flex-shrink:0;display:flex;align-items:center;justify-content:center;line-height:1}
+.pm-close:hover{background:var(--vermelho-dim);border-color:#FCA5A5;color:var(--vermelho)}
+.pay-methods{display:flex;gap:8px;margin-bottom:20px}
+.pay-method-btn{flex:1;padding:9px 6px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:11px;font-weight:700;color:var(--text2);cursor:pointer;transition:all .15s;text-align:center}
+.pay-method-btn:hover{border-color:var(--teal-light);color:var(--text)}
+.pay-method-btn.active{background:var(--teal-dim);border-color:var(--teal);color:var(--teal)}
+.pay-error{background:var(--vermelho-dim);border:1px solid #FCA5A5;border-radius:8px;padding:10px 14px;font-size:13px;color:var(--vermelho);margin-bottom:12px;display:none}
+.pix-display{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;margin-bottom:14px}
+.pix-qr-img{width:160px;height:160px;margin:0 auto 12px;display:block;border-radius:8px}
+.pix-code-btn{width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--mono);font-size:10px;color:var(--text2);text-align:left;cursor:pointer;word-break:break-all;transition:all .15s;margin-bottom:8px;font-weight:500}
+.pix-code-btn:hover{border-color:var(--teal);color:var(--teal)}
+.pix-code-btn.copied{border-color:var(--verde);color:var(--verde)}
+.pay-success-box{text-align:center;padding:24px 0}
+.pay-success-icon{font-size:52px;margin-bottom:12px;line-height:1}
+.pay-success-title{font-size:20px;font-weight:800;color:var(--text);margin-bottom:8px}
+.pay-success-desc{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px}
+.blocked-price-box{display:flex;align-items:baseline;gap:4px;justify-content:center;margin:18px 0 20px}
+.blocked-price-val{font-size:40px;font-weight:800;color:var(--teal);font-family:var(--mono)}
+.blocked-price-label{font-size:15px;font-weight:600;color:var(--text2)}
 </style>
 </head>
 <body>
@@ -340,9 +366,74 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   <div class="blocked-card">
     <div class="blocked-icon">🔒</div>
     <div class="blocked-title">Seu período de teste encerrou</div>
-    <div class="blocked-desc">Você utilizou seus 7 dias gratuitos do Pulso Anota.<br>Para continuar com acesso completo por 1 ano, adquira o Treinamento de Anotações de Enfermagem.</div>
-    <a href="https://anotacoes.pulsoenfermagem.com.br/" target="_blank" class="btn-cta">🎓 Quero acesso completo</a>
-    <div class="blocked-logout"><a onclick="logout()">Sair da conta</a></div>
+    <div class="blocked-desc">Você utilizou seus 7 dias gratuitos do Pulso Anota.<br>Assine o acesso anual para continuar praticando anotações de enfermagem.</div>
+    <div class="blocked-price-box">
+      <span class="blocked-price-val">R$&nbsp;79,90</span>
+      <span class="blocked-price-label">/ano</span>
+    </div>
+    <button onclick="abrirPagamento()" class="btn-cta" style="width:100%;justify-content:center;margin-bottom:14px">💳 Assinar agora</button>
+    <div class="blocked-logout">
+      <a href="https://anotacoes.pulsoenfermagem.com.br/" target="_blank">Ver curso completo</a>
+      &nbsp;·&nbsp;
+      <a onclick="logout()">Sair da conta</a>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE PAGAMENTO (Mercado Pago) -->
+<div id="payment-modal" class="payment-modal-overlay" style="display:none" onclick="handlePayModalClick(event)">
+  <div class="payment-modal-card" id="payment-modal-card">
+
+    <div id="pay-view-form">
+      <div class="pm-header">
+        <div>
+          <div class="pm-title">Assinar Pulso Anota</div>
+          <div class="pm-subtitle">Acesso completo por 1 ano &bull; R$&nbsp;79,90</div>
+        </div>
+        <button class="pm-close" onclick="fecharPagamento()">✕</button>
+      </div>
+
+      <!-- Método de pagamento -->
+      <div class="pay-methods">
+        <button class="pay-method-btn active" id="btn-pix"    onclick="trocarMetodo('pix',this)">🔑 Pix</button>
+        <button class="pay-method-btn"        id="btn-credit" onclick="trocarMetodo('credit_card',this)">💳 Crédito</button>
+        <button class="pay-method-btn"        id="btn-debit"  onclick="trocarMetodo('debit_card',this)">💳 Débito</button>
+      </div>
+
+      <!-- Mensagem de erro -->
+      <div id="pay-error" class="pay-error"></div>
+
+      <!-- Área Pix -->
+      <div id="pix-area">
+        <div id="pix-qr-display" style="display:none"></div>
+        <button id="btn-gerar-pix" class="btn-cta" style="width:100%;justify-content:center" onclick="gerarPix()">
+          Gerar QR Code Pix
+        </button>
+        <div id="btn-verificar-pix-wrap" style="display:none;margin-top:10px">
+          <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="verificarPix(this)">
+            Já paguei — Verificar acesso
+          </button>
+        </div>
+      </div>
+
+      <!-- Área Cartão (MP Brick SDK) -->
+      <div id="cardPaymentBrick_container" style="display:none"></div>
+
+      <p style="font-size:11px;color:var(--text3);text-align:center;margin-top:16px">🔒 Pagamento seguro via Mercado Pago</p>
+    </div>
+
+    <!-- Tela de sucesso (exibida após pagamento confirmado) -->
+    <div id="pay-view-success" style="display:none">
+      <div class="pay-success-box">
+        <div class="pay-success-icon">✅</div>
+        <div class="pay-success-title">Assinatura ativada!</div>
+        <div class="pay-success-desc">Seu acesso anual ao Pulso Anota está ativo.<br>Bem-vindo de volta!</div>
+        <button class="btn-cta" style="width:100%;justify-content:center" onclick="paySuccessAcessar()">
+          Acessar o app →
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -356,9 +447,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
       O simulador vai continuar existindo. Para continuar acessando, basta garantir o
       <strong>Treinamento de Anotações de Enfermagem</strong>, que é o curso que libera seu acesso completo ao app.
     </div>
-    <a href="https://anotacoes.pulsoenfermagem.com.br/" target="_blank" class="trial-modal-cta">
-      Quero continuar com o acesso →
-    </a>
+    <button onclick="fecharTrialModal(null);abrirPagamento();" class="trial-modal-cta">
+      💳 Assinar agora — R$&nbsp;79,90/ano
+    </button>
     <div class="trial-modal-dismiss"><a onclick="fecharTrialModal(null)">Entendi, continuar usando hoje</a></div>
   </div>
 </div>
@@ -735,6 +826,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 
 const SUPA_URL='https://tjuzmzywntgfnvhzzlsb.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqdXptenl3bnRnZm52aHp6bHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNzM1MDIsImV4cCI6MjA5Mjk0OTUwMn0.2OMUKx3Mv8ivEOAH_o6re_cepdKrvTB01rldwarRemg';
+// ↓ CONFIGURAR: substituir pela chave pública do Mercado Pago (painel MP → Credenciais)
+const MP_PUBLIC_KEY='APP_USR-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX';
 const {createClient}=supabase;
 const sb=createClient(SUPA_URL,SUPA_KEY);
 
@@ -885,6 +978,7 @@ function hideAll(){
   document.getElementById('auth-cadastro').style.display='none';
   document.getElementById('blocked-screen').style.display='none';
   document.getElementById('trial-modal').style.display='none';
+  document.getElementById('payment-modal').style.display='none';
   document.getElementById('topbar').style.display='none';
   document.getElementById('app-layout').style.display='none';
   document.querySelector('.bottom-nav').style.display='none';
@@ -1422,6 +1516,289 @@ function limparCalc(tipo) {
   document.getElementById(resMap[tipo]).classList.remove('show');
   if (tipo === 'comprimido') document.getElementById('cp-warn').style.display = 'none';
   if (tipo === 'insulina') document.getElementById('ins-aviso-seringa').style.display = 'none';
+}
+
+// ── MÓDULO DE PAGAMENTO (Mercado Pago) ────────────────────────────────────────
+
+let payMethod = 'pix';          // método ativo: 'pix' | 'credit_card' | 'debit_card'
+let mpMounted = false;          // controla se o Brick já foi montado
+let pixPaymentId = null;        // ID do pagamento Pix gerado
+
+// Abre o modal de pagamento (chamado pela blocked-screen e pelo trial-modal)
+function abrirPagamento() {
+  resetPayModal();
+  document.getElementById('payment-modal').style.display = 'flex';
+}
+
+// Fecha o modal de pagamento
+function fecharPagamento() {
+  document.getElementById('payment-modal').style.display = 'none';
+  if (window.cardPaymentBrickController) {
+    try { window.cardPaymentBrickController.unmount(); } catch(e) {}
+    window.cardPaymentBrickController = null;
+  }
+  mpMounted = false;
+}
+
+// Clique fora do card fecha o modal
+function handlePayModalClick(e) {
+  if (e.target === document.getElementById('payment-modal')) fecharPagamento();
+}
+
+// Reseta estado interno do modal (para reutilização)
+function resetPayModal() {
+  payMethod = 'pix';
+  mpMounted = false;
+  pixPaymentId = null;
+  const form = document.getElementById('pay-view-form');
+  const succ = document.getElementById('pay-view-success');
+  if (form) form.style.display = 'block';
+  if (succ) succ.style.display = 'none';
+
+  // Reset método ativo
+  document.querySelectorAll('.pay-method-btn').forEach(b => b.classList.remove('active'));
+  const btnPix = document.getElementById('btn-pix');
+  if (btnPix) btnPix.classList.add('active');
+
+  // Reset áreas
+  const pixArea = document.getElementById('pix-area');
+  const cardArea = document.getElementById('cardPaymentBrick_container');
+  if (pixArea)  { pixArea.style.display = 'block'; }
+  if (cardArea) { cardArea.style.display = 'none'; cardArea.innerHTML = ''; }
+
+  // Reset Pix
+  const qrDisplay = document.getElementById('pix-qr-display');
+  const btnGerar  = document.getElementById('btn-gerar-pix');
+  const btnVerify = document.getElementById('btn-verificar-pix-wrap');
+  if (qrDisplay) { qrDisplay.style.display = 'none'; qrDisplay.innerHTML = ''; }
+  if (btnGerar)  { btnGerar.style.display = 'block'; btnGerar.disabled = false; btnGerar.textContent = 'Gerar QR Code Pix'; }
+  if (btnVerify) btnVerify.style.display = 'none';
+
+  esconderPayError();
+}
+
+// Troca entre Pix, Crédito e Débito
+function trocarMetodo(method, btnEl) {
+  document.querySelectorAll('.pay-method-btn').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+
+  const pixArea  = document.getElementById('pix-area');
+  const cardArea = document.getElementById('cardPaymentBrick_container');
+  esconderPayError();
+
+  if (method === 'pix') {
+    payMethod = 'pix';
+    if (pixArea)  pixArea.style.display  = 'block';
+    if (cardArea) cardArea.style.display = 'none';
+  } else {
+    const mudou = payMethod !== method || !mpMounted;
+    payMethod = method;
+    if (pixArea)  pixArea.style.display  = 'none';
+    if (cardArea) cardArea.style.display = 'block';
+    if (mudou) {
+      if (window.cardPaymentBrickController) {
+        try { window.cardPaymentBrickController.unmount(); } catch(e) {}
+        window.cardPaymentBrickController = null;
+      }
+      mpMounted = false;
+      if (cardArea) cardArea.innerHTML = '';
+      iniciarCardBrick();
+    }
+  }
+}
+
+// Carrega o SDK do MP e renderiza o Brick de cartão
+function iniciarCardBrick() {
+  if (!window.MercadoPago) {
+    const s = document.createElement('script');
+    s.src = 'https://sdk.mercadopago.com/js/v2';
+    s.onload = () => setTimeout(renderizarCardBrick, 300);
+    document.head.appendChild(s);
+  } else {
+    renderizarCardBrick();
+  }
+}
+
+async function renderizarCardBrick() {
+  const container = document.getElementById('cardPaymentBrick_container');
+  if (!container || mpMounted) return;
+  mpMounted = true;
+
+  try {
+    const mpInstance    = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' });
+    const bricksBuilder = mpInstance.bricks();
+
+    window.cardPaymentBrickController = await bricksBuilder.create(
+      'cardPayment',
+      'cardPaymentBrick_container',
+      {
+        initialization: {
+          amount: 79.90,
+          payer: { email: currentUser?.email ?? '' },
+        },
+        customization: {
+          visual: { hidePaymentButton: false },
+          paymentMethods: {
+            maxInstallments: payMethod === 'credit_card' ? 12 : 1,
+            ...(payMethod === 'credit_card' ? { debitCard: 'none' } : { creditCard: 'none' }),
+          },
+        },
+        callbacks: {
+          onSubmit: async (formData) => {
+            esconderPayError();
+            try {
+              const { data: { session } } = await sb.auth.getSession();
+              const res = await fetch(`${SUPA_URL}/functions/v1/create-payment`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type':  'application/json',
+                  'Authorization': `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({
+                  payment_type:      payMethod,
+                  payment_method_id: formData.payment_method_id,
+                  token:             formData.token,
+                  issuer_id:         formData.issuer_id || null,
+                  installments:      formData.installments || 1,
+                  payer: { email: currentUser.email },
+                }),
+              });
+              const data = await res.json();
+              if (!res.ok || data.error) { mostrarPayError(data.error || 'Erro no pagamento.'); return; }
+
+              if (data.status === 'approved') {
+                await recarregarAcessoEFechar();
+              } else {
+                mostrarPayError('Pagamento recusado. Verifique os dados ou tente outro método.');
+              }
+            } catch(e) {
+              mostrarPayError('Erro ao processar pagamento. Tente novamente.');
+            }
+          },
+          onError: (err) => console.error('[MP Brick]', err),
+        },
+      }
+    );
+  } catch(e) {
+    console.error('[MP Brick] init error:', e);
+    mostrarPayError('Erro ao carregar formulário de cartão. Tente o Pix.');
+  }
+}
+
+// Gera o QR Code Pix
+async function gerarPix() {
+  const btn = document.getElementById('btn-gerar-pix');
+  btn.disabled = true;
+  btn.textContent = 'Gerando Pix…';
+  esconderPayError();
+
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    const res = await fetch(`${SUPA_URL}/functions/v1/create-payment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({
+        payment_type:      'pix',
+        payment_method_id: 'pix',
+        payer: { email: currentUser.email },
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) {
+      mostrarPayError(data.error || 'Erro ao gerar Pix.');
+      btn.disabled = false;
+      btn.textContent = 'Gerar QR Code Pix';
+      return;
+    }
+
+    pixPaymentId = data.payment_id;
+
+    // Exibir QR Code e código copia-e-cola
+    const qrDisplay = document.getElementById('pix-qr-display');
+    const codigoPix = (data.pix_copy_paste || '').replace(/'/g, '');
+    qrDisplay.innerHTML = `
+      <div class="pix-display">
+        ${data.pix_qr_base64
+          ? `<img class="pix-qr-img" src="data:image/png;base64,${data.pix_qr_base64}" alt="QR Code Pix"/>`
+          : '<p style="font-size:13px;color:var(--text2)">QR Code indisponível — use o código abaixo</p>'}
+        <button class="pix-code-btn" id="pix-copy-btn" onclick="copiarCodigoPix(this,'${codigoPix}')">
+          ${codigoPix || 'Código não disponível'}
+        </button>
+        <p style="font-size:11px;color:var(--text3);margin:0">Toque para copiar o código Pix</p>
+      </div>
+      <p style="font-size:12px;color:var(--text2);text-align:center;margin:0 0 4px">Código expira em 30 minutos</p>`;
+    qrDisplay.style.display = 'block';
+    btn.style.display = 'none';
+    document.getElementById('btn-verificar-pix-wrap').style.display = 'block';
+
+  } catch(e) {
+    mostrarPayError('Erro ao gerar Pix. Tente novamente.');
+    btn.disabled = false;
+    btn.textContent = 'Gerar QR Code Pix';
+  }
+}
+
+// Copia código Pix para a área de transferência
+function copiarCodigoPix(btnEl, codigo) {
+  navigator.clipboard.writeText(codigo).then(() => {
+    btnEl.classList.add('copied');
+    const orig = btnEl.textContent;
+    btnEl.textContent = '✅ Código copiado!';
+    setTimeout(() => { btnEl.classList.remove('copied'); btnEl.textContent = orig; }, 2500);
+  }).catch(() => showToast('❌ Não foi possível copiar'));
+}
+
+// Verifica se o Pix já foi pago
+async function verificarPix(btnEl) {
+  btnEl.disabled = true;
+  btnEl.textContent = 'Verificando…';
+  esconderPayError();
+
+  const { data: { session } } = await sb.auth.getSession();
+  // Recarrega dados do Supabase para ver se o webhook já atualizou o acesso
+  try {
+    const res = await fetch(
+      `${SUPA_URL}/rest/v1/acesso_status?id=eq.${currentUser.id}&select=status,tipo_acesso,acesso_anual_fim`,
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${session.access_token}` } }
+    );
+    const rows = await res.json();
+    if (rows && rows[0] && (rows[0].status === 'ativo' || rows[0].tipo_acesso === 'anual')) {
+      await recarregarAcessoEFechar();
+      return;
+    }
+  } catch(e) { /* silencioso */ }
+
+  btnEl.disabled = false;
+  btnEl.textContent = 'Verificar novamente';
+  mostrarPayError('Pagamento ainda não confirmado. Aguarde alguns segundos e tente novamente.');
+}
+
+// Após pagamento aprovado: recarrega o estado de acesso e fecha o modal
+async function recarregarAcessoEFechar() {
+  fecharPagamento();
+  // Exibe tela de sucesso temporariamente antes de recarregar o app
+  document.getElementById('payment-modal').style.display = 'flex';
+  document.getElementById('pay-view-form').style.display = 'none';
+  document.getElementById('pay-view-success').style.display = 'block';
+}
+
+// Botão "Acessar o app" na tela de sucesso
+async function paySuccessAcessar() {
+  fecharPagamento();
+  await verificarAcesso();
+}
+
+function mostrarPayError(msg) {
+  const el = document.getElementById('pay-error');
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+
+function esconderPayError() {
+  const el = document.getElementById('pay-error');
+  if (el) el.style.display = 'none';
 }
 </script>
 </body>
