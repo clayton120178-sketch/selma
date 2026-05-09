@@ -1455,7 +1455,7 @@ function dashRenderUsuarios(){
   const stCls={trial:'sp-trial',ativo:'sp-ativo',expirado:'sp-expirado',bloqueado:'sp-expirado',admin:'sp-admin'};
   tbody.innerHTML=lista.map(u=>{
     const cls=stCls[u.status]||'sp-trial';
-    const trial=u.status==='trial'?`${u.transacoes_trial||0}/10`:'—';
+    const trial=u.status==='trial'&&u.transacoes_trial!=null?`${u.transacoes_trial}/10`:'—';
     const anual=u.acesso_anual_fim?new Date(u.acesso_anual_fim).toLocaleDateString('pt-BR'):'—';
     const cupom=u.cupom_afiliado?`<span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--teal);background:var(--teal-dim);padding:2px 7px;border-radius:6px">${u.cupom_afiliado}</span>`:'—';
     const acesso=u.ultimo_acesso?new Date(u.ultimo_acesso).toLocaleDateString('pt-BR'):'—';
