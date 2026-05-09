@@ -698,6 +698,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
               </div>
             </div>
             <div id="region-list" style="padding:12px;display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid #E2ECEC"></div>
+            <div id="regiao-selecionada" style="display:none;padding:8px 12px;background:var(--teal-dim,#e8f5f5);border-top:1px solid #E2ECEC;font-size:13px;font-weight:600;color:var(--teal)">📍 Região: <span id="regiao-label"></span></div>
           </div>
           </div>
           <div class="card">
@@ -2331,7 +2332,7 @@ async function renderizarCardBrick() {
     const bricksBuilder = mpInstance.bricks();
 
     window.cardPaymentBrickController = await bricksBuilder.create(
-      'cardPayment',
+      'payment',
       'cardPaymentBrick_container',
       {
         initialization: {
@@ -2341,12 +2342,14 @@ async function renderizarCardBrick() {
         customization: {
           visual: { hidePaymentButton: false },
           paymentMethods: {
+            creditCard: payMethod === 'credit_card' ? 'all' : 'none',
+            debitCard:  payMethod === 'debit_card'  ? 'all' : 'none',
             maxInstallments: payMethod === 'credit_card' ? 12 : 1,
-            ...(payMethod === 'credit_card' ? { debitCard: 'none' } : { creditCard: 'none' }),
           },
         },
         callbacks: {
-          onSubmit: async (formData) => {
+          onReady: () => {},
+          onSubmit: async ({ selectedPaymentMethod, formData }) => {
             esconderPayError();
             try {
               const { data: { session } } = await sb.auth.getSession();
@@ -2383,6 +2386,7 @@ async function renderizarCardBrick() {
       }
     );
   } catch(e) {
+    mpMounted = false;
     console.error('[MP Brick] init error:', e);
     mostrarPayError('Erro ao carregar formulário de cartão. Tente o Pix.');
   }
@@ -2523,7 +2527,7 @@ async function renderInstallments(amount, containerId) {
   if (!el) return;
   if (_installmentsCache[amount]) { el.innerHTML = _installmentsCache[amount]; return; }
   try {
-    const mp   = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' });
+    const mp   = new MercadoPago({ publicKey: MP_PUBLIC_KEY, locale: 'pt-BR' });
     const data = await mp.getInstallments({ amount: String(amount), locale: 'pt-BR', bin: '411111' });
     if (!data || !data[0]?.payer_costs?.length) { el.innerHTML = ''; return; }
     const costs = data[0].payer_costs;
