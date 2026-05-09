@@ -2521,34 +2521,39 @@ async function renderInstallments(amount, containerId) {
   if (!el) return;
   if (_installmentsCache[amount]) { el.innerHTML = _installmentsCache[amount]; return; }
 
-  // Usa payment_method_id (sem precisar do cartão do usuário) para recuperar
-  // a tabela de parcelamento configurada na conta do Mercado Pago
+  // API REST do MP aceita payment_method_id sem precisar do cartão do usuário.
+  // Testamos visa → master → elo → hipercard e usamos o mais elástico encontrado.
   const METHODS = ['visa', 'master', 'elo', 'hipercard'];
   let best = null;
 
-  try {
-    const mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' });
-    for (const payment_method_id of METHODS) {
-      try {
-        const data  = await mp.getInstallments({ amount: String(amount), locale: 'pt-BR', payment_method_id });
-        const costs = data?.[0]?.payer_costs;
-        if (!costs?.length) continue;
-        // pega o mais elástico deste método
-        const candidate = costs[costs.length - 1];
-        if (!best || candidate.installments > best.installments) best = candidate;
-        if (best.installments > 1) break; // encontrou opção parcelada — chega
-      } catch { /* método indisponível, tenta o próximo */ }
-    }
-  } catch { /* SDK indisponível */ }
+  for (const payment_method_id of METHODS) {
+    try {
+      const res = await fetch(
+        `https://api.mercadopago.com/v1/payment_methods/installments` +
+        `?public_key=${encodeURIComponent(MP_PUBLIC_KEY)}` +
+        `&amount=${amount}` +
+        `&locale=pt-BR` +
+        `&payment_method_id=${payment_method_id}`
+      );
+      if (!res.ok) continue;
+      const data  = await res.json();
+      const costs = data?.[0]?.payer_costs;
+      if (!costs?.length) continue;
+      const candidate = costs[costs.length - 1];   // parcela mais elástica
+      if (!best || candidate.installments > best.installments) best = candidate;
+      if (best.installments > 1) break;             // achou opção parcelada — para
+    } catch { /* rede ou CORS — tenta próximo */ }
+  }
 
   let html;
-  if (best) {
+  if (best && best.installments > 1) {
     const val = `R$&nbsp;${best.installment_amount.toFixed(2).replace('.', ',')}`;
     const sem = best.installment_rate === 0
       ? '&nbsp;<span style="color:var(--teal);font-weight:600">s/juros</span>' : '';
     html = `ou <strong>${best.installments}x&nbsp;de&nbsp;${val}</strong>${sem} no cartão`;
   } else {
-    html = '<span style="color:var(--text3)">Parcele no cartão de crédito</span>';
+    // API acessível mas conta não tem parcelamento configurado ainda
+    html = '<span style="color:var(--text3)">À vista ou parcelado no cartão</span>';
   }
   _installmentsCache[amount] = html;
   el.innerHTML = html;
