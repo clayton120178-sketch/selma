@@ -252,6 +252,46 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .sp-ativo{background:var(--verde-dim);color:var(--verde)}
 .sp-expirado{background:var(--vermelho-dim);color:var(--vermelho)}
 .sp-admin{background:var(--teal-dim);color:var(--teal)}
+.admin-tabs{display:flex;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.admin-tab-btn{padding:9px 18px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;transition:all .15s}
+.admin-tab-btn:hover{border-color:var(--teal-light);color:var(--text)}
+.admin-tab-btn.active{background:var(--teal);border-color:var(--teal);color:white}
+.admin-panel{display:flex;flex-direction:column;gap:18px}
+
+/* DASHBOARD ADMIN */
+.dash-kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.dash-kpi-card{background:white;border:1px solid var(--border);border-radius:var(--r2);padding:16px 12px;text-align:center;box-shadow:var(--shadow)}
+.dash-kpi-icon{font-size:22px;margin-bottom:6px}
+.dash-kpi-val{font-size:26px;font-weight:800;font-family:var(--mono);color:var(--teal);line-height:1.1}
+.dash-kpi-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-top:4px}
+.dash-kpi-verde .dash-kpi-val{color:var(--verde)}
+.dash-kpi-amarelo .dash-kpi-val{color:var(--amarelo)}
+.dash-kpi-red .dash-kpi-val{color:var(--vermelho)}
+.dash-kpi-teal2 .dash-kpi-val{color:#0369A1}
+.dash-section-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.dash-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.dash-bar-label{font-size:12px;font-weight:600;color:var(--text2);width:150px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dash-bar-track{flex:1;background:var(--surface2);border-radius:4px;height:16px;overflow:hidden}
+.dash-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--teal),var(--teal-light));transition:width .45s ease;min-width:3px}
+.dash-bar-val{font-size:12px;font-weight:700;color:var(--text);width:32px;text-align:right;flex-shrink:0}
+.dash-users-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.dash-filter-btn{padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;transition:all .15s}
+.dash-filter-btn:hover{border-color:var(--teal-light);color:var(--text)}
+.dash-filter-btn.active{background:var(--teal);border-color:var(--teal);color:white}
+.comm-table{width:100%;border-collapse:collapse;font-size:13px}
+.comm-table th{text-align:left;padding:9px 12px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px}
+.comm-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text2)}
+.comm-table tr:last-child td{border-bottom:none}
+.comm-faixa{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;white-space:nowrap}
+.cf-25{background:var(--amarelo-dim);color:var(--amarelo)}
+.cf-30{background:#FEF9C3;color:#92400E}
+.cf-35{background:var(--verde-dim);color:var(--verde)}
+.cf-40{background:var(--teal-dim);color:var(--teal)}
+.dash-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.dash-stat-box{background:var(--surface2);border-radius:var(--r);padding:12px;border:1px solid var(--border)}
+.dash-stat-box-val{font-size:20px;font-weight:800;font-family:var(--mono);color:var(--teal)}
+.dash-stat-box-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+@media(max-width:600px){.dash-stat-grid{grid-template-columns:1fr}}
 
 .bm-card{background:white;border:1px solid #E2ECEC;border-radius:16px}
 .bm-head{padding:12px 16px;border-bottom:1px solid #E2ECEC;background:#F1F5F5;font-size:13px;font-weight:700;border-radius:16px 16px 0 0}
@@ -355,6 +395,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
     <div class="auth-field"><label class="auth-label">Nome completo</label><input class="auth-input" id="cad-nome" type="text" placeholder="Seu nome"></div>
     <div class="auth-field"><label class="auth-label">Email</label><input class="auth-input" id="cad-email" type="email" placeholder="seu@email.com"></div>
     <div class="auth-field"><label class="auth-label">Senha</label><input class="auth-input" id="cad-senha" type="password" placeholder="Mínimo 6 caracteres" onkeydown="if(event.key==='Enter')cadastrar()"></div>
+    <div class="auth-field"><label class="auth-label">Cupom de afiliado <span style="font-weight:400;color:var(--text3)">(opcional)</span></label><input class="auth-input" id="cad-cupom" type="text" placeholder="Ex: JOAO10" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
     <div class="auth-loading" id="cad-loading"><div class="spinner" style="display:inline-block"></div> Criando conta...</div>
     <button class="btn-auth" onclick="cadastrar()">Criar conta grátis</button>
     <div class="auth-switch">Já tem conta? <a onclick="showScreen('auth-login')">Entrar</a></div>
@@ -365,8 +406,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 <div class="blocked-screen" id="blocked-screen" style="display:none">
   <div class="blocked-card">
     <div class="blocked-icon">🔒</div>
-    <div class="blocked-title">Seu período de teste encerrou</div>
-    <div class="blocked-desc">Você utilizou seus 7 dias gratuitos do Pulso Anota.<br>Assine o acesso anual para continuar praticando anotações de enfermagem.</div>
+    <div class="blocked-title">Limite de usos gratuitos atingido</div>
+    <div class="blocked-desc">Você utilizou suas 10 transações gratuitas do Pulso Anota.<br>Assine o acesso anual para continuar praticando anotações de enfermagem.</div>
     <div class="blocked-price-box">
       <span class="blocked-price-val">R$&nbsp;79,90</span>
       <span class="blocked-price-label">/ano</span>
@@ -440,17 +481,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 <!-- MODAL ÚLTIMO DIA TRIAL -->
 <div id="trial-modal" style="display:none" class="trial-modal-overlay" onclick="fecharTrialModal(event)">
   <div class="trial-modal-card">
-    <div class="trial-modal-icon">⏳</div>
-    <div class="trial-modal-title">Seu acesso gratuito encerra hoje</div>
+    <div class="trial-modal-icon">⚠️</div>
+    <div class="trial-modal-title">Último uso gratuito disponível</div>
     <div class="trial-modal-body">
-      Nesses 7 dias você treinou anotações reais — queda, febre, medicação, acesso venoso.<br><br>
-      O simulador vai continuar existindo. Para continuar acessando, basta garantir o
+      Você já utilizou 9 das suas 10 transações gratuitas — anotações reais de queda, febre, medicação, acesso venoso.<br><br>
+      Para continuar usando sem limite, garanta o
       <strong>Treinamento de Anotações de Enfermagem</strong>, que é o curso que libera seu acesso completo ao app.
     </div>
     <button onclick="fecharTrialModal(null);abrirPagamento();" class="trial-modal-cta">
       💳 Assinar agora — R$&nbsp;79,90/ano
     </button>
-    <div class="trial-modal-dismiss"><a onclick="fecharTrialModal(null)">Entendi, continuar usando hoje</a></div>
+    <div class="trial-modal-dismiss"><a onclick="fecharTrialModal(null)">Entendi, usar meu último acesso gratuito</a></div>
   </div>
 </div>
 
@@ -663,6 +704,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
             <div class="calc-result-label">Volume a administrar</div>
             <div class="calc-result-main"><div class="calc-result-val" id="inj-val">—</div><div class="calc-result-unit">ml</div></div>
             <div class="calc-steps" id="inj-steps"></div>
+            <button class="btn btn-verde btn-registrar-calc" style="width:100%;margin-top:10px" onclick="registrarCalcTrial(this)">✓ Registrar uso do cálculo</button>
           </div>
           <button class="btn-limpar" onclick="limparCalc('injetavel')">↺ Limpar</button>
         </div>
@@ -693,6 +735,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
             <div class="calc-result-main"><div class="calc-result-val" id="cp-val">—</div><div class="calc-result-unit">comprimido(s)</div></div>
             <div class="calc-steps" id="cp-steps"></div>
             <div class="calc-warn" id="cp-warn" style="display:none">⚠️ Resultado fracionado — confirme com a prescrição ou cheque se há apresentação adequada.</div>
+            <button class="btn btn-verde btn-registrar-calc" style="width:100%;margin-top:10px" onclick="registrarCalcTrial(this)">✓ Registrar uso do cálculo</button>
           </div>
           <button class="btn-limpar" onclick="limparCalc('comprimido')">↺ Limpar</button>
         </div>
@@ -721,6 +764,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
             <div class="calc-result-label">Resultado da infusão</div>
             <div class="calc-result-grid" id="gt-grid"></div>
             <div class="calc-steps" id="gt-steps"></div>
+            <button class="btn btn-verde btn-registrar-calc" style="width:100%;margin-top:10px" onclick="registrarCalcTrial(this)">✓ Registrar uso do cálculo</button>
           </div>
           <button class="btn-limpar" onclick="limparCalc('gotejamento')">↺ Limpar</button>
         </div>
@@ -742,6 +786,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
             <div class="calc-result-label">Velocidade de infusão</div>
             <div class="calc-result-main"><div class="calc-result-val" id="bm-val">—</div><div class="calc-result-unit">ml/h</div></div>
             <div class="calc-steps" id="bm-steps"></div>
+            <button class="btn btn-verde btn-registrar-calc" style="width:100%;margin-top:10px" onclick="registrarCalcTrial(this)">✓ Registrar uso do cálculo</button>
           </div>
           <button class="btn-limpar" onclick="limparCalc('bomba')">↺ Limpar</button>
         </div>
@@ -778,6 +823,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
             <div id="ins-aviso-seringa" style="display:none;background:#FEE2E2;border:1.5px solid #FCA5A5;border-radius:var(--r);padding:10px 14px;font-size:12px;font-weight:600;color:var(--vermelho);line-height:1.5">
               🚨 <strong>Atenção:</strong> Ao usar seringa comum com frasco U-40, o risco de erro de dose é alto. Prefira sempre a seringa de insulina calibrada para U-40 quando disponível.
             </div>
+            <button class="btn btn-verde btn-registrar-calc" style="width:100%;margin-top:10px" onclick="registrarCalcTrial(this)">✓ Registrar uso do cálculo</button>
           </div>
           <button class="btn-limpar" onclick="limparCalc('insulina')">↺ Limpar</button>
         </div>
@@ -786,16 +832,163 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 
       <!-- ADMIN -->
       <div class="view" id="view-admin">
-        <div class="step-row"><div class="step-num" style="background:var(--teal)">⚙️</div><div><div class="step-title">Painel Administrativo</div><div class="step-sub">Gerenciar acessos dos usuários</div></div></div>
-        <div class="card">
-          <div class="card-header"><span class="card-title">👥 Usuários cadastrados</span><button class="btn btn-outline" style="font-size:12px;padding:6px 12px" onclick="carregarAdmin()">↺ Atualizar</button></div>
-          <div class="card-body" style="padding:0;overflow-x:auto">
-            <table class="admin-table" id="admin-table">
-              <thead><tr><th>Usuário</th><th>Status</th><th>Trial</th><th>Acesso anual até</th><th>Ações</th></tr></thead>
-              <tbody id="admin-tbody"><tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr></tbody>
-            </table>
+        <div class="step-row"><div class="step-num" style="background:var(--teal)">⚙️</div><div><div class="step-title">Painel Administrativo</div><div class="step-sub">Gerenciar acessos e afiliados</div></div></div>
+
+        <div class="admin-tabs">
+          <button class="admin-tab-btn active" id="admin-tab-usuarios" onclick="adminTab('usuarios',this)">👥 Usuários</button>
+          <button class="admin-tab-btn" id="admin-tab-influenciadores" onclick="adminTab('influenciadores',this)">🤝 Influenciadores</button>
+          <button class="admin-tab-btn" id="admin-tab-dashboard" onclick="adminTab('dashboard',this)">📊 Dashboard</button>
+        </div>
+
+        <!-- PAINEL USUÁRIOS -->
+        <div id="admin-panel-usuarios" class="admin-panel">
+          <div class="card">
+            <div class="card-header"><span class="card-title">👥 Usuários cadastrados</span><button class="btn btn-outline" style="font-size:12px;padding:6px 12px" onclick="carregarAdmin()">↺ Atualizar</button></div>
+            <div class="card-body" style="padding:0;overflow-x:auto">
+              <table class="admin-table" id="admin-table">
+                <thead><tr><th>Usuário</th><th>Status</th><th>Trial</th><th>Acesso anual até</th><th>Cupom</th><th>Ações</th></tr></thead>
+                <tbody id="admin-tbody"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr></tbody>
+              </table>
+            </div>
           </div>
         </div>
+
+        <!-- PAINEL INFLUENCIADORES -->
+        <div id="admin-panel-influenciadores" class="admin-panel" style="display:none">
+
+          <!-- Formulário cadastro/edição -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title" id="inf-form-title">➕ Novo Influenciador</span>
+              <button class="btn btn-outline" style="font-size:12px;padding:6px 12px" onclick="cancelarEdicaoInf()">✕ Limpar</button>
+            </div>
+            <div class="card-body">
+              <input type="hidden" id="inf-id">
+              <div class="fg">
+                <div class="field"><div class="field-label">Nome *</div><input class="field-input" id="inf-nome" placeholder="Nome completo do influenciador"></div>
+                <div class="field"><div class="field-label">Telefone</div><input class="field-input" id="inf-telefone" placeholder="(11) 99999-9999"></div>
+                <div class="field"><div class="field-label">CUPOM * <span style="font-weight:400;text-transform:none;font-size:10px">(único, maiúsculas/números)</span></div><input class="field-input" id="inf-cupom" placeholder="Ex: JOAO10" style="text-transform:uppercase;font-family:var(--mono);font-weight:700" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"></div>
+                <div class="field"><div class="field-label">Chave Pix</div><input class="field-input" id="inf-pix" placeholder="CPF, email, celular ou chave aleatória"></div>
+                <div class="field"><div class="field-label">Plataforma / Canal</div><input class="field-input" id="inf-plataforma" placeholder="Ex: Instagram, YouTube, TikTok..."></div>
+                <div class="field"><div class="field-label">Observações</div><input class="field-input" id="inf-obs" placeholder="Notas internas"></div>
+              </div>
+              <div id="inf-form-error" style="background:var(--vermelho-dim);border:1px solid #FCA5A5;border-radius:8px;padding:10px 14px;font-size:13px;color:var(--vermelho);margin-top:12px;display:none"></div>
+              <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
+                <button class="btn btn-primary" onclick="salvarInfluenciador()">💾 Salvar influenciador</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lista de influenciadores -->
+          <div class="card">
+            <div class="card-header"><span class="card-title">🤝 Influenciadores cadastrados</span><button class="btn btn-outline" style="font-size:12px;padding:6px 12px" onclick="carregarInfluenciadores()">↺ Atualizar</button></div>
+            <div class="card-body" style="padding:0;overflow-x:auto">
+              <table class="admin-table" id="inf-table">
+                <thead><tr><th>Nome</th><th>CUPOM</th><th>Telefone</th><th>Chave Pix</th><th>Plataforma</th><th>Status</th><th>Ações</th></tr></thead>
+                <tbody id="inf-tbody"><tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- PAINEL DASHBOARD -->
+        <div id="admin-panel-dashboard" class="admin-panel" style="display:none">
+
+          <!-- KPIs -->
+          <div class="dash-kpi-row" id="dash-kpis">
+            <div class="dash-kpi-card"><div class="dash-kpi-icon">🤝</div><div class="dash-kpi-val" id="kpi-inf">—</div><div class="dash-kpi-label">Influenciadores</div></div>
+            <div class="dash-kpi-card"><div class="dash-kpi-icon">👥</div><div class="dash-kpi-val" id="kpi-total">—</div><div class="dash-kpi-label">Usuários total</div></div>
+            <div class="dash-kpi-card dash-kpi-verde"><div class="dash-kpi-icon">✅</div><div class="dash-kpi-val" id="kpi-assin">—</div><div class="dash-kpi-label">Assinantes</div></div>
+            <div class="dash-kpi-card dash-kpi-amarelo"><div class="dash-kpi-icon">🎁</div><div class="dash-kpi-val" id="kpi-trial">—</div><div class="dash-kpi-label">Em trial</div></div>
+            <div class="dash-kpi-card dash-kpi-red"><div class="dash-kpi-icon">⏰</div><div class="dash-kpi-val" id="kpi-inativ">—</div><div class="dash-kpi-label">Inativos</div></div>
+          </div>
+
+          <!-- Usuários com filtro -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">👥 Usuários cadastrados</span>
+              <button class="btn btn-outline" style="font-size:12px;padding:6px 12px" onclick="dashCarregarUsuarios()">↺ Atualizar</button>
+            </div>
+            <div class="card-body" style="padding:14px 18px 0">
+              <div class="dash-users-filters">
+                <button class="dash-filter-btn active" onclick="dashFiltrarUsuarios('todos',this)">Todos</button>
+                <button class="dash-filter-btn" onclick="dashFiltrarUsuarios('ativo',this)">✅ Assinantes</button>
+                <button class="dash-filter-btn" onclick="dashFiltrarUsuarios('trial',this)">🎁 Em trial</button>
+                <button class="dash-filter-btn" onclick="dashFiltrarUsuarios('expirado',this)">⏰ Inativos</button>
+              </div>
+            </div>
+            <div style="overflow-x:auto">
+              <table class="admin-table" id="dash-users-table">
+                <thead><tr><th>Usuário</th><th>Status</th><th>Trial</th><th>Assinatura até</th><th>Cupom</th><th>Último acesso</th></tr></thead>
+                <tbody id="dash-users-tbody"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Usuários por influenciador -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">🏆 Usuários por Influenciador</span>
+              <button class="btn btn-outline" style="font-size:12px;padding:6px 12px" onclick="dashCarregarInfluenciadorStats()">↺ Atualizar</button>
+            </div>
+            <div class="card-body" style="padding:0;overflow-x:auto">
+              <table class="admin-table" id="dash-inf-table">
+                <thead><tr><th>Influenciador</th><th>Cupom</th><th>Ativações</th><th>Conversões (assinantes)</th><th>Taxa de conversão</th></tr></thead>
+                <tbody id="dash-inf-tbody"><tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Comissões -->
+          <div class="card">
+            <div class="card-header"><span class="card-title">💰 Comissão de Influenciadores</span></div>
+            <div class="card-body">
+              <div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6">
+                Faixas: <strong>≤20 assin. → 25%</strong> · <strong>21-50 → 30%</strong> · <strong>51-150 → 35%</strong> · <strong>>150 → 40%</strong> · Valor: R$&nbsp;79,90/assinante
+              </div>
+              <div class="fg">
+                <div class="field"><div class="field-label">Data início</div><input class="field-input" type="date" id="comm-inicio"></div>
+                <div class="field"><div class="field-label">Data fim</div><input class="field-input" type="date" id="comm-fim"></div>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+                <button class="btn btn-primary" onclick="dashCalcComissoes()">📊 Calcular comissões</button>
+                <button class="btn btn-outline" onclick="dashFillMesAtual()">📅 Mês atual</button>
+              </div>
+              <div id="comm-result" style="margin-top:16px;overflow-x:auto"></div>
+            </div>
+          </div>
+
+          <!-- Atividade geral -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">📈 Atividade Geral de Uso</span>
+              <button class="btn btn-outline" style="font-size:12px;padding:6px 12px" onclick="dashCarregarAtividade()">↺ Atualizar</button>
+            </div>
+            <div class="card-body" id="dash-atividade-body">
+              <div class="loading"><div class="spinner"></div>Carregando...</div>
+            </div>
+          </div>
+
+          <!-- Acessos por usuário -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">🔑 Acessos por Usuário (ativo e assinante)</span>
+              <button class="btn btn-outline" style="font-size:12px;padding:6px 12px" onclick="dashCarregarAcessos()">↺ Atualizar</button>
+            </div>
+            <div class="card-body" style="padding:0 0 4px">
+              <div id="dash-acessos-stats" style="padding:14px 18px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:4px"></div>
+            </div>
+            <div style="overflow-x:auto">
+              <table class="admin-table" id="dash-access-table">
+                <thead><tr><th>Usuário</th><th>Status</th><th>Usos totais</th><th>Último acesso</th><th>Assinante desde</th></tr></thead>
+                <tbody id="dash-access-tbody"><tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div><!-- /admin-panel-dashboard -->
+
       </div>
 
     </div>
@@ -884,7 +1077,8 @@ async function verificarAcesso(){
       await sb.from('usuarios').insert({
         id:currentUser.id,
         email:currentUser.email,
-        nome:currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||currentUser.email.split('@')[0]
+        nome:currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||currentUser.email.split('@')[0],
+        cupom_afiliado:currentUser.user_metadata?.cupom_afiliado||null
       }).onConflict('id').ignore();
       await new Promise(r=>setTimeout(r,1000));
       const res2=await sb.from('acesso_status').select('*').eq('id',currentUser.id).maybeSingle();
@@ -948,9 +1142,10 @@ function mostrarApp(dados){
 
   // Trial badge
   const ti=document.getElementById('trial-info');
-  if(dados.status==='trial'&&dados.dias_restantes_trial>=0){
-    const d=Math.ceil(dados.dias_restantes_trial);
-    ti.innerHTML=`<span class="trial-badge">🕐 ${d} dia${d!==1?'s':''} grátis</span>`;
+  if(dados.status==='trial'){
+    const usado=dados.transacoes_trial||0;
+    const restantes=10-usado;
+    ti.innerHTML=`<span class="trial-badge">🎁 ${restantes} uso${restantes!==1?'s':''} grátis</span>`;
   } else if(dados.tipo_acesso==='anual'){
     ti.innerHTML=`<span class="trial-badge" style="background:var(--verde-dim);border-color:#86EFAC;color:var(--verde)">✅ Acesso anual</span>`;
   }
@@ -958,15 +1153,20 @@ function mostrarApp(dados){
   // Carregar dados
   if(!oco.length) init();
 
-  // Modal último dia de trial
-  if(dados.status==='trial' && dados.dias_restantes_trial===0){
-    const chave='pulso_trial_modal_'+currentUser.id+'_'+new Date().toDateString();
+  // Modal aviso última transação gratuita (ao chegar em 9/10)
+  if(dados.status==='trial' && (dados.transacoes_trial||0)>=9){
+    const chave='pulso_trial_modal_'+currentUser.id+'_9trans';
     if(!sessionStorage.getItem(chave)){
       setTimeout(()=>{
         document.getElementById('trial-modal').style.display='flex';
       },800);
       sessionStorage.setItem(chave,'1');
     }
+  }
+
+  // Ocultar botões de registrar cálculo para usuários não-trial
+  if(dados.tipo_acesso!=='trial'){
+    document.querySelectorAll('.btn-registrar-calc').forEach(b=>b.style.display='none');
   }
 }
 
@@ -1010,13 +1210,20 @@ async function cadastrar(){
   const nome=document.getElementById('cad-nome').value.trim();
   const email=document.getElementById('cad-email').value.trim();
   const senha=document.getElementById('cad-senha').value;
+  const cupom=(document.getElementById('cad-cupom').value||'').trim().toUpperCase();
   const err=document.getElementById('cad-error');
   const loading=document.getElementById('cad-loading');
   err.style.display='none';
   if(!nome||!email||!senha){err.textContent='Preencha todos os campos.';err.style.display='block';return;}
   if(senha.length<6){err.textContent='A senha precisa ter pelo menos 6 caracteres.';err.style.display='block';return;}
+  if(cupom){
+    loading.style.display='block';
+    const {data:infData,error:cupomErr}=await sb.from('influenciadores').select('id').eq('cupom',cupom).eq('ativo',true).maybeSingle();
+    loading.style.display='none';
+    if(cupomErr||!infData){err.textContent='Cupom inválido ou não encontrado. Verifique e tente novamente.';err.style.display='block';return;}
+  }
   loading.style.display='block';
-  const {error}=await sb.auth.signUp({email,password:senha,options:{data:{full_name:nome}}});
+  const {error}=await sb.auth.signUp({email,password:senha,options:{data:{full_name:nome,cupom_afiliado:cupom||null}}});
   loading.style.display='none';
   if(error){err.textContent=traduzirErro(error.message);err.style.display='block';}
   else{showToast('✅ Conta criada! Verifique seu email.');}
@@ -1039,26 +1246,28 @@ function traduzirErro(msg){
 // ── ADMIN ──
 async function carregarAdmin(){
   const tbody=document.getElementById('admin-tbody');
-  tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
+  tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
   try{
     const {data}=await sb.from('acesso_status').select('*').order('criado_em',{ascending:false});
-    if(!data||!data.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Nenhum usuário.</td></tr>';return;}
+    if(!data||!data.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3)">Nenhum usuário.</td></tr>';return;}
     tbody.innerHTML=data.map(u=>{
       const statusCls={trial:'sp-trial',ativo:'sp-ativo',expirado:'sp-expirado',bloqueado:'sp-expirado',admin:'sp-admin'}[u.status]||'sp-trial';
-      const trialFim=u.trial_fim?new Date(u.trial_fim).toLocaleDateString('pt-BR'):'—';
+      const trialUsos=u.status==='trial'||u.tipo_acesso==='trial'?`${u.transacoes_trial||0}/10 usos`:'—';
       const anualFim=u.acesso_anual_fim?new Date(u.acesso_anual_fim).toLocaleDateString('pt-BR'):'—';
+      const cupomBadge=u.cupom_afiliado?`<span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--teal);background:var(--teal-dim);padding:2px 7px;border-radius:6px">${u.cupom_afiliado}</span>`:'—';
       return`<tr>
         <td><div style="font-weight:700;color:var(--text)">${u.nome||'—'}</div><div style="font-size:11px;color:var(--text3)">${u.email}</div></td>
         <td><span class="status-pill ${statusCls}">${u.status}</span></td>
-        <td style="font-size:12px">${trialFim}</td>
+        <td style="font-size:12px">${trialUsos}</td>
         <td style="font-size:12px">${anualFim}</td>
+        <td>${cupomBadge}</td>
         <td>
           <button onclick="liberarAnual('${u.id}')" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid #86EFAC;background:var(--verde-dim);color:var(--verde);cursor:pointer;font-family:var(--font);font-weight:700">+1 ano</button>
           <button onclick="bloquearUser('${u.id}')" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid #FCA5A5;background:var(--vermelho-dim);color:var(--vermelho);cursor:pointer;font-family:var(--font);font-weight:700;margin-left:4px">Bloquear</button>
         </td>
       </tr>`;
     }).join('');
-  }catch(e){tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--vermelho)">${e.message}</td></tr>`;}
+  }catch(e){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--vermelho)">${e.message}</td></tr>`;}
 }
 
 async function liberarAnual(uid){
@@ -1073,6 +1282,342 @@ async function bloquearUser(uid){
   await sb.from('usuarios').update({tipo_acesso:'bloqueado'}).eq('id',uid);
   showToast('🔒 Usuário bloqueado');
   carregarAdmin();
+}
+
+// ── ADMIN TABS ──
+function adminTab(tab,btn){
+  document.querySelectorAll('.admin-tab-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  document.getElementById('admin-panel-usuarios').style.display=tab==='usuarios'?'flex':'none';
+  document.getElementById('admin-panel-influenciadores').style.display=tab==='influenciadores'?'flex':'none';
+  document.getElementById('admin-panel-dashboard').style.display=tab==='dashboard'?'flex':'none';
+  if(tab==='influenciadores')carregarInfluenciadores();
+  else if(tab==='dashboard')carregarDashboard();
+  else carregarAdmin();
+}
+
+// ── INFLUENCIADORES ──
+let _infCache={};
+
+async function carregarInfluenciadores(){
+  const tbody=document.getElementById('inf-tbody');
+  tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
+  try{
+    const {data,error}=await sb.from('influenciadores').select('*').order('nome');
+    if(error)throw error;
+    _infCache={};
+    if(!data||!data.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text3)">Nenhum influenciador cadastrado ainda.</td></tr>';return;}
+    data.forEach(inf=>{_infCache[inf.id]=inf;});
+    tbody.innerHTML=data.map(inf=>`<tr>
+      <td><div style="font-weight:700;color:var(--text)">${inf.nome}</div>${inf.observacoes?`<div style="font-size:11px;color:var(--text3)">${inf.observacoes}</div>`:''}</td>
+      <td><span style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--teal);background:var(--teal-dim);padding:3px 9px;border-radius:6px;letter-spacing:.5px">${inf.cupom}</span></td>
+      <td style="font-size:12px">${inf.telefone||'—'}</td>
+      <td style="font-size:12px;font-family:var(--mono)">${inf.chave_pix||'—'}</td>
+      <td style="font-size:12px">${inf.plataforma||'—'}</td>
+      <td><span class="status-pill ${inf.ativo?'sp-ativo':'sp-expirado'}">${inf.ativo?'Ativo':'Inativo'}</span></td>
+      <td style="white-space:nowrap">
+        <button onclick="editarInfluenciador('${inf.id}')" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:700">✏️ Editar</button>
+        <button onclick="toggleInfluenciadorStatus('${inf.id}',${inf.ativo})" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid ${inf.ativo?'#FCA5A5':'#86EFAC'};background:${inf.ativo?'var(--vermelho-dim)':'var(--verde-dim)'};color:${inf.ativo?'var(--vermelho)':'var(--verde)'};cursor:pointer;font-family:var(--font);font-weight:700;margin-left:4px">${inf.ativo?'Desativar':'Ativar'}</button>
+      </td>
+    </tr>`).join('');
+  }catch(e){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--vermelho)">${e.message}</td></tr>`;}
+}
+
+async function salvarInfluenciador(){
+  const id=document.getElementById('inf-id').value;
+  const nome=document.getElementById('inf-nome').value.trim();
+  const telefone=document.getElementById('inf-telefone').value.trim();
+  const cupom=document.getElementById('inf-cupom').value.trim().toUpperCase();
+  const chave_pix=document.getElementById('inf-pix').value.trim();
+  const plataforma=document.getElementById('inf-plataforma').value.trim();
+  const observacoes=document.getElementById('inf-obs').value.trim();
+  const errEl=document.getElementById('inf-form-error');
+  errEl.style.display='none';
+  if(!nome||!cupom){errEl.textContent='Nome e CUPOM são obrigatórios.';errEl.style.display='block';return;}
+  if(!/^[A-Z0-9]+$/.test(cupom)){errEl.textContent='CUPOM deve conter apenas letras maiúsculas e números, sem espaços ou caracteres especiais.';errEl.style.display='block';return;}
+  const payload={nome,telefone:telefone||null,cupom,chave_pix:chave_pix||null,plataforma:plataforma||null,observacoes:observacoes||null};
+  let error;
+  if(id){
+    ({error}=await sb.from('influenciadores').update(payload).eq('id',id));
+  }else{
+    ({error}=await sb.from('influenciadores').insert({...payload,ativo:true}));
+  }
+  if(error){
+    if(error.message.includes('duplicate')||error.message.includes('unique')||error.code==='23505'){
+      errEl.textContent='Este CUPOM já está cadastrado. Escolha um nome diferente.';
+    }else{
+      errEl.textContent=error.message;
+    }
+    errEl.style.display='block';
+    return;
+  }
+  showToast(id?'✅ Influenciador atualizado!':'✅ Influenciador criado!');
+  cancelarEdicaoInf();
+  carregarInfluenciadores();
+}
+
+function editarInfluenciador(id){
+  const inf=_infCache[id];
+  if(!inf)return;
+  document.getElementById('inf-id').value=inf.id;
+  document.getElementById('inf-nome').value=inf.nome;
+  document.getElementById('inf-telefone').value=inf.telefone||'';
+  document.getElementById('inf-cupom').value=inf.cupom;
+  document.getElementById('inf-pix').value=inf.chave_pix||'';
+  document.getElementById('inf-plataforma').value=inf.plataforma||'';
+  document.getElementById('inf-obs').value=inf.observacoes||'';
+  document.getElementById('inf-form-title').textContent='✏️ Editar Influenciador';
+  document.getElementById('inf-form-error').style.display='none';
+  document.getElementById('admin-panel-influenciadores').querySelector('.card').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function cancelarEdicaoInf(){
+  ['inf-id','inf-nome','inf-telefone','inf-cupom','inf-pix','inf-plataforma','inf-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('inf-form-title').textContent='➕ Novo Influenciador';
+  document.getElementById('inf-form-error').style.display='none';
+}
+
+async function toggleInfluenciadorStatus(id,ativo){
+  const {error}=await sb.from('influenciadores').update({ativo:!ativo}).eq('id',id);
+  if(error){showToast('❌ Erro ao atualizar status');return;}
+  showToast(ativo?'🔒 Influenciador desativado':'✅ Influenciador ativado');
+  carregarInfluenciadores();
+}
+
+// ── DASHBOARD ──
+
+let _dashUsuarios = [];
+let _dashFiltroAtual = 'todos';
+
+async function carregarDashboard(){
+  dashCarregarKpis();
+  dashCarregarUsuarios();
+  dashCarregarInfluenciadorStats();
+  dashCarregarAtividade();
+  dashCarregarAcessos();
+  dashFillMesAtual();
+}
+
+async function dashCarregarKpis(){
+  try{
+    const [{data:users},{data:infs}]=await Promise.all([
+      sb.from('acesso_status').select('status,tipo_acesso'),
+      sb.from('influenciadores').select('id,ativo')
+    ]);
+    const total=users?users.length:0;
+    const assin=users?users.filter(u=>u.tipo_acesso==='anual'||u.status==='ativo').length:0;
+    const trial=users?users.filter(u=>u.status==='trial').length:0;
+    const inativ=users?users.filter(u=>u.status==='expirado'||u.status==='bloqueado').length:0;
+    const totalInf=infs?infs.length:0;
+    document.getElementById('kpi-inf').textContent=totalInf;
+    document.getElementById('kpi-total').textContent=total;
+    document.getElementById('kpi-assin').textContent=assin;
+    document.getElementById('kpi-trial').textContent=trial;
+    document.getElementById('kpi-inativ').textContent=inativ;
+  }catch(e){console.error('kpis',e);}
+}
+
+async function dashCarregarUsuarios(){
+  const tbody=document.getElementById('dash-users-tbody');
+  tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
+  try{
+    const {data}=await sb.from('acesso_status').select('*').order('criado_em',{ascending:false});
+    _dashUsuarios=data||[];
+    dashRenderUsuarios();
+  }catch(e){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--vermelho)">${e.message}</td></tr>`;}
+}
+
+function dashFiltrarUsuarios(filtro,btn){
+  _dashFiltroAtual=filtro;
+  document.querySelectorAll('.dash-filter-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  dashRenderUsuarios();
+}
+
+function dashRenderUsuarios(){
+  const tbody=document.getElementById('dash-users-tbody');
+  let lista=_dashUsuarios;
+  if(_dashFiltroAtual!=='todos'){
+    if(_dashFiltroAtual==='ativo') lista=lista.filter(u=>u.tipo_acesso==='anual'||u.status==='ativo');
+    else if(_dashFiltroAtual==='trial') lista=lista.filter(u=>u.status==='trial');
+    else if(_dashFiltroAtual==='expirado') lista=lista.filter(u=>u.status==='expirado'||u.status==='bloqueado');
+  }
+  if(!lista.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3)">Nenhum usuário neste filtro.</td></tr>';return;}
+  const stCls={trial:'sp-trial',ativo:'sp-ativo',expirado:'sp-expirado',bloqueado:'sp-expirado',admin:'sp-admin'};
+  tbody.innerHTML=lista.map(u=>{
+    const cls=stCls[u.status]||'sp-trial';
+    const trial=u.status==='trial'?`${u.transacoes_trial||0}/10`:'—';
+    const anual=u.acesso_anual_fim?new Date(u.acesso_anual_fim).toLocaleDateString('pt-BR'):'—';
+    const cupom=u.cupom_afiliado?`<span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--teal);background:var(--teal-dim);padding:2px 7px;border-radius:6px">${u.cupom_afiliado}</span>`:'—';
+    const acesso=u.ultimo_acesso?new Date(u.ultimo_acesso).toLocaleDateString('pt-BR'):'—';
+    return`<tr>
+      <td><div style="font-weight:700;color:var(--text)">${u.nome||'—'}</div><div style="font-size:11px;color:var(--text3)">${u.email}</div></td>
+      <td><span class="status-pill ${cls}">${u.status}</span></td>
+      <td style="font-size:12px">${trial}</td>
+      <td style="font-size:12px">${anual}</td>
+      <td>${cupom}</td>
+      <td style="font-size:12px">${acesso}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function dashCarregarInfluenciadorStats(){
+  const tbody=document.getElementById('dash-inf-tbody');
+  tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
+  try{
+    const [{data:infs},{data:users}]=await Promise.all([
+      sb.from('influenciadores').select('*').eq('ativo',true).order('nome'),
+      sb.from('acesso_status').select('cupom_afiliado,status,tipo_acesso')
+    ]);
+    if(!infs||!infs.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Nenhum influenciador ativo.</td></tr>';return;}
+    const usersCupom=users||[];
+    const rows=infs.map(inf=>{
+      const ativacoes=usersCupom.filter(u=>u.cupom_afiliado===inf.cupom).length;
+      const conversoes=usersCupom.filter(u=>u.cupom_afiliado===inf.cupom&&(u.tipo_acesso==='anual'||u.status==='ativo')).length;
+      const taxa=ativacoes>0?Math.round(conversoes/ativacoes*100):0;
+      return{inf,ativacoes,conversoes,taxa};
+    }).sort((a,b)=>b.ativacoes-a.ativacoes);
+    tbody.innerHTML=rows.map(({inf,ativacoes,conversoes,taxa})=>`<tr>
+      <td><div style="font-weight:700;color:var(--text)">${inf.nome}</div>${inf.plataforma?`<div style="font-size:11px;color:var(--text3)">${inf.plataforma}</div>`:''}</td>
+      <td><span style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--teal);background:var(--teal-dim);padding:3px 9px;border-radius:6px">${inf.cupom}</span></td>
+      <td style="font-weight:700;color:var(--text)">${ativacoes}</td>
+      <td><span style="font-weight:800;color:var(--verde)">${conversoes}</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div style="flex:1;background:var(--surface2);border-radius:3px;height:8px;overflow:hidden;min-width:60px"><div style="height:100%;background:var(--teal);width:${taxa}%"></div></div>
+        <span style="font-size:12px;font-weight:700;color:var(--text)">${taxa}%</span>
+      </div></td>
+    </tr>`).join('');
+  }catch(e){tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--vermelho)">${e.message}</td></tr>`;}
+}
+
+function dashFillMesAtual(){
+  const agora=new Date();
+  const ini=new Date(agora.getFullYear(),agora.getMonth(),1);
+  const fim=new Date(agora.getFullYear(),agora.getMonth()+1,0);
+  const fmt=d=>d.toISOString().split('T')[0];
+  const ei=document.getElementById('comm-inicio');
+  const ef=document.getElementById('comm-fim');
+  if(ei&&!ei.value)ei.value=fmt(ini);
+  if(ef&&!ef.value)ef.value=fmt(fim);
+}
+
+async function dashCalcComissoes(){
+  const inicio=document.getElementById('comm-inicio').value;
+  const fim=document.getElementById('comm-fim').value;
+  const res=document.getElementById('comm-result');
+  if(!inicio||!fim){res.innerHTML='<div style="color:var(--vermelho);font-size:13px">Selecione o período.</div>';return;}
+  res.innerHTML='<div class="loading"><div class="spinner"></div>Calculando...</div>';
+  try{
+    const fimDia=fim+'T23:59:59.999Z';
+    const [{data:infs},{data:conv}]=await Promise.all([
+      sb.from('influenciadores').select('*').eq('ativo',true),
+      sb.from('usuarios').select('cupom_afiliado').not('cupom_afiliado','is',null).eq('tipo_acesso','anual').gte('acesso_anual_inicio',inicio).lte('acesso_anual_inicio',fimDia)
+    ]);
+    if(!infs||!infs.length){res.innerHTML='<div style="color:var(--text2);font-size:13px">Nenhum influenciador ativo.</div>';return;}
+    const contagem={};
+    (conv||[]).forEach(u=>{if(u.cupom_afiliado)contagem[u.cupom_afiliado]=(contagem[u.cupom_afiliado]||0)+1;});
+    function faixa(n){if(n<=20)return{pct:25,cls:'cf-25',label:'25%'};if(n<=50)return{pct:30,cls:'cf-30',label:'30%'};if(n<=150)return{pct:35,cls:'cf-35',label:'35%'};return{pct:40,cls:'cf-40',label:'40%'};}
+    const TICKET=79.90;
+    const dados=infs.map(inf=>{
+      const assin=contagem[inf.cupom]||0;
+      const f=faixa(assin);
+      const bruto=assin*TICKET;
+      const comissao=(bruto*f.pct/100);
+      return{inf,assin,f,bruto,comissao};
+    }).filter(d=>d.assin>0).sort((a,b)=>b.assin-a.assin);
+    if(!dados.length){
+      res.innerHTML=`<div style="padding:20px;text-align:center;color:var(--text3);font-size:13px">Nenhuma conversão no período <strong>${inicio}</strong> → <strong>${fim}</strong>.</div>`;
+      return;
+    }
+    const totalAssin=dados.reduce((s,d)=>s+d.assin,0);
+    const totalPago=dados.reduce((s,d)=>s+d.comissao,0);
+    res.innerHTML=`
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px">
+        <div class="dash-stat-box"><div class="dash-stat-box-val">${totalAssin}</div><div class="dash-stat-box-label">Conversões no período</div></div>
+        <div class="dash-stat-box"><div class="dash-stat-box-val" style="color:var(--verde)">R$&nbsp;${totalPago.toFixed(2).replace('.',',')}</div><div class="dash-stat-box-label">Total a pagar</div></div>
+      </div>
+      <div style="overflow-x:auto"><table class="comm-table">
+        <thead><tr><th>Influenciador</th><th>Cupom</th><th>Chave Pix</th><th>Assinantes</th><th>Faixa</th><th>% Comissão</th><th>Receita bruta</th><th>A pagar</th></tr></thead>
+        <tbody>${dados.map(({inf,assin,f,bruto,comissao})=>`<tr>
+          <td style="font-weight:700;color:var(--text)">${inf.nome}</td>
+          <td><span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--teal);background:var(--teal-dim);padding:2px 7px;border-radius:6px">${inf.cupom}</span></td>
+          <td style="font-family:var(--mono);font-size:11px">${inf.chave_pix||'—'}</td>
+          <td style="font-weight:800;color:var(--text)">${assin}</td>
+          <td><span class="comm-faixa ${f.cls}">${assin<=20?'≤20':assin<=50?'21-50':assin<=150?'51-150':'>150'}</span></td>
+          <td style="font-weight:700">${f.label}</td>
+          <td style="font-family:var(--mono);font-size:12px">R$&nbsp;${bruto.toFixed(2).replace('.',',')}</td>
+          <td style="font-weight:800;color:var(--verde);font-family:var(--mono)">R$&nbsp;${comissao.toFixed(2).replace('.',',')}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>`;
+  }catch(e){res.innerHTML=`<div style="color:var(--vermelho);font-size:13px">${e.message}</div>`;}
+}
+
+async function dashCarregarAtividade(){
+  const body=document.getElementById('dash-atividade-body');
+  body.innerHTML='<div class="loading"><div class="spinner"></div>Carregando...</div>';
+  try{
+    const {data:users}=await sb.from('acesso_status').select('status,tipo_acesso,transacoes_trial,cupom_afiliado');
+    const todos=users||[];
+    const comUso=todos.filter(u=>(u.transacoes_trial||0)>0);
+    const totalUsos=todos.reduce((s,u)=>s+(u.transacoes_trial||0),0);
+    const mediaUsos=comUso.length?+(totalUsos/comUso.length).toFixed(1):0;
+    const trialAtivos=todos.filter(u=>u.status==='trial');
+    const trialUsados=trialAtivos.reduce((s,u)=>s+(u.transacoes_trial||0),0);
+    const totalAssin=todos.filter(u=>u.tipo_acesso==='anual').length;
+    const cobertura=todos.length?Math.round(comUso.length/todos.length*100):0;
+    // distribuição de faixas de uso
+    const faixas=[{l:'0 usos',fn:u=>(u.transacoes_trial||0)===0},{l:'1-3 usos',fn:u=>{const t=u.transacoes_trial||0;return t>=1&&t<=3;}},{l:'4-7 usos',fn:u=>{const t=u.transacoes_trial||0;return t>=4&&t<=7;}},{l:'8-10 usos',fn:u=>{const t=u.transacoes_trial||0;return t>=8&&t<=10;}},{l:'+10 usos',fn:u=>(u.transacoes_trial||0)>10}];
+    const maxF=Math.max(...faixas.map(f=>todos.filter(f.fn).length),1);
+    body.innerHTML=`
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:18px">
+        <div class="dash-stat-box"><div class="dash-stat-box-val">${totalUsos}</div><div class="dash-stat-box-label">Total de usos registrados</div></div>
+        <div class="dash-stat-box"><div class="dash-stat-box-val">${mediaUsos}</div><div class="dash-stat-box-label">Média por usuário ativo</div></div>
+        <div class="dash-stat-box"><div class="dash-stat-box-val">${cobertura}%</div><div class="dash-stat-box-label">Usuários que usaram</div></div>
+        <div class="dash-stat-box"><div class="dash-stat-box-val" style="color:var(--verde)">${totalAssin}</div><div class="dash-stat-box-label">Convertidos p/ assinatura</div></div>
+      </div>
+      <div class="dash-section-title">📊 Distribuição de usos por usuário</div>
+      ${faixas.map(f=>{const cnt=todos.filter(f.fn).length;const w=Math.round(cnt/maxF*100);return`<div class="dash-bar-row"><div class="dash-bar-label">${f.l}</div><div class="dash-bar-track"><div class="dash-bar-fill" style="width:${w}%"></div></div><div class="dash-bar-val">${cnt}</div></div>`}).join('')}
+      <div style="margin-top:16px;padding:12px;background:var(--amarelo-dim);border:1px solid #FDE68A;border-radius:var(--r);font-size:12px;color:var(--amarelo);font-weight:600">
+        ℹ️ Os usos registrados incluem anotações de enfermagem e cálculos de medicamentos (contabilizados conjuntamente). Para detalhamento por tipo de função, é necessário habilitar o log por ocorrência no banco de dados.
+      </div>`;
+  }catch(e){body.innerHTML=`<div style="color:var(--vermelho);font-size:13px">${e.message}</div>`;}
+}
+
+async function dashCarregarAcessos(){
+  const tbody=document.getElementById('dash-access-tbody');
+  const statsEl=document.getElementById('dash-acessos-stats');
+  tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
+  try{
+    const {data}=await sb.from('acesso_status').select('*').in('status',['ativo','trial']).order('ultimo_acesso',{ascending:false,nullsFirst:false});
+    const users=data||[];
+    const stCls={trial:'sp-trial',ativo:'sp-ativo'};
+    // stats médios
+    const comUltAcesso=users.filter(u=>u.ultimo_acesso);
+    if(statsEl&&comUltAcesso.length){
+      const agora=new Date();
+      const diasDesdeAcesso=comUltAcesso.map(u=>Math.floor((agora-new Date(u.ultimo_acesso))/(1000*60*60*24)));
+      const mediaDias=+(diasDesdeAcesso.reduce((s,d)=>s+d,0)/diasDesdeAcesso.length).toFixed(1);
+      const mediaUsos=+(users.reduce((s,u)=>s+(u.transacoes_trial||0),0)/users.length).toFixed(1);
+      statsEl.innerHTML=`
+        <div class="dash-stat-box"><div class="dash-stat-box-val">${users.length}</div><div class="dash-stat-box-label">Usuários ativos/trial</div></div>
+        <div class="dash-stat-box"><div class="dash-stat-box-val">${mediaDias}d</div><div class="dash-stat-box-label">Média dias desde último acesso</div></div>
+        <div class="dash-stat-box"><div class="dash-stat-box-val">${mediaUsos}</div><div class="dash-stat-box-label">Média de usos por usuário</div></div>`;
+    }
+    if(!users.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Nenhum usuário ativo.</td></tr>';return;}
+    tbody.innerHTML=users.map(u=>{
+      const cls=stCls[u.status]||'sp-trial';
+      const acesso=u.ultimo_acesso?new Date(u.ultimo_acesso).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';
+      const desde=u.acesso_anual_inicio?new Date(u.acesso_anual_inicio).toLocaleDateString('pt-BR'):'—';
+      const usos=u.transacoes_trial||0;
+      return`<tr>
+        <td><div style="font-weight:700;color:var(--text)">${u.nome||'—'}</div><div style="font-size:11px;color:var(--text3)">${u.email}</div></td>
+        <td><span class="status-pill ${cls}">${u.status}</span></td>
+        <td style="font-weight:800;font-family:var(--mono);color:var(--teal)">${usos}</td>
+        <td style="font-size:12px">${acesso}</td>
+        <td style="font-size:12px">${desde}</td>
+      </tr>`;
+    }).join('');
+  }catch(e){tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--vermelho)">${e.message}</td></tr>`;}
 }
 
 // ── USER MENU ──
@@ -1269,6 +1814,7 @@ function gerarAnotacao(){
   out.innerHTML=`<div class="output-wrap"><div class="output-header"><div class="output-title">✅ Anotação gerada</div><span style="font-size:11px;font-weight:600;color:var(--verde)">${hora} · ${selOco.nome}</span></div><div class="output-text">${final}</div><div class="output-actions"><button class="btn btn-verde" onclick="copiar(this,\`${safe}\`)">📋 Copiar</button><button class="btn btn-outline" onclick="resetForm()">➕ Nova anotação</button></div></div>`;
   out.scrollIntoView({behavior:'smooth',block:'nearest'});
   showToast('✅ Anotação gerada!');
+  registrarTransacao();
 }
 
 function copiar(btn,txt){
@@ -1296,7 +1842,7 @@ function showView(id,btn){
   document.querySelectorAll('.bn-btn').forEach(b=>b.classList.remove('active'));
   const bn=document.getElementById(`bn-${id}`);if(bn)bn.classList.add('active');
   closeSidebar();
-  if(id==='admin')carregarAdmin();
+  if(id==='admin'){adminTab('usuarios',document.getElementById('admin-tab-usuarios'));}
 }
 
 function resetForm(){
@@ -1313,6 +1859,40 @@ function fecharTrialModal(e){
   if(e===null||e.target===document.getElementById('trial-modal')){
     document.getElementById('trial-modal').style.display='none';
   }
+}
+
+async function registrarTransacao(){
+  if(!currentUser||!currentUsuario||currentUsuario.tipo_acesso!=='trial')return;
+  try{
+    const novoCount=(currentUsuario.transacoes_trial||0)+1;
+    const {error}=await sb.from('usuarios').update({transacoes_trial:novoCount}).eq('id',currentUser.id);
+    if(error)throw error;
+    currentUsuario.transacoes_trial=novoCount;
+    // Atualizar badge
+    const ti=document.getElementById('trial-info');
+    const restantes=10-novoCount;
+    if(restantes>0){
+      ti.innerHTML=`<span class="trial-badge">🎁 ${restantes} uso${restantes!==1?'s':''} grátis</span>`;
+    }
+    // Exibir modal de aviso ao chegar em 9/10
+    if(novoCount===9){
+      const chave='pulso_trial_modal_'+currentUser.id+'_9trans';
+      if(!sessionStorage.getItem(chave)){
+        setTimeout(()=>{document.getElementById('trial-modal').style.display='flex';},600);
+        sessionStorage.setItem(chave,'1');
+      }
+    }
+    // Bloquear ao atingir 10
+    if(novoCount>=10){
+      setTimeout(()=>mostrarBloqueio(),800);
+    }
+  }catch(e){console.error('Erro ao registrar transação:',e);}
+}
+
+function registrarCalcTrial(btn){
+  btn.disabled=true;
+  btn.textContent='✓ Registrado';
+  registrarTransacao();
 }
 
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open');}
@@ -1515,6 +2095,9 @@ function limparCalc(tipo) {
   document.getElementById(resMap[tipo]).classList.remove('show');
   if (tipo === 'comprimido') document.getElementById('cp-warn').style.display = 'none';
   if (tipo === 'insulina') document.getElementById('ins-aviso-seringa').style.display = 'none';
+  // Re-habilitar botão de registrar para próximo cálculo
+  const resEl = document.getElementById(resMap[tipo]);
+  if(resEl){ const btn=resEl.querySelector('.btn-registrar-calc'); if(btn){btn.disabled=false;btn.textContent='✓ Registrar uso do cálculo';} }
 }
 
 // ── MÓDULO DE PAGAMENTO (Mercado Pago) ────────────────────────────────────────
