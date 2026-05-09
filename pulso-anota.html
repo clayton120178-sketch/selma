@@ -167,6 +167,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .btn-primary:hover{background:#0B7A6E}
 .btn-outline{background:var(--surface);color:var(--text2);border-color:var(--border)}
 .btn-outline:hover{border-color:var(--teal);color:var(--teal)}
+.btn-share{background:#E8FDF5;color:#059669;border-color:#6EE7B7}
+.btn-share:hover{background:#D1FAE5;border-color:#059669}
 
 /* CALCULADORA DE MEDICAMENTOS */
 .calc-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
@@ -561,7 +563,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   </div>
   <div class="topbar-right">
     <span id="trial-info"></span>
-    <span style="font-size:10px;color:var(--text3);font-family:var(--mono);background:var(--surface2);padding:2px 7px;border-radius:6px;border:1px solid var(--border)">v09/05-D</span>
+    <span style="font-size:10px;color:var(--text3);font-family:var(--mono);background:var(--surface2);padding:2px 7px;border-radius:6px;border:1px solid var(--border)">v09/05-E</span>
     <div class="clock" id="clock">--:--</div>
     <div class="user-avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
   </div>
@@ -767,6 +769,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
             <div class="calc-result-main"><div class="calc-result-val" id="inj-val">—</div><div class="calc-result-unit">ml</div></div>
             <div class="calc-steps" id="inj-steps"></div>
             <button class="btn btn-verde btn-registrar-calc" style="width:100%;margin-top:10px" onclick="registrarCalcTrial(this)">✓ Registrar uso do cálculo</button>
+            <button class="btn btn-share" style="width:100%;margin-top:8px" onclick="compartilharCalc('injetavel')">🔗 Compartilhar resultado</button>
           </div>
           <button class="btn-limpar" onclick="limparCalc('injetavel')">↺ Limpar</button>
         </div>
@@ -798,6 +801,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
             <div class="calc-steps" id="cp-steps"></div>
             <div class="calc-warn" id="cp-warn" style="display:none">⚠️ Resultado fracionado — confirme com a prescrição ou cheque se há apresentação adequada.</div>
             <button class="btn btn-verde btn-registrar-calc" style="width:100%;margin-top:10px" onclick="registrarCalcTrial(this)">✓ Registrar uso do cálculo</button>
+            <button class="btn btn-share" style="width:100%;margin-top:8px" onclick="compartilharCalc('comprimido')">🔗 Compartilhar resultado</button>
           </div>
           <button class="btn-limpar" onclick="limparCalc('comprimido')">↺ Limpar</button>
         </div>
@@ -827,6 +831,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
             <div class="calc-result-grid" id="gt-grid"></div>
             <div class="calc-steps" id="gt-steps"></div>
             <button class="btn btn-verde btn-registrar-calc" style="width:100%;margin-top:10px" onclick="registrarCalcTrial(this)">✓ Registrar uso do cálculo</button>
+            <button class="btn btn-share" style="width:100%;margin-top:8px" onclick="compartilharCalc('gotejamento')">🔗 Compartilhar resultado</button>
           </div>
           <button class="btn-limpar" onclick="limparCalc('gotejamento')">↺ Limpar</button>
         </div>
@@ -849,6 +854,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
             <div class="calc-result-main"><div class="calc-result-val" id="bm-val">—</div><div class="calc-result-unit">ml/h</div></div>
             <div class="calc-steps" id="bm-steps"></div>
             <button class="btn btn-verde btn-registrar-calc" style="width:100%;margin-top:10px" onclick="registrarCalcTrial(this)">✓ Registrar uso do cálculo</button>
+            <button class="btn btn-share" style="width:100%;margin-top:8px" onclick="compartilharCalc('bomba')">🔗 Compartilhar resultado</button>
           </div>
           <button class="btn-limpar" onclick="limparCalc('bomba')">↺ Limpar</button>
         </div>
@@ -886,6 +892,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
               🚨 <strong>Atenção:</strong> Ao usar seringa comum com frasco U-40, o risco de erro de dose é alto. Prefira sempre a seringa de insulina calibrada para U-40 quando disponível.
             </div>
             <button class="btn btn-verde btn-registrar-calc" style="width:100%;margin-top:10px" onclick="registrarCalcTrial(this)">✓ Registrar uso do cálculo</button>
+            <button class="btn btn-share" style="width:100%;margin-top:8px" onclick="compartilharCalc('insulina')">🔗 Compartilhar resultado</button>
           </div>
           <button class="btn-limpar" onclick="limparCalc('insulina')">↺ Limpar</button>
         </div>
@@ -1892,7 +1899,7 @@ function gerarAnotacao(){
   renderHist();
   const out=document.getElementById('output');out.style.display='block';
   const safe=final.replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');
-  out.innerHTML=`<div class="output-wrap"><div class="output-header"><div class="output-title">✅ Anotação gerada</div><span style="font-size:11px;font-weight:600;color:var(--verde)">${hora} · ${selOco.nome}</span></div><div class="output-text">${final}</div><div class="output-actions"><button class="btn btn-verde" onclick="copiar(this,\`${safe}\`)">📋 Copiar</button><button class="btn btn-outline" onclick="resetForm()">➕ Nova anotação</button></div></div>`;
+  out.innerHTML=`<div class="output-wrap"><div class="output-header"><div class="output-title">✅ Anotação gerada</div><span style="font-size:11px;font-weight:600;color:var(--verde)">${hora} · ${selOco.nome}</span></div><div class="output-text">${final}</div><div class="output-actions"><button class="btn btn-verde" onclick="copiar(this,\`${safe}\`)">📋 Copiar</button><button class="btn btn-share" onclick="compartilhar(\`${safe}\`)">🔗 Compartilhar</button><button class="btn btn-outline" onclick="resetForm()">➕ Nova anotação</button></div></div>`;
   out.scrollIntoView({behavior:'smooth',block:'nearest'});
   showToast('✅ Anotação gerada!');
   registrarTransacao();
@@ -1900,6 +1907,27 @@ function gerarAnotacao(){
 
 function copiar(btn,txt){
   navigator.clipboard.writeText(txt).then(()=>{btn.textContent='✓ Copiado!';setTimeout(()=>btn.innerHTML='📋 Copiar',2000);showToast('📋 Copiado!');});
+}
+
+function compartilhar(texto){
+  const link='https://anota.pulsoenfermagem.com.br';
+  const msg='Usei o app Pulso Anota pra fazer isso aqui rapidinho — vê se te ajuda:\n\n'+texto+'\n\nDá pra testar grátis: '+link;
+  if(navigator.share){
+    navigator.share({title:'Pulso Anota',text:msg}).catch(()=>{});
+  } else {
+    window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+  }
+}
+
+function compartilharCalc(tipo){
+  const nomes={injetavel:'Cálculo de Dose Injetável',comprimido:'Cálculo de Comprimido',gotejamento:'Cálculo de Gotejamento',bomba:'Cálculo de Bomba de Infusão',insulina:'Cálculo de Insulina'};
+  const ids={injetavel:'inj-result',comprimido:'cp-result',gotejamento:'gt-result',bomba:'bm-result',insulina:'ins-result'};
+  const el=document.getElementById(ids[tipo]);
+  if(!el) return;
+  const clone=el.cloneNode(true);
+  clone.querySelectorAll('button').forEach(b=>b.remove());
+  const texto=nomes[tipo]+'\n'+clone.innerText.replace(/\n{3,}/g,'\n\n').trim();
+  compartilhar(texto);
 }
 
 function renderHist(){
