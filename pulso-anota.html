@@ -313,7 +313,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   .patient-bar{display:none}
   .auth-card{padding:28px 24px}
 }
-@media(min-width:769px){.bottom-nav{display:none}.sidebar{height:calc(100vh - var(--topbar-h))}}
+@media(min-width:769px){.bottom-nav{display:none}.sidebar{position:fixed;top:var(--topbar-h);bottom:0;left:0;height:auto;overflow-y:auto}.layout{display:block}.main{margin-left:var(--sidebar-w);height:calc(100vh - var(--topbar-h));display:flex;flex-direction:column;overflow:hidden}.content{flex:1;overflow-y:scroll;min-height:0}}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
