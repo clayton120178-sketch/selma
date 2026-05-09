@@ -2342,9 +2342,8 @@ async function renderizarCardBrick() {
         customization: {
           visual: { hidePaymentButton: false },
           paymentMethods: {
-            creditCard: payMethod === 'credit_card' ? 'all' : 'none',
-            debitCard:  payMethod === 'debit_card'  ? 'all' : 'none',
-            maxInstallments: payMethod === 'credit_card' ? 12 : 1,
+            ...(payMethod === 'credit_card' ? { creditCard: 'all', maxInstallments: 12 } : {}),
+            ...(payMethod === 'debit_card'  ? { debitCard:  'all', maxInstallments: 1  } : {}),
           },
         },
         callbacks: {
