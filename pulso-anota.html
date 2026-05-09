@@ -2520,29 +2520,37 @@ async function renderInstallments(amount, containerId) {
   const el = document.getElementById(containerId);
   if (!el) return;
   if (_installmentsCache[amount]) { el.innerHTML = _installmentsCache[amount]; return; }
+
+  // BINs de cartões brasileiros — testamos em ordem buscando o maior nº de parcelas
+  const BINS = ['516259','548188','423564','458834','411111'];
+  let best = null;
+
   try {
-    // BINs de cartões brasileiros comuns — testamos em sequência até obter >1 parcela
-    const BINS = ['516259','548188','423564','458834','411111'];
-    let costs = null;
+    const mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' });
     for (const bin of BINS) {
-      const res  = await fetch(
-        `https://api.mercadopago.com/v1/payment_methods/installments?public_key=${MP_PUBLIC_KEY}&amount=${amount}&locale=pt-BR&bin=${bin}`
-      );
-      const data = await res.json();
-      if (data?.[0]?.payer_costs?.length > 1) { costs = data[0].payer_costs; break; }
+      try {
+        const data  = await mp.getInstallments({ amount: String(amount), locale: 'pt-BR', bin });
+        const costs = data?.[0]?.payer_costs;
+        if (!costs?.length) continue;
+        // pega o mais elástico deste BIN
+        const candidate = costs[costs.length - 1];
+        if (!best || candidate.installments > best.installments) best = candidate;
+        if (best.installments > 1) break; // encontrou opção parcelada — chega
+      } catch { /* BIN inválido para este método, tenta o próximo */ }
     }
-    if (!costs) { el.innerHTML = ''; return; }
-    // Usa a maior parcela disponível (mais elástica) como destaque
-    const best     = costs[costs.length - 1];
-    const bestVal  = `R$&nbsp;${best.installment_amount.toFixed(2).replace('.', ',')}`;
-    const bestLabel = best.installment_rate === 0
+  } catch { /* SDK indisponível */ }
+
+  let html;
+  if (best) {
+    const val = `R$&nbsp;${best.installment_amount.toFixed(2).replace('.', ',')}`;
+    const sem = best.installment_rate === 0
       ? '&nbsp;<span style="color:var(--teal);font-weight:600">s/juros</span>' : '';
-    const html = `ou <strong>${best.installments}x&nbsp;de&nbsp;${bestVal}</strong>${bestLabel} no cartão`;
-    _installmentsCache[amount] = html;
-    el.innerHTML = html;
-  } catch(e) {
-    el.innerHTML = '<span style="color:var(--text3)">Parcele no cartão de crédito</span>';
+    html = `ou <strong>${best.installments}x&nbsp;de&nbsp;${val}</strong>${sem} no cartão`;
+  } else {
+    html = '<span style="color:var(--text3)">Parcele no cartão de crédito</span>';
   }
+  _installmentsCache[amount] = html;
+  el.innerHTML = html;
 }
 </script>
 </body>
