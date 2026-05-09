@@ -313,7 +313,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   .patient-bar{display:none}
   .auth-card{padding:28px 24px}
 }
-@media(min-width:769px){.bottom-nav{display:none}.sidebar{position:fixed;top:var(--topbar-h);bottom:0;left:0;height:auto;overflow-y:auto}.layout{display:block}.main{margin-left:var(--sidebar-w);height:calc(100vh - var(--topbar-h));display:flex;flex-direction:column;overflow:hidden}.content{flex:1;overflow-y:scroll;min-height:0}}
+@media(min-width:769px){.bottom-nav{display:none}.sidebar{position:fixed;top:var(--topbar-h);bottom:0;left:0;width:var(--sidebar-w);height:auto;overflow-y:auto}.layout{display:block;margin-left:var(--sidebar-w)}.main{height:calc(100vh - var(--topbar-h));display:flex;flex-direction:column}.content{flex:1;overflow-y:scroll;min-height:0}}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
@@ -561,6 +561,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   </div>
   <div class="topbar-right">
     <span id="trial-info"></span>
+    <span style="font-size:10px;color:var(--text3);font-family:var(--mono);background:var(--surface2);padding:2px 7px;border-radius:6px;border:1px solid var(--border)">v09/05-B</span>
     <div class="clock" id="clock">--:--</div>
     <div class="user-avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
   </div>
