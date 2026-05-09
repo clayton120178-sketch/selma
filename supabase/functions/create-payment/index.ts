@@ -4,11 +4,14 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 // ── CONFIGURAÇÕES ────────────────────────────────────────────────────────────
 const ALLOWED_ORIGIN = "https://anota.pulsoenfermagem.com.br";
 
-// Único plano: acesso anual ao app Pulso Anota
-// ↓ ADAPTAR: alterar o preço aqui quando necessário
-const PRICE = 79.90;
-const DAYS  = 365;
+// Planos disponíveis — alterar preços aqui quando necessário
+const PRICES: Record<string, number> = {
+  anotacoes: 97.00,   // Módulo de anotações de enfermagem
+  completo:  117.00,  // Anotações + Calculadora de Medicamentos
+};
+const DAYS = 365;
 
+const VALID_PLANS     = new Set(Object.keys(PRICES));
 const VALID_PAY_TYPES = new Set(["pix", "credit_card", "debit_card"]);
 const EMAIL_RE        = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -67,6 +70,7 @@ serve(async (req) => {
     }
 
     const payment_type = sanitizeString(raw.payment_type);
+    const plan         = sanitizeString(raw.plan) ?? "anotacoes";
 
     if (!payment_type || !VALID_PAY_TYPES.has(payment_type)) {
       return new Response(
@@ -75,7 +79,15 @@ serve(async (req) => {
       );
     }
 
+    if (!VALID_PLANS.has(plan)) {
+      return new Response(
+        JSON.stringify({ error: "Plano inválido" }),
+        { status: 400, headers: { ...cors, "Content-Type": "application/json" } }
+      );
+    }
+
     // 3. Preço definido no backend — nunca vem do frontend
+    const PRICE    = PRICES[plan];
     const MP_TOKEN = Deno.env.get("MP_ACCESS_TOKEN")!;
 
     // 4. Forçar e-mail do usuário autenticado (ignora e-mail vindo do body)
@@ -89,16 +101,18 @@ serve(async (req) => {
     }
     const payerEmailSafe = user.email!;
 
+    const planLabel = plan === "completo" ? "Completo" : "Anotações";
+
     // 5. Montar payload para o Mercado Pago
     const mpPayload: Record<string, unknown> = {
       transaction_amount: PRICE,
-      description: "Pulso Anota — Acesso Anual",
+      description: `Pulso Anota — Plano ${planLabel} · Acesso Anual`,
       payment_method_id: sanitizeString(raw.payment_method_id) ?? payment_type,
       payer: {
         email: payerEmailSafe,
         ...(payerRaw?.identification ? { identification: payerRaw.identification } : {}),
       },
-      metadata: { user_id: user.id, plan: "anual", cycle: "anual", days: DAYS },
+      metadata: { user_id: user.id, plan, days: DAYS },
       notification_url: `${Deno.env.get("SUPABASE_URL")}/functions/v1/payment-webhook`,
     };
 
@@ -166,6 +180,7 @@ serve(async (req) => {
 
       await adminSupabase.from("usuarios").update({
         tipo_acesso:         "anual",
+        plano:               plan,
         acesso_anual_inicio: new Date().toISOString(),
         acesso_anual_fim:    expiresAt.toISOString(),
       }).eq("id", user.id);

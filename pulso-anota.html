@@ -343,6 +343,30 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .blocked-price-box{display:flex;align-items:baseline;gap:4px;justify-content:center;margin:18px 0 20px}
 .blocked-price-val{font-size:40px;font-weight:800;color:var(--teal);font-family:var(--mono)}
 .blocked-price-label{font-size:15px;font-weight:600;color:var(--text2)}
+/* ── TELA DE BLOQUEIO — SELEÇÃO DE PLANOS ────────────────────────────────── */
+.blocked-card{max-width:600px!important}
+.blocked-headline{font-size:20px;font-weight:800;color:var(--text);margin-bottom:8px;line-height:1.35;text-align:center}
+.blocked-sub{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;text-align:center}
+.plan-select-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:520px){.plan-select-grid{grid-template-columns:1fr}}
+.psc{border:1.5px solid var(--border);border-radius:16px;padding:20px;text-align:left;position:relative;background:var(--surface)}
+.psc.featured{border-color:var(--teal);background:linear-gradient(160deg,var(--teal-dim) 0%,white 60%)}
+.psc-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--teal);color:white;font-size:10px;font-weight:800;padding:3px 12px;border-radius:20px;letter-spacing:.05em;white-space:nowrap}
+.psc-name{font-size:10px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+.psc-price{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--text);line-height:1}
+.psc-price-label{font-size:12px;color:var(--text3);margin-bottom:14px;margin-top:2px}
+.psc-features{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.psc-feat{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--text2);line-height:1.4}
+.psc-feat.ok{color:var(--text)}
+.psc-fi{width:16px;height:16px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;margin-top:1px}
+.psc-feat.ok .psc-fi{background:var(--teal-dim);color:var(--teal)}
+.psc-feat:not(.ok) .psc-fi{background:var(--surface2);color:var(--text3)}
+.psc-installments{font-size:10px;color:var(--text3);margin-bottom:14px;min-height:13px;line-height:1.5}
+.psc-btn{width:100%;padding:11px;border-radius:10px;border:1.5px solid var(--border);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;background:var(--surface2);color:var(--text)}
+.psc-btn:hover{transform:translateY(-1px)}
+.psc-btn.featured-btn{background:var(--teal);color:white;border:none}
+.psc-btn.featured-btn:hover{background:var(--teal-light);box-shadow:0 4px 16px rgba(13,148,136,.3)}
+.blocked-cta-label{font-size:17px;font-weight:800;color:var(--teal);text-align:center;margin-bottom:16px}
 </style>
 </head>
 <body>
@@ -405,14 +429,44 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 <!-- BLOQUEIO -->
 <div class="blocked-screen" id="blocked-screen" style="display:none">
   <div class="blocked-card">
-    <div class="blocked-icon">🔒</div>
-    <div class="blocked-title">Limite de usos gratuitos atingido</div>
-    <div class="blocked-desc">Você utilizou suas 10 transações gratuitas do Pulso Anota.<br>Assine o acesso anual para continuar praticando anotações de enfermagem.</div>
-    <div class="blocked-price-box">
-      <span class="blocked-price-val">R$&nbsp;79,90</span>
-      <span class="blocked-price-label">/ano</span>
+    <div class="blocked-headline">Você já usou seus 10 testes grátis.</div>
+    <div class="blocked-sub">Continue fazendo anotações e cálculos em segundos, sem limite.</div>
+
+    <div class="plan-select-grid">
+      <!-- Plano Anotações -->
+      <div class="psc">
+        <div class="psc-name">Anotações</div>
+        <div class="psc-price">R$&nbsp;97<span style="font-size:15px;font-weight:400">,00</span></div>
+        <div class="psc-price-label">por ano</div>
+        <div class="psc-features">
+          <div class="psc-feat ok"><div class="psc-fi">✓</div>Módulo de Anotações completo</div>
+          <div class="psc-feat ok"><div class="psc-fi">✓</div>Todos os tipos de ocorrência</div>
+          <div class="psc-feat ok"><div class="psc-fi">✓</div>Histórico e prontuário</div>
+          <div class="psc-feat"><div class="psc-fi">—</div>Calculadora de Medicamentos</div>
+        </div>
+        <div class="psc-installments" id="inst-anotacoes">carregando parcelas...</div>
+        <button class="psc-btn" onclick="abrirPagamento('anotacoes')">Assinar</button>
+      </div>
+
+      <!-- Plano Completo -->
+      <div class="psc featured">
+        <div class="psc-badge">MAIS COMPLETO</div>
+        <div class="psc-name">Completo</div>
+        <div class="psc-price">R$&nbsp;117<span style="font-size:15px;font-weight:400">,00</span></div>
+        <div class="psc-price-label">por ano</div>
+        <div class="psc-features">
+          <div class="psc-feat ok"><div class="psc-fi">✓</div>Tudo do plano Anotações</div>
+          <div class="psc-feat ok"><div class="psc-fi">✓</div>Calculadora de Medicamentos</div>
+          <div class="psc-feat ok"><div class="psc-fi">✓</div>Injetável, comprimido, gotejamento</div>
+          <div class="psc-feat ok"><div class="psc-fi">✓</div>Bomba de infusão e insulina</div>
+        </div>
+        <div class="psc-installments" id="inst-completo">carregando parcelas...</div>
+        <button class="psc-btn featured-btn" onclick="abrirPagamento('completo')">Assinar agora →</button>
+      </div>
     </div>
-    <button onclick="abrirPagamento()" class="btn-cta" style="width:100%;justify-content:center;margin-bottom:14px">💳 Assinar agora</button>
+
+    <div class="blocked-cta-label">Libera seu acesso agora!</div>
+
     <div class="blocked-logout">
       <a href="https://anotacoes.pulsoenfermagem.com.br/" target="_blank">Ver curso completo</a>
       &nbsp;·&nbsp;
@@ -428,8 +482,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
     <div id="pay-view-form">
       <div class="pm-header">
         <div>
-          <div class="pm-title">Assinar Pulso Anota</div>
-          <div class="pm-subtitle">Acesso completo por 1 ano &bull; R$&nbsp;79,90</div>
+          <div class="pm-title" id="pm-title">Assinar Pulso Anota</div>
+          <div class="pm-subtitle" id="pm-subtitle">Selecione um plano para continuar</div>
         </div>
         <button class="pm-close" onclick="fecharPagamento()">✕</button>
       </div>
@@ -488,8 +542,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
       Para continuar usando sem limite, garanta o
       <strong>Treinamento de Anotações de Enfermagem</strong>, que é o curso que libera seu acesso completo ao app.
     </div>
-    <button onclick="fecharTrialModal(null);abrirPagamento();" class="trial-modal-cta">
-      💳 Assinar agora — R$&nbsp;79,90/ano
+    <button onclick="fecharTrialModal(null);abrirPagamento('completo');" class="trial-modal-cta">
+      💳 Ver planos e assinar
     </button>
     <div class="trial-modal-dismiss"><a onclick="fecharTrialModal(null)">Entendi, usar meu último acesso gratuito</a></div>
   </div>
@@ -1119,6 +1173,7 @@ function mostrarBloqueio(){
   if(lo) lo.style.display='none';
   hideAll();
   document.getElementById('blocked-screen').style.display='flex';
+  carregarInstallmentsBlocked();
 }
 
 function mostrarApp(dados){
@@ -1155,7 +1210,8 @@ function mostrarApp(dados){
     const restantes=10-usado;
     ti.innerHTML=`<span class="trial-badge">🎁 ${restantes} uso${restantes!==1?'s':''} grátis</span>`;
   } else if(dados.tipo_acesso==='anual'){
-    ti.innerHTML=`<span class="trial-badge" style="background:var(--verde-dim);border-color:#86EFAC;color:var(--verde)">✅ Acesso anual</span>`;
+    const planLabel = dados.plano === 'completo' ? 'Completo' : 'Anotações';
+    ti.innerHTML=`<span class="trial-badge" style="background:var(--verde-dim);border-color:#86EFAC;color:var(--verde)">✅ ${planLabel}</span>`;
   }
 
   // Carregar dados
@@ -1176,6 +1232,21 @@ function mostrarApp(dados){
   if(dados.tipo_acesso!=='trial'){
     document.querySelectorAll('.btn-registrar-calc').forEach(b=>b.style.display='none');
   }
+
+  // Bloquear calculadora de medicamentos para plano 'anotacoes'
+  const temCalculo = dados.tipo_acesso==='admin' || dados.plano==='completo' || dados.status==='trial';
+  if(!temCalculo){
+    const lockCalc = ()=>{ mostrarToastUpgrade(); return false; };
+    const navCalc = document.getElementById('nav-calcular');
+    const bnCalc  = document.getElementById('bn-calcular');
+    if(navCalc){ navCalc.onclick = lockCalc; navCalc.title='🔒 Disponível no Plano Completo'; }
+    if(bnCalc) { bnCalc.onclick  = lockCalc; }
+  }
+}
+
+function mostrarToastUpgrade(){
+  showToast('🔒 Calculadora de Medicamentos é exclusiva do Plano Completo.');
+  setTimeout(()=>abrirPagamento('completo'), 1800);
 }
 
 function hideAll(){
@@ -1281,8 +1352,8 @@ async function carregarAdmin(){
 async function liberarAnual(uid){
   const agora=new Date();
   const fim=new Date(agora);fim.setFullYear(fim.getFullYear()+1);
-  await sb.from('usuarios').update({tipo_acesso:'anual',acesso_anual_inicio:agora.toISOString(),acesso_anual_fim:fim.toISOString()}).eq('id',uid);
-  showToast('✅ Acesso anual liberado');
+  await sb.from('usuarios').update({tipo_acesso:'anual',plano:'completo',acesso_anual_inicio:agora.toISOString(),acesso_anual_fim:fim.toISOString()}).eq('id',uid);
+  showToast('✅ Acesso anual liberado (Plano Completo)');
   carregarAdmin();
 }
 
@@ -2111,12 +2182,23 @@ function limparCalc(tipo) {
 
 // ── MÓDULO DE PAGAMENTO (Mercado Pago) ────────────────────────────────────────
 
-let payMethod = 'pix';          // método ativo: 'pix' | 'credit_card' | 'debit_card'
-let mpMounted = false;          // controla se o Brick já foi montado
-let pixPaymentId = null;        // ID do pagamento Pix gerado
+const PLAN_PRICES = { anotacoes: 97.00, completo: 117.00 };
+const PLAN_NAMES  = { anotacoes: 'Plano Anotações', completo: 'Plano Completo' };
+
+let payMethod    = 'pix';          // método ativo: 'pix' | 'credit_card' | 'debit_card'
+let mpMounted    = false;          // controla se o Brick já foi montado
+let pixPaymentId = null;           // ID do pagamento Pix gerado
+let selectedPlan = 'anotacoes';    // plano selecionado: 'anotacoes' | 'completo'
+let _installmentsCache = {};       // cache de parcelas por valor
 
 // Abre o modal de pagamento (chamado pela blocked-screen e pelo trial-modal)
-function abrirPagamento() {
+function abrirPagamento(plan = 'anotacoes') {
+  selectedPlan = plan;
+  const priceStr = PLAN_PRICES[plan].toFixed(2).replace('.', ',');
+  const titleEl    = document.getElementById('pm-title');
+  const subtitleEl = document.getElementById('pm-subtitle');
+  if (titleEl)    titleEl.textContent    = 'Assinar Pulso Anota';
+  if (subtitleEl) subtitleEl.textContent = `${PLAN_NAMES[plan]} · R$ ${priceStr}/ano`;
   resetPayModal();
   document.getElementById('payment-modal').style.display = 'flex';
 }
@@ -2224,7 +2306,7 @@ async function renderizarCardBrick() {
       'cardPaymentBrick_container',
       {
         initialization: {
-          amount: 79.90,
+          amount: PLAN_PRICES[selectedPlan],
           payer: { email: currentUser?.email ?? '' },
         },
         customization: {
@@ -2251,6 +2333,7 @@ async function renderizarCardBrick() {
                   token:             formData.token,
                   issuer_id:         formData.issuer_id || null,
                   installments:      formData.installments || 1,
+                  plan:              selectedPlan,
                   payer: { email: currentUser.email },
                 }),
               });
@@ -2294,6 +2377,7 @@ async function gerarPix() {
       body: JSON.stringify({
         payment_type:      'pix',
         payment_method_id: 'pix',
+        plan:              selectedPlan,
         payer: { email: currentUser.email },
       }),
     });
@@ -2390,6 +2474,44 @@ function mostrarPayError(msg) {
 function esconderPayError() {
   const el = document.getElementById('pay-error');
   if (el) el.style.display = 'none';
+}
+
+// ── PARCELAMENTOS NA TELA DE BLOQUEIO (Mercado Pago SDK) ──────────────────────
+
+async function carregarInstallmentsBlocked() {
+  if (!window.MercadoPago) {
+    const s = document.createElement('script');
+    s.src = 'https://sdk.mercadopago.com/js/v2';
+    document.head.appendChild(s);
+    await new Promise(r => { s.onload = r; s.onerror = r; });
+  }
+  renderInstallments(97.00,  'inst-anotacoes');
+  renderInstallments(117.00, 'inst-completo');
+}
+
+async function renderInstallments(amount, containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (_installmentsCache[amount]) { el.innerHTML = _installmentsCache[amount]; return; }
+  try {
+    const mp   = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' });
+    const data = await mp.getInstallments({ amount: String(amount), locale: 'pt-BR', bin: '411111' });
+    if (!data || !data[0]?.payer_costs?.length) { el.innerHTML = ''; return; }
+    const costs = data[0].payer_costs;
+    // Mostrar 1x, 3x, 6x e 12x (ou máximo disponível)
+    const pts = [1, 3, 6, 12]
+      .map(n => costs.find(c => c.installments === n))
+      .filter(Boolean);
+    const html = '<span style="color:var(--text3)">Cartão: </span>' + pts.map(c => {
+      const val   = `R$&nbsp;${c.installment_amount.toFixed(2).replace('.', ',')}`;
+      const label = c.installment_rate === 0 ? '&nbsp;s/juros' : '';
+      return `${c.installments}x&nbsp;de&nbsp;${val}${label}`;
+    }).join(' &middot; ');
+    _installmentsCache[amount] = html;
+    el.innerHTML = html;
+  } catch(e) {
+    el.innerHTML = '<span style="color:var(--text3)">Parcele no cartão de crédito</span>';
+  }
 }
 </script>
 </body>
