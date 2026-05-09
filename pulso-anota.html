@@ -2521,22 +2521,23 @@ async function renderInstallments(amount, containerId) {
   if (!el) return;
   if (_installmentsCache[amount]) { el.innerHTML = _installmentsCache[amount]; return; }
 
-  // BINs de cartões brasileiros — testamos em ordem buscando o maior nº de parcelas
-  const BINS = ['516259','548188','423564','458834','411111'];
+  // Usa payment_method_id (sem precisar do cartão do usuário) para recuperar
+  // a tabela de parcelamento configurada na conta do Mercado Pago
+  const METHODS = ['visa', 'master', 'elo', 'hipercard'];
   let best = null;
 
   try {
     const mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' });
-    for (const bin of BINS) {
+    for (const payment_method_id of METHODS) {
       try {
-        const data  = await mp.getInstallments({ amount: String(amount), locale: 'pt-BR', bin });
+        const data  = await mp.getInstallments({ amount: String(amount), locale: 'pt-BR', payment_method_id });
         const costs = data?.[0]?.payer_costs;
         if (!costs?.length) continue;
-        // pega o mais elástico deste BIN
+        // pega o mais elástico deste método
         const candidate = costs[costs.length - 1];
         if (!best || candidate.installments > best.installments) best = candidate;
         if (best.installments > 1) break; // encontrou opção parcelada — chega
-      } catch { /* BIN inválido para este método, tenta o próximo */ }
+      } catch { /* método indisponível, tenta o próximo */ }
     }
   } catch { /* SDK indisponível */ }
 
