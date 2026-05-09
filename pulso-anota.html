@@ -540,9 +540,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
     <div class="trial-modal-icon">⚠️</div>
     <div class="trial-modal-title">Último uso gratuito disponível</div>
     <div class="trial-modal-body">
-      Você já utilizou 9 das suas 10 transações gratuitas — anotações reais de queda, febre, medicação, acesso venoso.<br><br>
-      Para continuar usando sem limite, garanta o
-      <strong>Treinamento de Anotações de Enfermagem</strong>, que é o curso que libera seu acesso completo ao app.
+      Você já utilizou 9 das suas 10 transações gratuitas.<br><br>
+      Continue fazendo suas anotações e cálculos sem limite:<br>
+      <strong>Assine o acesso completo</strong>
     </div>
     <button onclick="fecharTrialModal(null);abrirPagamento('completo');" class="trial-modal-cta">
       💳 Ver planos e assinar
@@ -2534,11 +2534,11 @@ async function renderInstallments(amount, containerId) {
     const pts = [1, 3, 6, 12]
       .map(n => costs.find(c => c.installments === n))
       .filter(Boolean);
-    const html = '<span style="color:var(--text3)">Cartão: </span>' + pts.map(c => {
-      const val   = `R$&nbsp;${c.installment_amount.toFixed(2).replace('.', ',')}`;
-      const label = c.installment_rate === 0 ? '&nbsp;s/juros' : '';
-      return `${c.installments}x&nbsp;de&nbsp;${val}${label}`;
-    }).join(' &middot; ');
+    // Usa a maior parcela disponível (mais elástica) como destaque
+    const best = costs[costs.length - 1];
+    const bestVal = `R$&nbsp;${best.installment_amount.toFixed(2).replace('.', ',')}`;
+    const bestLabel = best.installment_rate === 0 ? '&nbsp;<span style="color:var(--teal);font-weight:600">s/juros</span>' : '';
+    const html = `ou <strong>${best.installments}x&nbsp;de&nbsp;${bestVal}</strong>${bestLabel} no cartão`;
     _installmentsCache[amount] = html;
     el.innerHTML = html;
   } catch(e) {
