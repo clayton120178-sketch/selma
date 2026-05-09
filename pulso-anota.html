@@ -556,6 +556,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
       <button class="nav-btn" onclick="atalho('administracao_medicacao')"><div class="ni">💊</div>Medicação</button>
       <button class="nav-btn" onclick="atalho('alta_transferencia')"><div class="ni">🚑</div>Alta / Transfer.</button>
     </div>
+    <div id="sidebar-admin-section" style="display:none">
+      <div class="sdiv"></div>
+      <div class="cat-label"><div class="cat-pip" style="background:var(--teal)"></div>Administração</div>
+      <div style="padding:0 8px">
+        <button class="nav-btn" onclick="showView('admin',this)"><div class="ni">⚙️</div>Painel Admin</button>
+      </div>
+    </div>
   </aside>
 
   <main class="main">
@@ -1138,6 +1145,7 @@ function mostrarApp(dados){
   // Admin menu
   if(dados.tipo_acesso==='admin'){
     document.getElementById('admin-menu-item').style.display='flex';
+    document.getElementById('sidebar-admin-section').style.display='block';
   }
 
   // Trial badge
