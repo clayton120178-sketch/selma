@@ -1089,7 +1089,7 @@ async function verificarAcesso(){
     // Atualizar ultimo acesso
     await sb.from('usuarios').update({ultimo_acesso:new Date().toISOString()}).eq('id',currentUser.id);
 
-    if(data.status==='ativo'||data.status==='trial'){
+    if(data.status==='ativo'||data.status==='trial'||data.tipo_acesso==='admin'){
       mostrarApp(data);
     } else {
       mostrarBloqueio();
