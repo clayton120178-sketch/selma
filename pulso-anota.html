@@ -1256,11 +1256,11 @@ async function carregarAdmin(){
   const tbody=document.getElementById('admin-tbody');
   tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
   try{
-    const {data}=await sb.from('acesso_status').select('*').order('criado_em',{ascending:false});
+    const {data}=await sb.from('acesso_status').select('*').order('trial_inicio',{ascending:false});
     if(!data||!data.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3)">Nenhum usuário.</td></tr>';return;}
     tbody.innerHTML=data.map(u=>{
       const statusCls={trial:'sp-trial',ativo:'sp-ativo',expirado:'sp-expirado',bloqueado:'sp-expirado',admin:'sp-admin'}[u.status]||'sp-trial';
-      const trialUsos=u.status==='trial'||u.tipo_acesso==='trial'?`${u.transacoes_trial||0}/10 usos`:'—';
+      const trialUsos=u.status==='trial'||u.tipo_acesso==='trial'?`${u.transacoes_trial||u.dias_restantes_trial||0}/10 usos`:'—';
       const anualFim=u.acesso_anual_fim?new Date(u.acesso_anual_fim).toLocaleDateString('pt-BR'):'—';
       const cupomBadge=u.cupom_afiliado?`<span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--teal);background:var(--teal-dim);padding:2px 7px;border-radius:6px">${u.cupom_afiliado}</span>`:'—';
       return`<tr>
@@ -1412,8 +1412,8 @@ async function dashCarregarKpis(){
       sb.from('acesso_status').select('status,tipo_acesso'),
       sb.from('influenciadores').select('id,ativo')
     ]);
-    const total=users?users.length:0;
-    const assin=users?users.filter(u=>u.tipo_acesso==='anual'||u.status==='ativo').length:0;
+    const total=users?users.filter(u=>u.tipo_acesso!=='admin').length:0;
+    const assin=users?users.filter(u=>u.tipo_acesso==='anual').length:0;
     const trial=users?users.filter(u=>u.status==='trial').length:0;
     const inativ=users?users.filter(u=>u.status==='expirado'||u.status==='bloqueado').length:0;
     const totalInf=infs?infs.length:0;
@@ -1429,7 +1429,7 @@ async function dashCarregarUsuarios(){
   const tbody=document.getElementById('dash-users-tbody');
   tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
   try{
-    const {data}=await sb.from('acesso_status').select('*').order('criado_em',{ascending:false});
+    const {data}=await sb.from('acesso_status').select('*').order('trial_inicio',{ascending:false});
     _dashUsuarios=data||[];
     dashRenderUsuarios();
   }catch(e){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--vermelho)">${e.message}</td></tr>`;}
@@ -1445,8 +1445,9 @@ function dashFiltrarUsuarios(filtro,btn){
 function dashRenderUsuarios(){
   const tbody=document.getElementById('dash-users-tbody');
   let lista=_dashUsuarios;
+  lista=lista.filter(u=>u.tipo_acesso!=='admin');
   if(_dashFiltroAtual!=='todos'){
-    if(_dashFiltroAtual==='ativo') lista=lista.filter(u=>u.tipo_acesso==='anual'||u.status==='ativo');
+    if(_dashFiltroAtual==='ativo') lista=lista.filter(u=>u.tipo_acesso==='anual');
     else if(_dashFiltroAtual==='trial') lista=lista.filter(u=>u.status==='trial');
     else if(_dashFiltroAtual==='expirado') lista=lista.filter(u=>u.status==='expirado'||u.status==='bloqueado');
   }
