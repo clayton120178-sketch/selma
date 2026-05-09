@@ -10,7 +10,9 @@ ALTER TABLE usuarios
   ADD COLUMN IF NOT EXISTS plano VARCHAR(20) DEFAULT NULL;
 
 -- 2. Recriar a view acesso_status expondo o campo plano
-CREATE OR REPLACE VIEW acesso_status AS
+--    DROP necessário porque CREATE OR REPLACE não permite inserir coluna no meio da lista
+DROP VIEW IF EXISTS acesso_status;
+CREATE VIEW acesso_status AS
 SELECT
   u.id,
   u.email,
