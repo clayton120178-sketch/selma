@@ -9,6 +9,16 @@
         }
       ],
       "dest": "/anotacoes/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "app.pulsoenfermagem.com.br"
+        }
+      ],
+      "dest": "/pulso-anota.html"
     }
   ]
 }
