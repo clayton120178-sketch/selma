@@ -1417,23 +1417,40 @@ async function salvarInfluenciador(){
   const plataforma=document.getElementById('inf-plataforma').value.trim();
   const observacoes=document.getElementById('inf-obs').value.trim();
   const errEl=document.getElementById('inf-form-error');
+  const btn=document.querySelector('#admin-panel-influenciadores .btn-primary');
   errEl.style.display='none';
-  if(!nome||!cupom){errEl.textContent='Nome e CUPOM são obrigatórios.';errEl.style.display='block';return;}
-  if(!/^[A-Z0-9]+$/.test(cupom)){errEl.textContent='CUPOM deve conter apenas letras maiúsculas e números, sem espaços ou caracteres especiais.';errEl.style.display='block';return;}
+  if(!nome||!cupom){
+    errEl.textContent='Nome e CUPOM são obrigatórios.';
+    errEl.style.display='block';
+    errEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+    return;
+  }
+  if(!/^[A-Z0-9]+$/.test(cupom)){
+    errEl.textContent='CUPOM deve conter apenas letras maiúsculas e números, sem espaços ou caracteres especiais.';
+    errEl.style.display='block';
+    errEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+    return;
+  }
+  const origLabel=btn?btn.textContent:'';
+  if(btn){btn.disabled=true;btn.textContent='Salvando...';}
   const payload={nome,telefone:telefone||null,cupom,chave_pix:chave_pix||null,plataforma:plataforma||null,observacoes:observacoes||null};
   let error;
-  if(id){
-    ({error}=await sb.from('influenciadores').update(payload).eq('id',id));
-  }else{
-    ({error}=await sb.from('influenciadores').insert({...payload,ativo:true}));
-  }
+  try{
+    if(id){
+      ({error}=await sb.from('influenciadores').update(payload).eq('id',id));
+    }else{
+      ({error}=await sb.from('influenciadores').insert({...payload,ativo:true}));
+    }
+  }catch(e){error=e;}
+  if(btn){btn.disabled=false;btn.textContent=origLabel;}
   if(error){
-    if(error.message.includes('duplicate')||error.message.includes('unique')||error.code==='23505'){
+    if(error.message&&(error.message.includes('duplicate')||error.message.includes('unique'))||error.code==='23505'){
       errEl.textContent='Este CUPOM já está cadastrado. Escolha um nome diferente.';
     }else{
-      errEl.textContent=error.message;
+      errEl.textContent=error.message||JSON.stringify(error);
     }
     errEl.style.display='block';
+    errEl.scrollIntoView({behavior:'smooth',block:'nearest'});
     return;
   }
   showToast(id?'✅ Influenciador atualizado!':'✅ Influenciador criado!');
@@ -1485,10 +1502,12 @@ async function carregarDashboard(){
 
 async function dashCarregarKpis(){
   try{
-    const [{data:users},{data:infs}]=await Promise.all([
+    const [{data:users,error:e1},{data:infs,error:e2}]=await Promise.all([
       sb.from('acesso_status').select('status,tipo_acesso'),
       sb.from('influenciadores').select('id,ativo')
     ]);
+    if(e1)throw e1;
+    if(e2)throw e2;
     const total=users?users.filter(u=>u.tipo_acesso!=='admin').length:0;
     const assin=users?users.filter(u=>u.tipo_acesso==='anual').length:0;
     const trial=users?users.filter(u=>u.status==='trial').length:0;
@@ -1506,7 +1525,8 @@ async function dashCarregarUsuarios(){
   const tbody=document.getElementById('dash-users-tbody');
   tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
   try{
-    const {data}=await sb.from('acesso_status').select('*').order('trial_inicio',{ascending:false});
+    const {data,error}=await sb.from('acesso_status').select('*').order('trial_inicio',{ascending:false});
+    if(error)throw error;
     _dashUsuarios=data||[];
     dashRenderUsuarios();
   }catch(e){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--vermelho)">${e.message}</td></tr>`;}
@@ -1551,10 +1571,12 @@ async function dashCarregarInfluenciadorStats(){
   const tbody=document.getElementById('dash-inf-tbody');
   tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
   try{
-    const [{data:infs},{data:users}]=await Promise.all([
+    const [{data:infs,error:e1},{data:users,error:e2}]=await Promise.all([
       sb.from('influenciadores').select('*').eq('ativo',true).order('nome'),
       sb.from('acesso_status').select('cupom_afiliado,status,tipo_acesso')
     ]);
+    if(e1)throw e1;
+    if(e2)throw e2;
     if(!infs||!infs.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Nenhum influenciador ativo.</td></tr>';return;}
     const usersCupom=users||[];
     const rows=infs.map(inf=>{
@@ -1595,10 +1617,12 @@ async function dashCalcComissoes(){
   res.innerHTML='<div class="loading"><div class="spinner"></div>Calculando...</div>';
   try{
     const fimDia=fim+'T23:59:59.999Z';
-    const [{data:infs},{data:conv}]=await Promise.all([
+    const [{data:infs,error:e1},{data:conv,error:e2}]=await Promise.all([
       sb.from('influenciadores').select('*').eq('ativo',true),
       sb.from('usuarios').select('cupom_afiliado').not('cupom_afiliado','is',null).eq('tipo_acesso','anual').gte('acesso_anual_inicio',inicio).lte('acesso_anual_inicio',fimDia)
     ]);
+    if(e1)throw e1;
+    if(e2)throw e2;
     if(!infs||!infs.length){res.innerHTML='<div style="color:var(--text2);font-size:13px">Nenhum influenciador ativo.</div>';return;}
     const contagem={};
     (conv||[]).forEach(u=>{if(u.cupom_afiliado)contagem[u.cupom_afiliado]=(contagem[u.cupom_afiliado]||0)+1;});
@@ -1642,7 +1666,8 @@ async function dashCarregarAtividade(){
   const body=document.getElementById('dash-atividade-body');
   body.innerHTML='<div class="loading"><div class="spinner"></div>Carregando...</div>';
   try{
-    const {data:users}=await sb.from('acesso_status').select('status,tipo_acesso,transacoes_trial,cupom_afiliado');
+    const {data:users,error}=await sb.from('acesso_status').select('status,tipo_acesso,transacoes_trial,cupom_afiliado');
+    if(error)throw error;
     const todos=users||[];
     const comUso=todos.filter(u=>(u.transacoes_trial||0)>0);
     const totalUsos=todos.reduce((s,u)=>s+(u.transacoes_trial||0),0);
@@ -1674,7 +1699,8 @@ async function dashCarregarAcessos(){
   const statsEl=document.getElementById('dash-acessos-stats');
   tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
   try{
-    const {data}=await sb.from('acesso_status').select('*').in('status',['ativo','trial']).order('ultimo_acesso',{ascending:false,nullsFirst:false});
+    const {data,error}=await sb.from('acesso_status').select('*').in('status',['ativo','trial']).order('ultimo_acesso',{ascending:false,nullsFirst:false});
+    if(error)throw error;
     const users=data||[];
     const stCls={trial:'sp-trial',ativo:'sp-ativo'};
     // stats médios
