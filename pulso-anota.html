@@ -54,6 +54,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .blocked-logout{margin-top:16px;font-size:13px;color:var(--text3)}
 .blocked-logout a{color:var(--teal);cursor:pointer;font-weight:600}
 
+/* CUPOM SCREEN */
+.cupom-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0a1f1d 0%,#0d2e2a 50%,#0a1f1d 100%);display:flex;align-items:center;justify-content:center;z-index:950;padding:20px}
+.cupom-card{background:white;border-radius:20px;padding:40px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.cupom-icon{font-size:40px;margin-bottom:14px;line-height:1}
+.cupom-title{font-size:22px;font-weight:800;color:var(--text);margin-bottom:8px}
+.cupom-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:24px}
+.cupom-error{background:var(--vermelho-dim);border:1px solid #FCA5A5;border-radius:8px;padding:10px 14px;font-size:13px;color:var(--vermelho);margin-bottom:14px;display:none}
+.cupom-loading{text-align:center;padding:10px;font-size:13px;color:var(--text2);display:none}
+.cupom-logout{margin-top:16px;text-align:center;font-size:13px;color:var(--text3)}
+.cupom-logout a{color:var(--teal);font-weight:600;cursor:pointer}
+
 /* MODAL ÚLTIMO DIA TRIAL */
 .trial-modal-overlay{position:fixed;inset:0;background:rgba(10,31,29,.55);backdrop-filter:blur(3px);z-index:800;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadein .25s ease}
 .trial-modal-card{background:white;border-radius:20px;padding:36px 32px 28px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.25);position:relative;animation:modal-up .3s cubic-bezier(.34,1.3,.64,1)}
@@ -472,6 +483,27 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 
     <div class="blocked-cta-label">Libera seu acesso agora!</div>
 
+  </div>
+</div>
+
+<!-- CUPOM: PRIMEIRO ACESSO -->
+<div class="cupom-screen" id="cupom-screen" style="display:none">
+  <div class="cupom-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <div class="auth-logo-name">Pulso <span>Anota</span></div>
+    </div>
+    <div class="cupom-icon">🏷️</div>
+    <div class="cupom-title">Insira seu cupom</div>
+    <div class="cupom-desc">Para ativar seu acesso, informe o cupom que você recebeu. Ele é necessário apenas neste primeiro acesso.</div>
+    <div class="cupom-error" id="cupom-error"></div>
+    <div class="auth-field">
+      <label class="auth-label">Cupom</label>
+      <input class="auth-input" id="cupom-input" type="text" placeholder="Ex: JOAO10" style="text-transform:uppercase;font-family:var(--mono);font-weight:700;letter-spacing:1px" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')" onkeydown="if(event.key==='Enter')submitCupom()">
+    </div>
+    <div class="cupom-loading" id="cupom-loading"><div class="spinner" style="display:inline-block"></div> Verificando cupom...</div>
+    <button class="btn-auth" onclick="submitCupom()">Confirmar cupom</button>
+    <div class="cupom-logout"><a onclick="logout()">Sair da conta</a></div>
   </div>
 </div>
 
@@ -1158,7 +1190,11 @@ async function verificarAcesso(){
     await sb.from('usuarios').update({ultimo_acesso:new Date().toISOString()}).eq('id',currentUser.id);
 
     if(data.status==='ativo'||data.status==='trial'||data.tipo_acesso==='admin'){
-      mostrarApp(data);
+      if(data.tipo_acesso!=='admin' && !data.ultimo_acesso && !data.cupom_afiliado){
+        mostrarCupomScreen(data);
+      } else {
+        mostrarApp(data);
+      }
     } else {
       mostrarBloqueio();
     }
@@ -1180,6 +1216,50 @@ function mostrarBloqueio(){
   if(lo) lo.style.display='none';
   hideAll();
   document.getElementById('blocked-screen').style.display='flex';
+}
+
+function mostrarCupomScreen(dados){
+  const lo = document.getElementById('loading-oauth');
+  if(lo) lo.style.display='none';
+  hideAll();
+  document.getElementById('cupom-screen').style.display='flex';
+  document.getElementById('cupom-input').value='';
+  document.getElementById('cupom-error').style.display='none';
+}
+
+async function submitCupom(){
+  const input = document.getElementById('cupom-input');
+  const errEl = document.getElementById('cupom-error');
+  const loadEl = document.getElementById('cupom-loading');
+  const cupom = input.value.trim().toUpperCase();
+
+  errEl.style.display='none';
+  if(!cupom){
+    errEl.textContent='Digite o cupom antes de continuar.';
+    errEl.style.display='block';
+    return;
+  }
+
+  loadEl.style.display='block';
+  const {data:infData, error:infErr} = await sb.from('influenciadores')
+    .select('id').eq('cupom', cupom).eq('ativo', true).maybeSingle();
+  loadEl.style.display='none';
+
+  if(infErr || !infData){
+    errEl.textContent='Cupom inválido ou não encontrado. Verifique e tente novamente.';
+    errEl.style.display='block';
+    input.focus();
+    return;
+  }
+
+  loadEl.style.display='block';
+  await sb.from('usuarios').update({cupom_afiliado: cupom}).eq('id', currentUser.id);
+  loadEl.style.display='none';
+
+  const {data:dadosAtualizados} = await sb.from('acesso_status').select('*').eq('id', currentUser.id).maybeSingle();
+  currentUsuario = dadosAtualizados || currentUsuario;
+  if(dadosAtualizados) dadosAtualizados.cupom_afiliado = cupom;
+  mostrarApp(dadosAtualizados || currentUsuario);
 }
 
 function mostrarApp(dados){
@@ -1261,6 +1341,7 @@ function hideAll(){
   document.getElementById('auth-login').style.display='none';
   document.getElementById('auth-cadastro').style.display='none';
   document.getElementById('blocked-screen').style.display='none';
+  document.getElementById('cupom-screen').style.display='none';
   document.getElementById('trial-modal').style.display='none';
   document.getElementById('payment-modal').style.display='none';
   document.getElementById('topbar').style.display='none';
