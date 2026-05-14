@@ -1261,6 +1261,7 @@ async function verificarAcesso(){
         if(navInf) navInf.style.display = 'flex';
         showView('influenciador', navInf);
         carregarPainelInfluenciador();
+        if(!oco.length) init();
         return;
       }
     } catch(e) {
