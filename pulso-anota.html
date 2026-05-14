@@ -650,6 +650,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
         <button class="nav-btn" onclick="showView('admin',this)"><div class="ni">⚙️</div>Painel Admin</button>
       </div>
     </div>
+    <!-- Painel do Influenciador — visível apenas para influenciadores -->
+    <button class="nav-btn" id="nav-influenciador" onclick="showView('influenciador',this)" style="display:none">
+      <div class="ni">🤝</div>Meu Painel
+    </button>
   </aside>
 
   <main class="main">
@@ -966,6 +970,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
               <input type="hidden" id="inf-id">
               <div class="fg">
                 <div class="field"><div class="field-label">Nome *</div><input class="field-input" id="inf-nome" placeholder="Nome completo do influenciador"></div>
+                <div class="field"><div class="field-label">Email <span style="font-weight:400;color:var(--text3)">(para acesso ao portal)</span></div><input class="field-input" id="inf-email" type="email" placeholder="email@exemplo.com"></div>
                 <div class="field"><div class="field-label">Telefone</div><input class="field-input" id="inf-telefone" placeholder="(11) 99999-9999"></div>
                 <div class="field"><div class="field-label">CUPOM * <span style="font-weight:400;text-transform:none;font-size:10px">(único, maiúsculas/números)</span></div><input class="field-input" id="inf-cupom" placeholder="Ex: JOAO10" style="text-transform:uppercase;font-family:var(--mono);font-weight:700" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"></div>
                 <div class="field"><div class="field-label">Chave Pix</div><input class="field-input" id="inf-pix" placeholder="CPF, email, celular ou chave aleatória"></div>
@@ -984,7 +989,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
             <div class="card-header"><span class="card-title">🤝 Influenciadores cadastrados</span><button class="btn btn-outline" style="font-size:12px;padding:6px 12px" onclick="carregarInfluenciadores()">↺ Atualizar</button></div>
             <div class="card-body" style="padding:0;overflow-x:auto">
               <table class="admin-table" id="inf-table">
-                <thead><tr><th>Nome</th><th>CUPOM</th><th>Telefone</th><th>Chave Pix</th><th>Plataforma</th><th>Status</th><th>Ações</th></tr></thead>
+                <thead><tr><th>Nome</th><th>Email</th><th>CUPOM</th><th>Telefone</th><th>Chave Pix</th><th>Plataforma</th><th>Status</th><th>Ações</th></tr></thead>
                 <tbody id="inf-tbody"><tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr></tbody>
               </table>
             </div>
@@ -1091,7 +1096,70 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 
       </div>
 
+    </div><!-- /view-admin -->
+
+    <!-- VIEW: PORTAL DO INFLUENCIADOR -->
+    <div class="view" id="view-influenciador">
+      <div class="step-row">
+        <div class="step-num" style="background:var(--teal)">🤝</div>
+        <div>
+          <div class="step-title" id="inf-portal-titulo">Meu Painel</div>
+          <div class="step-sub" id="inf-portal-sub">Seus usuários vinculados ao cupom</div>
+        </div>
+      </div>
+
+      <!-- Cards de resumo -->
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:4px" id="inf-portal-cards">
+        <div class="card" style="flex:1;min-width:140px;padding:16px 18px">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Total vinculados</div>
+          <div style="font-size:28px;font-weight:800;color:var(--text)" id="inf-stat-total">—</div>
+        </div>
+        <div class="card" style="flex:1;min-width:140px;padding:16px 18px">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Em trial</div>
+          <div style="font-size:28px;font-weight:800;color:#F59E0B" id="inf-stat-trial">—</div>
+        </div>
+        <div class="card" style="flex:1;min-width:140px;padding:16px 18px">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Assinantes</div>
+          <div style="font-size:28px;font-weight:800;color:var(--teal)" id="inf-stat-assinantes">—</div>
+        </div>
+        <div class="card" style="flex:1;min-width:140px;padding:16px 18px">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Bloqueados</div>
+          <div style="font-size:28px;font-weight:800;color:var(--vermelho,#EF4444)" id="inf-stat-bloqueados">—</div>
+        </div>
+      </div>
+
+      <!-- Tabela de usuários -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">👥 Usuários do cupom <span style="font-family:var(--mono);color:var(--teal)" id="inf-portal-cupom-badge"></span></span>
+          <button class="btn btn-outline" style="font-size:12px;padding:6px 12px" onclick="carregarPainelInfluenciador()">↺ Atualizar</button>
+        </div>
+        <div class="card-body" style="padding:0;overflow-x:auto">
+          <table class="admin-table" id="inf-portal-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Plano</th>
+                <th>Cadastro</th>
+                <th>Assinatura</th>
+              </tr>
+            </thead>
+            <tbody id="inf-portal-tbody">
+              <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <div style="display:flex;justify-content:flex-end;margin-top:8px">
+        <button class="btn btn-outline" onclick="logout()" style="font-size:13px">Sair da conta</button>
+      </div>
     </div>
+    <!-- /view-influenciador -->
+
   </main>
 </div>
 
@@ -1129,6 +1197,7 @@ const REGIOES=['Cabeça','Pescoço','Tórax','Abdome','Pelve / quadril','Braço 
 
 let oco=[],selOco=null,selCtx=null,tpl=null,hist=[],selReg='';
 let currentUser=null,currentUsuario=null;
+let currentInfluenciador = null; // { id, nome, cupom, email } — preenchido se logado como influenciador
 
 // CLOCK
 setInterval(()=>{const d=new Date();document.getElementById('clock').textContent=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;},1000);
@@ -1163,6 +1232,41 @@ sb.auth.onAuthStateChange(async(event,session)=>{
 
 async function verificarAcesso(){
   try{
+    // Verificar se o usuário logado é um influenciador ativo
+    try {
+      const { data: infCheck } = await sb
+        .from('influenciadores')
+        .select('id, nome, cupom, email')
+        .eq('email', currentUser.email)
+        .eq('ativo', true)
+        .maybeSingle();
+
+      if (infCheck) {
+        currentInfluenciador = infCheck;
+        const lo = document.getElementById('loading-oauth');
+        if(lo) lo.style.display='none';
+        hideAll();
+        document.getElementById('topbar').style.display = 'flex';
+        document.getElementById('app-layout').style.display = 'flex';
+        // Configurar avatar
+        const av = document.getElementById('user-avatar');
+        if(currentUser.user_metadata?.avatar_url){
+          av.innerHTML = `<img src="${currentUser.user_metadata.avatar_url}" alt="">`;
+        } else {
+          av.textContent = (infCheck.nome||currentUser.email||'?')[0].toUpperCase();
+        }
+        document.getElementById('um-nome').textContent = infCheck.nome || '—';
+        document.getElementById('um-email').textContent = currentUser.email || '—';
+        const navInf = document.getElementById('nav-influenciador');
+        if(navInf) navInf.style.display = 'flex';
+        showView('influenciador', navInf);
+        carregarPainelInfluenciador();
+        return;
+      }
+    } catch(e) {
+      console.warn('[INFLUENCIADOR] Erro ao verificar influenciador:', e);
+    }
+
     let tentativas=0;
     let data=null;
     // Aguarda até 5s pelo trigger criar o registro
@@ -1467,15 +1571,16 @@ let _infCache={};
 
 async function carregarInfluenciadores(){
   const tbody=document.getElementById('inf-tbody');
-  tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
+  tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
   try{
     const {data,error}=await sb.from('influenciadores').select('*').order('nome');
     if(error)throw error;
     _infCache={};
-    if(!data||!data.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text3)">Nenhum influenciador cadastrado ainda.</td></tr>';return;}
+    if(!data||!data.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3)">Nenhum influenciador cadastrado ainda.</td></tr>';return;}
     data.forEach(inf=>{_infCache[inf.id]=inf;});
     tbody.innerHTML=data.map(inf=>`<tr>
       <td><div style="font-weight:700;color:var(--text)">${inf.nome}</div>${inf.observacoes?`<div style="font-size:11px;color:var(--text3)">${inf.observacoes}</div>`:''}</td>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--text2)">${inf.email||'—'}</td>
       <td><span style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--teal);background:var(--teal-dim);padding:3px 9px;border-radius:6px;letter-spacing:.5px">${inf.cupom}</span></td>
       <td style="font-size:12px">${inf.telefone||'—'}</td>
       <td style="font-size:12px;font-family:var(--mono)">${inf.chave_pix||'—'}</td>
@@ -1486,7 +1591,7 @@ async function carregarInfluenciadores(){
         <button onclick="toggleInfluenciadorStatus('${inf.id}',${inf.ativo})" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid ${inf.ativo?'#FCA5A5':'#86EFAC'};background:${inf.ativo?'var(--vermelho-dim)':'var(--verde-dim)'};color:${inf.ativo?'var(--vermelho)':'var(--verde)'};cursor:pointer;font-family:var(--font);font-weight:700;margin-left:4px">${inf.ativo?'Desativar':'Ativar'}</button>
       </td>
     </tr>`).join('');
-  }catch(e){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--vermelho)">${e.message}</td></tr>`;}
+  }catch(e){tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--vermelho)">${e.message}</td></tr>`;}
 }
 
 async function salvarInfluenciador(){
@@ -1514,7 +1619,8 @@ async function salvarInfluenciador(){
   }
   const origLabel=btn?btn.textContent:'';
   if(btn){btn.disabled=true;btn.textContent='Salvando...';}
-  const payload={nome,telefone:telefone||null,cupom,chave_pix:chave_pix||null,plataforma:plataforma||null,observacoes:observacoes||null};
+  const email = document.getElementById('inf-email').value.trim().toLowerCase() || null;
+  const payload={nome,email,telefone:telefone||null,cupom,chave_pix:chave_pix||null,plataforma:plataforma||null,observacoes:observacoes||null};
   let error;
   try{
     if(id){
@@ -1544,6 +1650,7 @@ function editarInfluenciador(id){
   if(!inf)return;
   document.getElementById('inf-id').value=inf.id;
   document.getElementById('inf-nome').value=inf.nome;
+  document.getElementById('inf-email').value=inf.email||'';
   document.getElementById('inf-telefone').value=inf.telefone||'';
   document.getElementById('inf-cupom').value=inf.cupom;
   document.getElementById('inf-pix').value=inf.chave_pix||'';
@@ -1555,7 +1662,7 @@ function editarInfluenciador(id){
 }
 
 function cancelarEdicaoInf(){
-  ['inf-id','inf-nome','inf-telefone','inf-cupom','inf-pix','inf-plataforma','inf-obs'].forEach(id=>document.getElementById(id).value='');
+  ['inf-id','inf-nome','inf-email','inf-telefone','inf-cupom','inf-pix','inf-plataforma','inf-obs'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('inf-form-title').textContent='➕ Novo Influenciador';
   document.getElementById('inf-form-error').style.display='none';
 }
@@ -1565,6 +1672,84 @@ async function toggleInfluenciadorStatus(id,ativo){
   if(error){showToast('❌ Erro ao atualizar status');return;}
   showToast(ativo?'🔒 Influenciador desativado':'✅ Influenciador ativado');
   carregarInfluenciadores();
+}
+
+async function carregarPainelInfluenciador() {
+  if (!currentInfluenciador) return;
+
+  const tituloEl = document.getElementById('inf-portal-titulo');
+  const subEl    = document.getElementById('inf-portal-sub');
+  const cupomBadge = document.getElementById('inf-portal-cupom-badge');
+
+  if (tituloEl) tituloEl.textContent = `Olá, ${currentInfluenciador.nome.split(' ')[0]}`;
+  if (subEl)    subEl.textContent    = `Usuários vinculados ao seu cupom`;
+  if (cupomBadge) cupomBadge.textContent = currentInfluenciador.cupom;
+
+  const tbody = document.getElementById('inf-portal-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3)"><div class="spinner" style="display:inline-block"></div> Carregando...</td></tr>';
+
+  const { data, error } = await sb
+    .from('acesso_status')
+    .select('nome, email, status, tipo_acesso, plano, criado_em, acesso_anual_inicio, acesso_anual_fim')
+    .eq('cupom_afiliado', currentInfluenciador.cupom)
+    .order('criado_em', { ascending: false });
+
+  if (error) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--vermelho,#EF4444)">Erro ao carregar dados: ${error.message}</td></tr>`;
+    return;
+  }
+
+  if (!data || !data.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3)">Nenhum usuário vinculado ao seu cupom ainda.</td></tr>';
+    ['inf-stat-total','inf-stat-trial','inf-stat-assinantes','inf-stat-bloqueados'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.textContent = '0';
+    });
+    return;
+  }
+
+  const total      = data.length;
+  const emTrial    = data.filter(u => u.status === 'trial').length;
+  const assinantes = data.filter(u => u.status === 'ativo').length;
+  const bloqueados = data.filter(u => u.status === 'bloqueado').length;
+
+  const totalEl = document.getElementById('inf-stat-total');
+  const trialEl = document.getElementById('inf-stat-trial');
+  const assinEl = document.getElementById('inf-stat-assinantes');
+  const bloqEl  = document.getElementById('inf-stat-bloqueados');
+  if (totalEl) totalEl.textContent = total;
+  if (trialEl) trialEl.textContent = emTrial;
+  if (assinEl) assinEl.textContent = assinantes;
+  if (bloqEl)  bloqEl.textContent  = bloqueados;
+
+  const fmtData = (iso) => {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  };
+
+  const statusBadge = (u) => {
+    if (u.status === 'trial')     return `<span style="background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">Trial</span>`;
+    if (u.status === 'ativo')     return `<span style="background:#D1FAE5;color:#065F46;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">Assinante</span>`;
+    if (u.status === 'bloqueado') return `<span style="background:#FEE2E2;color:#991B1B;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">Bloqueado</span>`;
+    return `<span style="color:var(--text3);font-size:11px">${u.status || '—'}</span>`;
+  };
+
+  const planoBadge = (u) => {
+    if (u.status !== 'ativo' && u.tipo_acesso !== 'anual') return '—';
+    if (u.plano === 'completo')  return `<span style="background:var(--teal-dim,#CCFBF1);color:var(--teal);padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">Completo</span>`;
+    return `<span style="background:#EDE9FE;color:#5B21B6;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">Anotações</span>`;
+  };
+
+  tbody.innerHTML = data.map(u => `
+    <tr>
+      <td style="font-weight:600;color:var(--text)">${u.nome || '—'}</td>
+      <td style="font-family:var(--mono);font-size:12px;color:var(--text2)">${u.email || '—'}</td>
+      <td>${statusBadge(u)}</td>
+      <td>${planoBadge(u)}</td>
+      <td style="font-size:12px;color:var(--text2)">${fmtData(u.criado_em)}</td>
+      <td style="font-size:12px;color:var(--text2)">${u.acesso_anual_inicio ? fmtData(u.acesso_anual_inicio) : '—'}</td>
+    </tr>
+  `).join('');
 }
 
 // ── DASHBOARD ──
