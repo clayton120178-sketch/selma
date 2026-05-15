@@ -19,6 +19,16 @@
         }
       ],
       "dest": "/pulso-anota.html"
+    },
+    {
+      "src": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "anota.pulsoenfermagem.com.br"
+        }
+      ],
+      "dest": "/pulso-anota.html"
     }
   ]
 }
