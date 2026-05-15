@@ -2226,6 +2226,12 @@ function renderForm(t,o,c){
       const inp=document.createElement('input');inp.className='field-input';inp.dataset.id=f.id;
       inp.type=f.tipo==='numero'?'number':'text';if(f.tipo==='numero'){inp.min='0';}
       inp.placeholder=f.tipo==='numero'?'0':f.tipo==='tempo'?'ex: 30 minutos':'Digite aqui...';
+      // local_lesao em curativo: preenchido pelo mapa corporal — somente leitura
+      if(f.id==='local_lesao' && selOco && selOco.slug==='curativo'){
+        inp.readOnly=true;
+        inp.placeholder='Selecione a região no mapa acima';
+        inp.style.cssText='background:#f0faf9;color:#0D9488;font-weight:600;cursor:default;';
+      }
       w.appendChild(inp);
     }
     body.appendChild(w);
@@ -2443,9 +2449,7 @@ function coletarExtras(slug) {
   if(slug === 'acesso_venoso' && selRegExtraUnico) {
     partes.push(`Local do acesso: ${selRegExtraUnico}`);
   }
-  if(slug === 'curativo' && selRegExtraUnico) {
-    partes.push(`Localização corporal: ${selRegExtraUnico}`);
-  }
+  // curativo: local_lesao é alimentado direto no campo do formulário — não duplicar aqui
 
   campos.forEach(f => {
     // Ignorar campos ocultos por dependência
@@ -2494,6 +2498,11 @@ function selRegionExtra(el) {
     el.classList.add('selx');
     selRegExtraUnico = el.dataset.region;
     document.getElementById('bm-extra-info').textContent = '📍 ' + selRegExtraUnico;
+    // Curativo: alimenta o campo local_lesao do formulário com a região selecionada
+    if(selOco && selOco.slug === 'curativo') {
+      const inputLocalLesao = document.querySelector('[data-id="local_lesao"]');
+      if(inputLocalLesao) inputLocalLesao.value = selRegExtraUnico;
+    }
   }
 }
 
