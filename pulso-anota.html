@@ -2615,7 +2615,7 @@ function copiar(btn,txt){
 }
 
 function compartilhar(texto){
-  const link='https://app.pulsoenfermagem.com.br/';
+  const link='https://app.pulsoenfermagem.com.br';
   const msg='Usei o app Pulso Anota pra fazer isso aqui rapidinho — vê se te ajuda:\n\n'+texto+'\n\nDá pra testar grátis: '+link;
   if(navigator.share){
     navigator.share({title:'Pulso Anota',text:msg}).catch(()=>{});
