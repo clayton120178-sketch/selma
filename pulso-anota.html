@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -439,6 +439,80 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .brx:hover{fill:#A7D5D1}
 .brx.selx{fill:var(--teal)}
 .bm-multi-info{background:var(--teal-dim);border:1px solid var(--teal-mid);border-radius:var(--r);padding:7px 12px;font-size:11px;font-weight:600;color:var(--teal);margin-top:6px;min-height:28px;line-height:1.5}
+
+/* ===== MODO ESTUDO ===== */
+.estudo-fase{animation:fadeInUp .3s ease forwards}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.estudo-header{margin-bottom:20px}
+.estudo-header h2{font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:4px}
+.estudo-subtitulo{font-size:.875rem;color:var(--text2);line-height:1.5}
+.estudo-filtros{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.estudo-filtro-btn{padding:7px 16px;border-radius:999px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:.8rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s}
+.estudo-filtro-btn:hover{border-color:var(--teal-light);color:var(--text)}
+.estudo-filtro-btn.ativo{background:var(--teal);border-color:var(--teal);color:#fff}
+.estudo-lista{display:flex;flex-direction:column;gap:0}
+.estudo-caso-card{background:#fff;border:1.5px solid #e5e7eb;border-radius:16px;padding:20px;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .15s;margin-bottom:12px}
+.estudo-caso-card:hover,.estudo-caso-card:active{border-color:var(--teal);box-shadow:0 4px 16px rgba(13,148,136,.12);transform:translateY(-2px)}
+.estudo-caso-card-titulo{font-family:var(--font);font-weight:600;font-size:1rem;color:#111827}
+.estudo-caso-card-preview{font-size:.875rem;color:#6b7280;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:4px}
+.estudo-vazio{text-align:center;padding:40px 20px;color:var(--text3);font-size:.9rem;line-height:1.7}
+.badge-basico{background:#d1fae5;color:#065f46}
+.badge-intermediario{background:#fef3c7;color:#92400e}
+.badge-avancado{background:#fee2e2;color:#991b1b}
+.estudo-badge-dificuldade{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0}
+.estudo-caso-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.estudo-btn-voltar{background:none;border:none;color:var(--teal);font-family:var(--font);font-size:.875rem;font-weight:600;cursor:pointer;padding:4px 0}
+.estudo-narrativa-container{margin-bottom:20px;position:relative}
+.estudo-narrativa{background:#f0fdfa;border-left:4px solid var(--teal);border-radius:0 12px 12px 0;padding:20px;font-size:.95rem;line-height:1.7;color:#1f2937;font-family:var(--font)}
+.estudo-label-textarea{font-size:.8rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:8px}
+.estudo-textarea{width:100%;min-height:180px;border:1.5px solid #d1d5db;border-radius:12px;padding:16px;font-family:var(--mono);font-size:1rem;line-height:1.6;color:#111827;resize:vertical;transition:border-color .2s,box-shadow .2s;box-sizing:border-box}
+.estudo-textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.12)}
+.estudo-char-count{text-align:right;font-size:.75rem;color:var(--text3);margin-top:4px}
+.estudo-acoes-escrita{margin-top:16px}
+.estudo-btn-avaliar{width:100%;padding:14px;font-size:1rem}
+.estudo-score-container{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:8px}
+.estudo-score-ring{width:120px;height:120px;transform:rotate(-90deg)}
+.score-ring-bg{fill:none;stroke:#e5e7eb;stroke-width:10}
+.score-ring-fill{fill:none;stroke:var(--teal);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1)}
+.estudo-score-numero{position:absolute;font-size:1.75rem;font-weight:700;color:var(--teal)}
+.estudo-score-label{font-size:.75rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.estudo-resultado-header{text-align:center;padding:24px 0 16px}
+.score-baixo .score-ring-fill{stroke:#ef4444}
+.score-baixo .estudo-score-numero{color:#ef4444}
+.score-medio .score-ring-fill{stroke:#f59e0b}
+.score-medio .estudo-score-numero{color:#f59e0b}
+.estudo-criterios-container{margin-bottom:24px}
+.estudo-criterios-titulo{font-size:.875rem;font-weight:700;color:var(--text);margin-bottom:12px}
+.estudo-criterios-lista{list-style:none;padding:0;margin:0}
+.estudo-criterio-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f3f4f6;font-size:.9rem;animation:fadeInUp .25s ease forwards;opacity:0}
+.estudo-criterio-item:nth-child(1){animation-delay:.1s}
+.estudo-criterio-item:nth-child(2){animation-delay:.2s}
+.estudo-criterio-item:nth-child(3){animation-delay:.3s}
+.estudo-criterio-item:nth-child(4){animation-delay:.4s}
+.estudo-criterio-item:nth-child(5){animation-delay:.5s}
+.estudo-criterio-item:nth-child(6){animation-delay:.6s}
+.criterio-icone-presente{color:#10b981;font-size:1.1rem;flex-shrink:0}
+.criterio-icone-ausente{color:#ef4444;font-size:1.1rem;flex-shrink:0}
+.criterio-icone-parcial{color:#f59e0b;font-size:1.1rem;flex-shrink:0}
+.criterio-descricao-ausente{color:#6b7280}
+.estudo-comparacao{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.estudo-comparacao-label{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;color:#6b7280}
+.estudo-comparacao-texto{background:#f9fafb;border-radius:12px;padding:16px;font-family:var(--mono);font-size:.85rem;line-height:1.7;color:#374151;min-height:120px;white-space:pre-wrap}
+.estudo-texto-gabarito{background:#f0fdfa;border:1.5px solid #99f6e4}
+.estudo-acoes-resultado{display:flex;gap:12px;margin-top:24px;padding-bottom:32px;flex-wrap:wrap}
+.estudo-acoes-resultado button{flex:1;min-width:140px;padding:14px}
+.estudo-btn-colapsar{display:none}
+@media(max-width:640px){
+  .estudo-textarea{min-height:140px}
+  .estudo-acoes-escrita{position:sticky;bottom:0;background:#fff;padding:12px 0 16px;border-top:1px solid #f3f4f6;margin-top:16px}
+  .estudo-narrativa.colapsada{max-height:80px;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,black 50%,transparent 100%);mask-image:linear-gradient(to bottom,black 50%,transparent 100%)}
+  .estudo-btn-colapsar{display:block;width:100%;text-align:center;background:none;border:none;color:var(--teal);font-size:.85rem;font-weight:600;padding:8px 0;cursor:pointer;font-family:var(--font)}
+  .estudo-score-ring{width:90px;height:90px}
+  .estudo-resultado-header{text-align:center;padding:24px 0 16px}
+  .estudo-acoes-resultado{flex-direction:column;gap:12px;padding-bottom:32px}
+  .estudo-acoes-resultado button{width:100%;padding:16px}
+  .estudo-comparacao{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -676,6 +750,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
       <div class="sidebar-label">Navegação</div>
       <button class="nav-btn active" onclick="showView('nova',this)"><div class="ni">📝</div>Nova Anotação</button>
       <button class="nav-btn" onclick="showView('historico',this)"><div class="ni">📋</div>Histórico<span class="nav-count" id="hc" style="display:none">0</span></button>
+      <button class="nav-btn" id="nav-estudo" onclick="showView('estudo',this)"><div class="ni">🎓</div>Modo Estudo</button>
       <button class="nav-btn" onclick="showView('prontuario',this)"><div class="ni">🏥</div>Prontuário</button>
       <button class="nav-btn" id="nav-calcular" onclick="showView('calcular',this)"><div class="ni">🧮</div>Calcular Dose</button>
     </div>
@@ -869,6 +944,78 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
         <div id="hist-list"></div>
       </div>
 
+
+      <!-- MODO ESTUDO -->
+      <div class="view" id="view-estudo" style="display:none">
+
+        <!-- FASE 1: Seleção do caso -->
+        <div class="estudo-fase" data-fase="selecao">
+          <div class="estudo-header">
+            <h2>Modo Estudo</h2>
+            <p class="estudo-subtitulo">Pratique como se estivesse no plantão. Sem gabarito à vista.</p>
+          </div>
+          <div class="estudo-filtros">
+            <button class="estudo-filtro-btn ativo" data-dificuldade="todos" onclick="filtrarDificuldade('todos')">Todos</button>
+            <button class="estudo-filtro-btn" data-dificuldade="basico" onclick="filtrarDificuldade('basico')">Básico</button>
+            <button class="estudo-filtro-btn" data-dificuldade="intermediario" onclick="filtrarDificuldade('intermediario')">Intermediário</button>
+            <button class="estudo-filtro-btn" data-dificuldade="avancado" onclick="filtrarDificuldade('avancado')">Avançado</button>
+          </div>
+          <div id="estudo-lista-casos" class="estudo-lista"><div class="loading"><div class="spinner"></div>Carregando casos...</div></div>
+        </div>
+
+        <!-- FASE 2: Leitura e escrita -->
+        <div class="estudo-fase" data-fase="escrita" style="display:none">
+          <div class="estudo-caso-header">
+            <button class="estudo-btn-voltar" onclick="voltarSelecao()">← Casos</button>
+            <span class="estudo-badge-dificuldade"></span>
+          </div>
+          <div class="estudo-narrativa-container">
+            <div id="estudo-narrativa-texto" class="estudo-narrativa"></div>
+            <button class="estudo-btn-colapsar" id="btn-colapsar-narrativa">Ver caso completo ↓</button>
+          </div>
+          <div class="estudo-escrita-container">
+            <label class="estudo-label-textarea" for="estudo-textarea">Escreva a anotação de enfermagem:</label>
+            <textarea id="estudo-textarea" class="estudo-textarea" placeholder="Escreva aqui a anotação completa conforme o caso descrito acima..." rows="8"></textarea>
+            <div class="estudo-char-count"><span id="estudo-char-count">0</span> caracteres</div>
+          </div>
+          <div class="estudo-acoes-escrita">
+            <button class="btn btn-primary estudo-btn-avaliar" id="btn-avaliar" onclick="avaliarResposta()">Ver resultado</button>
+          </div>
+        </div>
+
+        <!-- FASE 3: Resultado e gabarito -->
+        <div class="estudo-fase" data-fase="resultado" style="display:none">
+          <div class="estudo-resultado-header">
+            <div class="estudo-score-container">
+              <svg class="estudo-score-ring" viewBox="0 0 120 120">
+                <circle class="score-ring-bg" cx="60" cy="60" r="50"/>
+                <circle class="score-ring-fill" id="score-ring-fill" cx="60" cy="60" r="50" stroke-dasharray="314" stroke-dashoffset="314"/>
+              </svg>
+              <div class="estudo-score-numero" id="estudo-score-numero">0%</div>
+            </div>
+            <div class="estudo-score-label">completude</div>
+          </div>
+          <div class="estudo-criterios-container">
+            <h3 class="estudo-criterios-titulo">O que foi avaliado</h3>
+            <ul id="estudo-lista-criterios" class="estudo-criterios-lista"></ul>
+          </div>
+          <div class="estudo-comparacao">
+            <div class="estudo-comparacao-coluna">
+              <div class="estudo-comparacao-label">Sua anotação</div>
+              <div id="estudo-texto-usuario" class="estudo-comparacao-texto estudo-texto-usuario"></div>
+            </div>
+            <div class="estudo-comparacao-coluna">
+              <div class="estudo-comparacao-label">Gabarito</div>
+              <div id="estudo-texto-gabarito" class="estudo-comparacao-texto estudo-texto-gabarito"></div>
+            </div>
+          </div>
+          <div class="estudo-acoes-resultado">
+            <button class="btn btn-outline" onclick="voltarSelecao()">Escolher outro caso</button>
+            <button class="btn btn-primary" onclick="proximoCasoAleatorio()">Próximo caso →</button>
+          </div>
+        </div>
+
+      </div>
       <!-- PRONTUÁRIO -->
       <div class="view" id="view-prontuario">
         <div class="step-row"><div class="step-num" style="background:var(--teal)">🏥</div><div><div class="step-title">Prontuário do Paciente</div><div class="step-sub">José da Silva · Leito 12-A · Clínica Médica</div></div></div>
@@ -1209,6 +1356,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
           </div>
 
         </div><!-- /admin-panel-dashboard -->
+        <!-- PAINEL CASOS DE ESTUDO -->
+        <div id="admin-panel-casos" class="admin-panel" style="display:none">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">📚 Casos de Estudo</span>
+              <button class="btn btn-outline" style="font-size:12px;padding:6px 12px" onclick="carregarCasosAdmin()">↺ Atualizar</button>
+            </div>
+            <div class="card-body" style="padding:0;overflow-x:auto">
+              <table class="admin-table" id="casos-admin-table">
+                <thead><tr><th>Título</th><th>Dificuldade</th><th>Práticas</th><th>Status</th><th>Ações</th></tr></thead>
+                <tbody id="casos-admin-tbody"><tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
 
       </div>
 
@@ -1282,6 +1444,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 <nav class="bottom-nav">
   <button class="bn-btn active" onclick="showView('nova',this)" id="bn-nova"><div class="bn-icon">📝</div>Anotar</button>
   <button class="bn-btn" onclick="showView('historico',this)" id="bn-historico"><div class="bn-icon">📋</div>Histórico</button>
+  <button class="bn-btn" onclick="showView('estudo',this)" id="bn-estudo"><div class="bn-icon">🎓</div>Estudo</button>
   <button class="bn-btn" onclick="showView('prontuario',this)" id="bn-prontuario"><div class="bn-icon">🏥</div>Prontuário</button>
   <button class="bn-btn" onclick="showView('calcular',this)" id="bn-calcular"><div class="bn-icon">🧮</div>Calcular</button>
 </nav>
@@ -1685,8 +1848,10 @@ function adminTab(tab,btn){
   document.getElementById('admin-panel-usuarios').style.display=tab==='usuarios'?'flex':'none';
   document.getElementById('admin-panel-influenciadores').style.display=tab==='influenciadores'?'flex':'none';
   document.getElementById('admin-panel-dashboard').style.display=tab==='dashboard'?'flex':'none';
+  document.getElementById('admin-panel-casos').style.display=tab==='casos'?'flex':'none';
   if(tab==='influenciadores')carregarInfluenciadores();
   else if(tab==='dashboard')carregarDashboard();
+  else if(tab==='casos')carregarCasosAdmin();
   else carregarAdmin();
 }
 
@@ -3368,6 +3533,244 @@ function esconderPayError() {
   if (el) el.style.display = 'none';
 }
 
+
+// ===================== MODO ESTUDO =====================
+
+let casoAtual = null;
+let casosFiltrados = [];
+let dificuldadeFiltro = 'todos';
+
+async function carregarCasosEstudo() {
+  const container = document.getElementById('estudo-lista-casos');
+  container.innerHTML = '<div class="loading"><div class="spinner"></div>Carregando casos...</div>';
+
+  let query = sb
+    .from('casos_estudo')
+    .select('id, titulo, narrativa, ocorrencia_id, contexto_id, campos_gabarito, criterios_avaliacao, dificuldade')
+    .eq('ativo', true)
+    .order('dificuldade', { ascending: true });
+
+  if (dificuldadeFiltro !== 'todos') {
+    query = query.eq('dificuldade', dificuldadeFiltro);
+  }
+
+  const { data, error } = await query;
+  if (error) { console.error('Erro ao carregar casos:', error); container.innerHTML='<div class="estudo-vazio"><p>Erro ao carregar casos.</p></div>'; return; }
+  casosFiltrados = data || [];
+  renderizarListaCasos(casosFiltrados);
+}
+
+function renderizarListaCasos(casos) {
+  const container = document.getElementById('estudo-lista-casos');
+  if (!casos || casos.length === 0) {
+    container.innerHTML = '<div class="estudo-vazio"><p>Nenhum caso disponível para este nível ainda.</p><p>Tente outro nível de dificuldade.</p></div>';
+    return;
+  }
+  const labels = { basico: 'Básico', intermediario: 'Intermediário', avancado: 'Avançado' };
+  container.innerHTML = casos.map(caso => {
+    const label = labels[caso.dificuldade] || caso.dificuldade;
+    const preview = caso.narrativa.substring(0, 120) + (caso.narrativa.length > 120 ? '...' : '');
+    return `<div class="estudo-caso-card" onclick="iniciarCaso('${caso.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <span class="estudo-caso-card-titulo">${caso.titulo}</span>
+        <span class="estudo-badge-dificuldade badge-${caso.dificuldade}">${label}</span>
+      </div>
+      <p class="estudo-caso-card-preview">${preview}</p>
+    </div>`;
+  }).join('');
+}
+
+function iniciarCaso(casoId) {
+  casoAtual = casosFiltrados.find(c => c.id === casoId);
+  if (!casoAtual) return;
+  document.getElementById('estudo-narrativa-texto').textContent = casoAtual.narrativa;
+  const textarea = document.getElementById('estudo-textarea');
+  textarea.value = '';
+  document.getElementById('estudo-char-count').textContent = '0';
+  const labels = { basico: 'Básico', intermediario: 'Intermediário', avancado: 'Avançado' };
+  const badgeEl = document.querySelector('[data-fase="escrita"] .estudo-badge-dificuldade');
+  if (badgeEl) { badgeEl.textContent = labels[casoAtual.dificuldade] || casoAtual.dificuldade; badgeEl.className = `estudo-badge-dificuldade badge-${casoAtual.dificuldade}`; }
+  if (window.innerWidth <= 640) {
+    document.getElementById('estudo-narrativa-texto').classList.add('colapsada');
+    document.getElementById('btn-colapsar-narrativa').textContent = 'Ver caso completo ↓';
+  } else {
+    document.getElementById('estudo-narrativa-texto').classList.remove('colapsada');
+  }
+  mostrarFaseEstudo('escrita');
+  setTimeout(() => textarea.focus(), 350);
+}
+
+function avaliarCompletude(textoUsuario, criterios) {
+  const norm = t => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const texto = norm(textoUsuario);
+  return criterios.map(criterio => {
+    const presente = criterio.palavras_chave.some(p => texto.includes(norm(p)));
+    return { id: criterio.id, descricao: criterio.descricao, obrigatorio: criterio.obrigatorio, presente };
+  });
+}
+
+function calcularScore(resultados) {
+  const obrigatorios = resultados.filter(c => c.obrigatorio);
+  if (!obrigatorios.length) return 100;
+  return Math.round((obrigatorios.filter(c => c.presente).length / obrigatorios.length) * 100);
+}
+
+async function avaliarResposta() {
+  const textoUsuario = document.getElementById('estudo-textarea').value.trim();
+  if (textoUsuario.length < 20) { showToast('Escreva a anotação antes de avaliar.'); return; }
+
+  const btnAvaliar = document.getElementById('btn-avaliar');
+  btnAvaliar.disabled = true;
+  btnAvaliar.textContent = 'Avaliando...';
+
+  const resultadosCriterios = avaliarCompletude(textoUsuario, casoAtual.criterios_avaliacao);
+  const score = calcularScore(resultadosCriterios);
+
+  // Gerar gabarito por interpolação
+  let textoGabarito = '';
+  try {
+    const { data: tplData } = await sb.from('templates').select('template').eq('ocorrencia_id', casoAtual.ocorrencia_id).eq('contexto_id', casoAtual.contexto_id).maybeSingle();
+    if (tplData) {
+      textoGabarito = tplData.template;
+      for (const [k, v] of Object.entries(casoAtual.campos_gabarito)) {
+        textoGabarito = textoGabarito.replaceAll(`[${k}]`, v);
+      }
+    } else {
+      textoGabarito = '(Gabarito não disponível para este caso)';
+    }
+  } catch (e) { textoGabarito = '(Erro ao gerar gabarito)'; }
+
+  // Salvar resultado silencioso
+  try {
+    if (currentUser && currentUsuario) {
+      await sb.from('resultados_estudo').insert({
+        user_id: currentUser.id, caso_id: casoAtual.id,
+        texto_usuario: textoUsuario, score_completude: score,
+        criterios_resultado: resultadosCriterios
+      });
+    }
+  } catch (e) { console.warn('Erro ao salvar resultado:', e); }
+
+  // Consumir transação de trial
+  await registrarTransacao();
+
+  renderizarResultadoEstudo(textoUsuario, textoGabarito, resultadosCriterios, score);
+  mostrarFaseEstudo('resultado');
+
+  btnAvaliar.disabled = false;
+  btnAvaliar.textContent = 'Ver resultado';
+}
+
+function renderizarResultadoEstudo(textoUsuario, textoGabarito, criterios, score) {
+  const circunferencia = 314;
+  const offset = circunferencia - (score / 100) * circunferencia;
+  const ringFill = document.getElementById('score-ring-fill');
+  const scoreNumero = document.getElementById('estudo-score-numero');
+  const scoreContainer = document.querySelector('.estudo-score-container');
+  scoreContainer.classList.remove('score-baixo', 'score-medio');
+  if (score < 50) scoreContainer.classList.add('score-baixo');
+  else if (score < 80) scoreContainer.classList.add('score-medio');
+  setTimeout(() => { ringFill.style.strokeDashoffset = offset; scoreNumero.textContent = score + '%'; }, 100);
+
+  const lista = document.getElementById('estudo-lista-criterios');
+  lista.innerHTML = criterios.map(c => {
+    const icone = c.presente ? '✅' : (c.obrigatorio ? '❌' : '⚠️');
+    const classeIcone = c.presente ? 'criterio-icone-presente' : (c.obrigatorio ? 'criterio-icone-ausente' : 'criterio-icone-parcial');
+    const classeDesc = c.presente ? '' : 'criterio-descricao-ausente';
+    return `<li class="estudo-criterio-item"><span class="${classeIcone}">${icone}</span><span class="${classeDesc}">${c.descricao}${!c.presente && !c.obrigatorio ? ' (opcional)' : ''}</span></li>`;
+  }).join('');
+
+  document.getElementById('estudo-texto-usuario').textContent = textoUsuario;
+  document.getElementById('estudo-texto-gabarito').textContent = textoGabarito;
+}
+
+function mostrarFaseEstudo(nomeFase) {
+  document.querySelectorAll('.estudo-fase').forEach(f => f.style.display = 'none');
+  const alvo = document.querySelector(`.estudo-fase[data-fase="${nomeFase}"]`);
+  if (alvo) {
+    alvo.style.display = 'block';
+    const viewEl = document.getElementById('view-estudo');
+    if (viewEl) viewEl.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function voltarSelecao() {
+  casoAtual = null;
+  mostrarFaseEstudo('selecao');
+}
+
+function proximoCasoAleatorio() {
+  if (casosFiltrados.length <= 1) { voltarSelecao(); return; }
+  const disponiveis = casosFiltrados.filter(c => c.id !== casoAtual?.id);
+  const proximo = disponiveis[Math.floor(Math.random() * disponiveis.length)];
+  iniciarCaso(proximo.id);
+}
+
+function filtrarDificuldade(dificuldade) {
+  dificuldadeFiltro = dificuldade;
+  document.querySelectorAll('.estudo-filtro-btn').forEach(btn => {
+    btn.classList.toggle('ativo', btn.dataset.dificuldade === dificuldade);
+  });
+  carregarCasosEstudo();
+}
+
+function entrarModoEstudo() {
+  mostrarFaseEstudo('selecao');
+  carregarCasosEstudo();
+}
+
+// Contador de caracteres e colapsar narrativa — inicializar após DOM
+document.addEventListener('DOMContentLoaded', () => {
+  const textarea = document.getElementById('estudo-textarea');
+  if (textarea) {
+    textarea.addEventListener('input', function() {
+      document.getElementById('estudo-char-count').textContent = this.value.length;
+    });
+  }
+  const btnCol = document.getElementById('btn-colapsar-narrativa');
+  if (btnCol) {
+    btnCol.addEventListener('click', function() {
+      const narrativa = document.getElementById('estudo-narrativa-texto');
+      const colapsada = narrativa.classList.toggle('colapsada');
+      this.textContent = colapsada ? 'Ver caso completo ↓' : 'Ver menos ↑';
+    });
+  }
+});
+
+// ===================== ADMIN: CASOS DE ESTUDO =====================
+
+async function carregarCasosAdmin() {
+  const tbody = document.getElementById('casos-admin-tbody');
+  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Carregando...</td></tr>';
+  try {
+    const { data: casos, error } = await sb.from('casos_estudo').select('id, titulo, dificuldade, ativo').order('dificuldade').order('titulo');
+    if (error) throw error;
+
+    // Buscar contagem de resultados por caso
+    const { data: contagens } = await sb.from('resultados_estudo').select('caso_id');
+    const countMap = {};
+    (contagens || []).forEach(r => { countMap[r.caso_id] = (countMap[r.caso_id] || 0) + 1; });
+
+    if (!casos || !casos.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Nenhum caso cadastrado.</td></tr>'; return; }
+    const labels = { basico: 'Básico', intermediario: 'Intermediário', avancado: 'Avançado' };
+    const badges = { basico: 'badge-basico', intermediario: 'badge-intermediario', avancado: 'badge-avancado' };
+    tbody.innerHTML = casos.map(c => `<tr>
+      <td style="font-weight:600;color:var(--text)">${c.titulo}</td>
+      <td><span class="estudo-badge-dificuldade ${badges[c.dificuldade]}">${labels[c.dificuldade]||c.dificuldade}</span></td>
+      <td style="font-family:var(--mono)">${countMap[c.id] || 0}</td>
+      <td><span class="status-pill ${c.ativo?'sp-ativo':'sp-expirado'}">${c.ativo?'Ativo':'Inativo'}</span></td>
+      <td><button onclick="toggleCasoAtivo('${c.id}',${c.ativo})" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid ${c.ativo?'#FCA5A5':'#86EFAC'};background:${c.ativo?'var(--vermelho-dim)':'var(--verde-dim)'};color:${c.ativo?'var(--vermelho)':'var(--verde)'};cursor:pointer;font-family:var(--font);font-weight:700">${c.ativo?'Desativar':'Ativar'}</button></td>
+    </tr>`).join('');
+  } catch(e) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--vermelho)">${e.message}</td></tr>`; }
+}
+
+async function toggleCasoAtivo(casoId, ativo) {
+  try {
+    await sb.from('casos_estudo').update({ ativo: !ativo }).eq('id', casoId);
+    carregarCasosAdmin();
+  } catch(e) { showToast('Erro ao atualizar caso: ' + e.message); }
+}
 </script>
 </body>
 </html>
