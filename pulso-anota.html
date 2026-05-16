@@ -2975,6 +2975,7 @@ function showView(id,btn){
   closeSidebar();
   if(id==='admin'){adminTab('usuarios',document.getElementById('admin-tab-usuarios'));}
   if(id==='historico'){carregarHistorico();}
+  if(id==='estudo'){entrarModoEstudo();}
 }
 
 function resetForm(){
@@ -3544,20 +3545,25 @@ async function carregarCasosEstudo() {
   const container = document.getElementById('estudo-lista-casos');
   container.innerHTML = '<div class="loading"><div class="spinner"></div>Carregando casos...</div>';
 
-  let query = sb
-    .from('casos_estudo')
-    .select('id, titulo, narrativa, ocorrencia_id, contexto_id, campos_gabarito, criterios_avaliacao, dificuldade')
-    .eq('ativo', true)
-    .order('dificuldade', { ascending: true });
+  try {
+    const dificuldades = dificuldadeFiltro === 'todos'
+      ? ['basico', 'intermediario', 'avancado']
+      : [dificuldadeFiltro];
 
-  if (dificuldadeFiltro !== 'todos') {
-    query = query.eq('dificuldade', dificuldadeFiltro);
+    const { data, error } = await sb
+      .from('casos_estudo')
+      .select('id, titulo, narrativa, ocorrencia_id, contexto_id, campos_gabarito, criterios_avaliacao, dificuldade')
+      .eq('ativo', true)
+      .in('dificuldade', dificuldades)
+      .order('dificuldade', { ascending: true });
+
+    if (error) throw error;
+    casosFiltrados = data || [];
+    renderizarListaCasos(casosFiltrados);
+  } catch (e) {
+    console.error('Erro ao carregar casos:', e);
+    container.innerHTML = '<div class="estudo-vazio"><p>Erro ao carregar casos. Tente novamente.</p></div>';
   }
-
-  const { data, error } = await query;
-  if (error) { console.error('Erro ao carregar casos:', error); container.innerHTML='<div class="estudo-vazio"><p>Erro ao carregar casos.</p></div>'; return; }
-  casosFiltrados = data || [];
-  renderizarListaCasos(casosFiltrados);
 }
 
 function renderizarListaCasos(casos) {
