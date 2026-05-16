@@ -4003,8 +4003,9 @@ async function toggleCasoAtivo(casoId, ativo) {
 function verificarAcessoAPH() {
   if (!currentUsuario) return false;
   if (currentUsuario.tipo_acesso === 'admin') return true;
-  if (currentUsuario.tipo_acesso !== 'anual') return false;
-  return currentUsuario.plano === 'aph';
+  if (currentUsuario.status === 'trial') return true;
+  if (currentUsuario.tipo_acesso === 'anual' && currentUsuario.plano === 'aph') return true;
+  return false;
 }
 
 // ── Ponto de entrada do módulo ────────────────────────────────────────────────
