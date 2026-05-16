@@ -241,6 +241,26 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .tl-meta{font-size:11px;font-weight:600;color:var(--text3);margin-bottom:5px;display:flex;gap:10px}
 .tl-meta span{color:var(--teal)}
 .tl-txt{font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--text2)}
+/* HISTÓRICO PERSISTENTE */
+.hist-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer;transition:border-color .15s,box-shadow .15s;display:flex;align-items:flex-start;gap:12px}
+.hist-card:hover{border-color:var(--teal-mid);box-shadow:var(--shadow2)}
+.hist-card-icon{width:36px;height:36px;border-radius:50%;background:var(--teal-dim);border:2px solid var(--teal-mid);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.hist-card-body{flex:1;min-width:0}
+.hist-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-card-ctx{font-size:12px;color:var(--text3);font-weight:500;margin-bottom:4px}
+.hist-card-date{font-size:11px;color:var(--teal);font-weight:600}
+.hist-card-arrow{color:var(--text3);font-size:16px;align-self:center;flex-shrink:0}
+/* MODAL HISTÓRICO */
+.hist-modal-overlay{position:fixed;inset:0;background:rgba(10,31,29,.55);backdrop-filter:blur(3px);z-index:800;display:flex;align-items:flex-end;justify-content:center;padding:0;animation:fadein .2s ease}
+.hist-modal-card{background:white;border-radius:20px 20px 0 0;width:100%;max-width:680px;max-height:85vh;overflow-y:auto;padding:24px 24px 32px;box-shadow:0 -8px 40px rgba(0,0,0,.18);animation:slide-up .25s cubic-bezier(.34,1.2,.64,1)}
+@media(min-width:769px){.hist-modal-overlay{align-items:center}.hist-modal-card{border-radius:20px;max-height:80vh}}
+@keyframes slide-up{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.hist-modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.hist-modal-title{font-size:16px;font-weight:700;color:var(--text)}
+.hist-modal-close{width:32px;height:32px;border-radius:50%;border:none;background:var(--surface2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hist-modal-meta{font-size:12px;color:var(--text3);margin-bottom:16px}
+.hist-modal-text{font-family:var(--mono);font-size:13px;line-height:1.8;color:var(--text);background:var(--surface2);border-radius:var(--r);padding:14px 16px;margin-bottom:16px;white-space:pre-wrap;word-break:break-word}
+.hist-modal-actions{display:flex;gap:10px;flex-wrap:wrap}
 .loading{display:flex;align-items:center;gap:10px;padding:24px;color:var(--text2);font-size:13px}
 .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -459,9 +479,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
       <div class="auth-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><polyline points="2,12 6,12 8,4 10,20 12,10 14,16 16,12 22,12"/></svg></div>
       <span class="auth-logo-name">Pulso <span>Anota</span></span>
     </div>
-    <div class="auth-subtitle">7 dias grátis para explorar</div>
+    <div class="auth-subtitle">Anotações e cálculos grátis para explorar</div>
     <div class="auth-title">Criar conta</div>
-    <div class="auth-desc">Experimente grátis por 7 dias. Sem cartão de crédito.</div>
+    <div class="auth-desc">Experimente grátis. Sem cartão de crédito.</div>
     <div class="auth-error" id="cad-error"></div>
     <button class="btn-google" onclick="loginGoogle()">
       <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
@@ -844,8 +864,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 
       <!-- HISTÓRICO -->
       <div class="view" id="view-historico">
-        <div class="step-row"><div class="step-num" style="background:var(--teal)">📋</div><div><div class="step-title">Histórico de Anotações</div><div class="step-sub">Anotações geradas nesta sessão</div></div></div>
-        <div class="tl" id="hist-list"><div class="empty"><div class="empty-icon">📋</div><div class="empty-title">Nenhuma anotação ainda</div><div class="empty-sub">Gere sua primeira anotação e ela aparecerá aqui</div></div></div>
+        <div class="step-row"><div class="step-num" style="background:var(--teal)">🕐</div><div><div class="step-title">Histórico de Anotações</div><div class="step-sub">Últimos 30 dias · toque para rever o texto</div></div></div>
+        <div id="hist-loading" style="display:none"><div class="loading"><div class="spinner"></div>Carregando histórico...</div></div>
+        <div id="hist-list"></div>
       </div>
 
       <!-- PRONTUÁRIO -->
@@ -2598,13 +2619,15 @@ function coletarBH() {
   return [entStr, saiStr, balStr].filter(Boolean).join(' | ');
 }
 
-function gerarAnotacao(){
+async function gerarAnotacao(){
   if(!tpl)return;
   const campos=typeof tpl.campos==='string'?JSON.parse(tpl.campos):tpl.campos;
   let texto=tpl.template;let ok=true;
+  const camposValores={};
   if(selOco&&selOco.slug==='dor'){
     if(!selReg){showToast('⚠️ Selecione a localização no corpo');return;}
     texto=texto.replaceAll('[localizacao]',selReg);
+    camposValores['localizacao']=selReg;
   }
   campos.forEach(f=>{
     if(selOco&&selOco.slug==='dor'&&f.id==='localizacao')return;
@@ -2617,6 +2640,7 @@ function gerarAnotacao(){
       const el=document.querySelector(`[data-id="${f.id}"], [data-field-id="${f.id}"]`);
       if(el){el.style.borderColor='#EF4444';setTimeout(()=>el.style.borderColor='',2500);}
     }
+    camposValores[f.id]=val;
     texto=texto.replaceAll(`[${f.id}]`,val||`[${f.label}]`);
   });
   if(!ok){showToast('⚠️ Preencha todos os campos');return;}
@@ -2624,6 +2648,10 @@ function gerarAnotacao(){
   if(selOco&&selOco.slug==='queda'&&selRegsExtra.length===0){showToast('⚠️ Selecione ao menos uma região no corpo');return;}
   if(selOco&&selOco.slug==='acesso_venoso'&&!selRegExtraUnico){showToast('⚠️ Selecione o local do acesso no corpo');return;}
   if(selOco&&selOco.slug==='curativo'&&!selRegExtraUnico){showToast('⚠️ Selecione o local do curativo no corpo');return;}
+  // Captura regiões extras e slug no camposValores para regeneração fiel
+  if(selRegsExtra.length) camposValores['__regioes_extra']=selRegsExtra.join(', ');
+  if(selRegExtraUnico) camposValores['__regiao_extra_unico']=selRegExtraUnico;
+  camposValores['__slug']=selOco.slug;
   // Apensa dados extras ao texto da anotação
   if(selOco) texto += coletarExtras(selOco.slug);
   const d=new Date();
@@ -2631,12 +2659,12 @@ function gerarAnotacao(){
   const final=`${hora} — ${texto}`;
   hist.unshift({hora,ocorrencia:selOco.nome,contexto:selCtx.nome,texto:final,icon:ICONS[selOco.slug]||'📄'});
   const hc=document.getElementById('hc');hc.textContent=hist.length;hc.style.display='';
-  renderHist();
   const out=document.getElementById('output');out.style.display='block';
   const safe=final.replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');
   out.innerHTML=`<div class="output-wrap"><div class="output-header"><div class="output-title">✅ Anotação gerada</div><span style="font-size:11px;font-weight:600;color:var(--verde)">${hora} · ${selOco.nome}</span></div><div class="output-text">${final}</div><div class="output-actions"><button class="btn btn-verde" onclick="copiar(this,\`${safe}\`)">📋 Copiar</button><button class="btn btn-share" onclick="compartilhar(\`${safe}\`)">🔗 Compartilhar</button><button class="btn btn-outline" onclick="resetForm()">➕ Nova anotação</button></div></div>`;
   out.scrollIntoView({behavior:'smooth',block:'nearest'});
   showToast('✅ Anotação gerada!');
+  await salvarHistorico(selOco.id,selOco.nome,selCtx.id,selCtx.nome,camposValores);
   registrarTransacao();
 }
 
@@ -2666,9 +2694,103 @@ function compartilharCalc(tipo){
 }
 
 function renderHist(){
+  // mantido para compatibilidade — badge de contagem da sessão
+}
+
+// ── HISTÓRICO PERSISTENTE ──────────────────────────────────────────────────────
+
+async function salvarHistorico(ocorrenciaId,ocorrenciaNome,contextoId,contextoNome,camposValores){
+  if(!currentUsuario)return;
+  try{
+    await sb.from('historico_anotacoes').insert({
+      user_id:currentUser.id,
+      ocorrencia_id:ocorrenciaId,
+      contexto_id:contextoId,
+      campos_valores:camposValores,
+      ocorrencia_nome:ocorrenciaNome,
+      contexto_nome:contextoNome
+    });
+  }catch(e){
+    console.warn('Erro ao salvar histórico:',e);
+  }
+}
+
+async function carregarHistorico(){
+  if(!currentUsuario){
+    document.getElementById('hist-list').innerHTML=`<div class="empty"><div class="empty-icon">🕐</div><div class="empty-title">Suas anotações aparecerão aqui.</div><div class="empty-sub">Gere sua primeira anotação para começar.</div></div>`;
+    return;
+  }
+  document.getElementById('hist-loading').style.display='block';
+  document.getElementById('hist-list').innerHTML='';
+  try{await sb.rpc('purgar_historico_antigo');}catch(e){console.warn('Purga falhou:',e);}
+  const{data,error}=await sb
+    .from('historico_anotacoes')
+    .select('id,ocorrencia_nome,contexto_nome,criado_em,ocorrencia_id,contexto_id,campos_valores')
+    .eq('user_id',currentUser.id)
+    .order('criado_em',{ascending:false})
+    .limit(100);
+  document.getElementById('hist-loading').style.display='none';
+  if(error){console.error('Erro ao carregar histórico:',error);return;}
+  renderizarHistorico(data||[]);
+}
+
+let historicoItems=[];
+function renderizarHistorico(itens){
+  historicoItems=itens;
   const list=document.getElementById('hist-list');
-  if(!hist.length){list.innerHTML=`<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">Nenhuma anotação ainda</div></div>`;return;}
-  list.innerHTML=hist.map(e=>`<div class="tl-item"><div class="tl-dot teal">${e.icon}</div><div class="tl-body"><div class="tl-meta"><span>${e.hora}</span>${e.ocorrencia} · ${e.contexto}</div><div class="tl-txt">${e.texto}</div></div></div>`).join('');
+  if(!itens.length){
+    list.innerHTML=`<div class="empty"><div class="empty-icon">🕐</div><div class="empty-title">Suas anotações aparecerão aqui.</div><div class="empty-sub">Gere sua primeira anotação para começar.</div></div>`;
+    return;
+  }
+  list.innerHTML=itens.map((item,i)=>{
+    const slug=(item.campos_valores&&item.campos_valores['__slug'])||'';
+    const icon=ICONS[slug]||'📄';
+    const d=new Date(item.criado_em);
+    const dataBR=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()} às ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    return `<div class="hist-card" onclick="verAnotacaoHistorico(${i})"><div class="hist-card-icon">${icon}</div><div class="hist-card-body"><div class="hist-card-title">${item.ocorrencia_nome}</div><div class="hist-card-ctx">${item.contexto_nome}</div><div class="hist-card-date">${dataBR}</div></div><div class="hist-card-arrow">›</div></div>`;
+  }).join('');
+}
+
+async function verAnotacaoHistorico(index){
+  const item=historicoItems[index];
+  if(!item)return;
+  const{data:tplData}=await sb
+    .from('templates')
+    .select('template,campos')
+    .eq('ocorrencia_id',item.ocorrencia_id)
+    .eq('contexto_id',item.contexto_id)
+    .maybeSingle();
+  let textoRegenerado='';
+  if(!tplData){
+    showToast('⚠️ Template desta anotação não está mais disponível.');
+    return;
+  }
+  textoRegenerado=tplData.template;
+  const cv=item.campos_valores||{};
+  for(const[k,v]of Object.entries(cv)){
+    if(!k.startsWith('__'))textoRegenerado=textoRegenerado.replaceAll(`[${k}]`,v);
+  }
+  // Apensa extras se presentes
+  if(cv['__regioes_extra']) textoRegenerado+=`\nRegiões afetadas: ${cv['__regioes_extra']}`;
+  if(cv['__regiao_extra_unico']) textoRegenerado+=`\nLocal do acesso: ${cv['__regiao_extra_unico']}`;
+  const slug=(item.campos_valores&&item.campos_valores['__slug'])||'';
+  const icon=ICONS[slug]||'📄';
+  const d=new Date(item.criado_em);
+  const hora=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  const dataBR=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()} às ${hora}`;
+  const final=`${hora} — ${textoRegenerado}`;
+  const safe=final.replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');
+  const overlay=document.createElement('div');
+  overlay.className='hist-modal-overlay';
+  overlay.id='hist-modal-overlay';
+  overlay.onclick=function(e){if(e.target===overlay)fecharModalHistorico();};
+  overlay.innerHTML=`<div class="hist-modal-card"><div class="hist-modal-header"><div><div class="hist-modal-title">${icon} ${item.ocorrencia_nome}</div></div><button class="hist-modal-close" onclick="fecharModalHistorico()">✕</button></div><div class="hist-modal-meta">${item.contexto_nome} · ${dataBR}</div><div class="hist-modal-text">${final}</div><div class="hist-modal-actions"><button class="btn btn-verde" onclick="copiar(this,\`${safe}\`)">📋 Copiar</button><button class="btn btn-share" onclick="compartilhar(\`${safe}\`)">🔗 Compartilhar</button></div></div>`;
+  document.body.appendChild(overlay);
+}
+
+function fecharModalHistorico(){
+  const el=document.getElementById('hist-modal-overlay');
+  if(el)el.remove();
 }
 
 function atalho(slug){
@@ -2687,6 +2809,7 @@ function showView(id,btn){
   const bn=document.getElementById(`bn-${id}`);if(bn)bn.classList.add('active');
   closeSidebar();
   if(id==='admin'){adminTab('usuarios',document.getElementById('admin-tab-usuarios'));}
+  if(id==='historico'){carregarHistorico();}
 }
 
 function resetForm(){
