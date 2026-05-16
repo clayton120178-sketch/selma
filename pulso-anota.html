@@ -4002,10 +4002,9 @@ async function toggleCasoAtivo(casoId, ativo) {
 // ── Verificação de acesso ─────────────────────────────────────────────────────
 function verificarAcessoAPH() {
   if (!currentUsuario) return false;
-  const plano = currentUsuario.plano || '';
-  const tipo  = currentUsuario.tipo_acesso || '';
-  if (tipo !== 'anual') return false;
-  return plano === 'aph';
+  if (currentUsuario.tipo_acesso === 'admin') return true;
+  if (currentUsuario.tipo_acesso !== 'anual') return false;
+  return currentUsuario.plano === 'aph';
 }
 
 // ── Ponto de entrada do módulo ────────────────────────────────────────────────
