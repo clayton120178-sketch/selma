@@ -3617,7 +3617,7 @@ function avaliarCompletude(textoUsuario, criterios) {
       // "ev" does not match inside "escrever", while prefix keywords like "reavali" still
       // match "reavaliado" (boundary only on the left).
       if (/^[a-z]+$/.test(np)) {
-        return new RegExp('\\b' + np).test(texto);
+        return new RegExp('\\b' + np + '\\b').test(texto);
       }
       return texto.includes(np);
     });
