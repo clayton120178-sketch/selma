@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Pulso Anota</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--teal:#0D9488;--teal-light:#14B8A6;--teal-dim:#E6F7F6;--teal-mid:#CCEFED;--verde:#16A34A;--verde-dim:#DCFCE7;--vermelho:#EF4444;--vermelho-dim:#FEE2E2;--amarelo:#D97706;--amarelo-dim:#FEF3C7;--bg:#F8FAFA;--surface:#FFFFFF;--surface2:#F1F5F5;--border:#E2ECEC;--border2:#CBD5D5;--text:#0F2A28;--text2:#4A6B68;--text3:#8AA8A5;--sidebar-w:240px;--topbar-h:56px;--bottom-nav-h:64px;--font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;--r:10px;--r2:16px;--shadow:0 1px 4px rgba(13,148,136,.08),0 4px 16px rgba(13,148,136,.06);--shadow2:0 2px 8px rgba(13,148,136,.12),0 8px 32px rgba(13,148,136,.08)}
@@ -380,7 +382,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .blocked-card{max-width:600px!important}
 .blocked-headline{font-size:20px;font-weight:800;color:var(--text);margin-bottom:8px;line-height:1.35;text-align:center}
 .blocked-sub{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;text-align:center}
-.plan-select-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.plan-select-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:720px){.plan-select-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.plan-select-grid{grid-template-columns:1fr}}
 .psc{border:1.5px solid var(--border);border-radius:16px;padding:20px;text-align:left;position:relative;background:var(--surface)}
 .psc.featured{border-color:var(--teal);background:linear-gradient(160deg,var(--teal-dim) 0%,white 60%)}
@@ -401,6 +404,95 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .psc-btn.featured-btn{background:var(--teal);color:white;border:none}
 .psc-btn.featured-btn:hover{background:var(--teal-light);box-shadow:0 4px 16px rgba(13,148,136,.3)}
 .blocked-cta-label{font-size:17px;font-weight:800;color:var(--teal);text-align:center;margin-bottom:16px}
+
+/* ── MÓDULO APH ─────────────────────────────────────────────────────────────── */
+.aph-stepper{display:flex;gap:4px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.aph-stepper::-webkit-scrollbar{display:none}
+.aph-step{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;min-width:56px;flex:1;user-select:none}
+.aph-step-num{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);background:var(--surface2);font-size:13px;font-weight:700;color:var(--text3);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.aph-step-label{font-size:9px;font-weight:700;color:var(--text3);text-align:center;white-space:nowrap;line-height:1.2}
+.aph-step.ativo .aph-step-num{background:var(--teal);border-color:var(--teal);color:white}
+.aph-step.ativo .aph-step-label{color:var(--teal)}
+.aph-step.visitado .aph-step-num{background:var(--teal-dim);border-color:var(--teal);color:var(--teal)}
+.aph-step.visitado .aph-step-label{color:var(--teal)}
+.aph-step.desabilitado{cursor:default;opacity:.4;pointer-events:none}
+@media(max-width:600px){.aph-step-label{display:none}.aph-stepper{gap:3px}}
+.aph-section-title{font-size:13px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;padding:8px 0 10px;border-bottom:1px solid var(--border);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.aph-field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.aph-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px}
+.aph-input{padding:10px 14px;border-radius:var(--r);border:1.5px solid var(--border);font-family:var(--font);font-size:14px;color:var(--text);outline:none;transition:border-color .15s;background:var(--surface)}
+.aph-input:focus{border-color:var(--teal)}
+.aph-input.alerta{background:#FEE2E2;border-color:#FCA5A5}
+.aph-input.aviso{background:#FEF3C7;border-color:#FDE68A}
+.aph-textarea{padding:10px 14px;border-radius:var(--r);border:1.5px solid var(--border);font-family:var(--font);font-size:13px;color:var(--text);outline:none;resize:vertical;min-height:76px;transition:border-color .15s;background:var(--surface)}
+.aph-textarea:focus{border-color:var(--teal)}
+.aph-chips{display:flex;flex-wrap:wrap;gap:7px}
+.aph-chip{padding:7px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;transition:all .15s;min-height:36px;line-height:1}
+.aph-chip:hover{border-color:var(--teal-light);color:var(--text)}
+.aph-chip.selected{background:var(--teal-dim);border-color:var(--teal);color:var(--teal)}
+.aph-toggle{display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);cursor:pointer;font-size:13px;font-weight:600;color:var(--text2)}
+.aph-toggle input[type=checkbox]{width:18px;height:18px;accent-color:var(--teal)}
+.aph-subgrupo{background:var(--surface2);border-radius:var(--r);padding:12px 14px;margin-bottom:12px;border:1px solid var(--border)}
+.aph-subgrupo-title{font-size:11px;font-weight:800;color:var(--teal);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+.glasgow-badge{font-family:var(--mono);font-size:38px;font-weight:800;text-align:center;padding:14px;border-radius:var(--r2);margin:10px 0;line-height:1}
+.glasgow-verde{color:#16A34A;background:#DCFCE7}
+.glasgow-amarelo{color:#D97706;background:#FEF3C7}
+.glasgow-vermelho{color:#EF4444;background:#FEE2E2}
+.aph-vitais-table{width:100%;border-collapse:collapse;font-size:12px;min-width:680px}
+.aph-vitais-table th{text-align:center;padding:7px 5px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+.aph-vitais-table td{padding:5px 3px;border-bottom:1px solid var(--border)}
+.aph-vitais-table input{width:100%;padding:6px 5px;border-radius:6px;border:1.5px solid var(--border);font-family:var(--mono);font-size:12px;color:var(--text);text-align:center;background:var(--surface);outline:none;min-width:44px}
+.aph-vitais-table input:focus{border-color:var(--teal)}
+.aph-vitais-table input.alerta{background:#FEE2E2;border-color:#FCA5A5}
+.aph-vitais-table input.aviso{background:#FEF3C7;border-color:#FDE68A}
+.aph-eva-btns{display:flex;gap:3px;flex-wrap:wrap}
+.aph-eva-btn{width:28px;height:28px;border-radius:6px;border:1.5px solid var(--border);font-size:11px;font-weight:800;cursor:pointer;transition:all .15s;font-family:var(--mono)}
+.aph-eva-btn.selected{color:white;border-color:transparent}
+.aph-intervencao-card{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:10px}
+.aph-intervencao-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.aph-intervencao-tipo{font-size:12px;font-weight:700;color:var(--teal)}
+.aph-accordion{border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden}
+.aph-accordion-head{padding:12px 16px;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:var(--surface)}
+.aph-accordion-head:hover{background:var(--surface2)}
+.aph-accordion-body{padding:12px 16px;border-top:1px solid var(--border);background:var(--surface);font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-wrap;word-break:break-word}
+/* Step states used by JS */
+.aph-step.current .aph-step-num{background:var(--teal);border-color:var(--teal);color:white}
+.aph-step.current .aph-step-label{color:var(--teal)}
+.aph-step.done .aph-step-num{background:var(--teal-dim);border-color:var(--teal);color:var(--teal)}
+.aph-step.done .aph-step-label{color:var(--teal)}
+/* Chip active state */
+.aph-chip.active{background:var(--teal-dim);border-color:var(--teal);color:var(--teal)}
+/* Accordion used in ABCDE */
+.aph-acc-header{padding:12px 16px;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:var(--surface);user-select:none}
+.aph-acc-header:hover{background:var(--surface2)}
+.aph-acc-body{padding:12px 16px;border-top:1px solid var(--border);background:var(--surface);display:none}
+.aph-accordion.open .aph-acc-body{display:block}
+/* Grid 2 columns */
+.aph-grid2{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:520px){.aph-grid2{grid-template-columns:1fr}}
+/* Result screen */
+.aph-result-header{background:linear-gradient(135deg,#0a1f1d,#0d3330);color:white;border-radius:var(--r2);padding:20px 22px;margin-bottom:16px}
+.aph-result-section{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px}
+.aph-result-label{font-size:10px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.aph-result-value{font-size:13px;color:var(--text);line-height:1.5}
+/* Status badge variants */
+.aph-status-rascunho{background:var(--amarelo-dim);color:var(--amarelo)}
+.aph-status-finalizado{background:var(--verde-dim);color:var(--verde)}
+.aph-hist-item{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.aph-hist-info{flex:1;min-width:0}
+.aph-hist-title{font-size:14px;font-weight:700;color:var(--text)}
+.aph-hist-meta{font-size:12px;color:var(--text3);margin-top:3px}
+.aph-hist-actions{display:flex;gap:6px;flex-shrink:0}
+.aph-status-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;display:inline-block}
+.aph-badge-rascunho{background:var(--amarelo-dim);color:var(--amarelo)}
+.aph-badge-finalizado{background:var(--verde-dim);color:var(--verde)}
+.aph-desfecho-estavel{background:var(--verde-dim);color:var(--verde)}
+.aph-desfecho-instavel{background:var(--amarelo-dim);color:var(--amarelo)}
+.aph-desfecho-pcr{background:var(--vermelho-dim);color:var(--vermelho)}
+.aph-desfecho-obito{background:var(--surface2);color:var(--text3)}
+.aph-field-error{border-color:var(--vermelho)!important}
+.aph-field-error-msg{font-size:11px;color:var(--vermelho);font-weight:600;margin-top:3px}
+@media(max-width:600px){.aph-vitais-table{font-size:11px}}
 
 /* ── EXTRAS DE OCORRÊNCIAS ─────────────────────────────────────────────────── */
 .extra-section{margin-top:14px}
@@ -609,6 +701,22 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
         </div>
         <button class="psc-btn featured-btn" onclick="abrirPagamento('completo')">Assinar agora →</button>
       </div>
+
+      <!-- Plano APH -->
+      <div class="psc" style="border-color:#F59E0B;background:linear-gradient(160deg,#FFFBEB 0%,white 60%)">
+        <div class="psc-badge" style="background:#F59E0B">🚑 NOVO</div>
+        <div class="psc-name">APH</div>
+        <div class="psc-installments-est"><strong>ou em até 12x de R$ 13,95*</strong></div>
+        <div class="psc-price">R$&nbsp;147<span style="font-size:15px;font-weight:400">,00</span></div>
+        <div class="psc-price-label">por ano</div>
+        <div class="psc-features">
+          <div class="psc-feat ok"><div class="psc-fi">✓</div>Tudo do plano Completo</div>
+          <div class="psc-feat ok"><div class="psc-fi">✓</div>Boletim APH com 9 etapas</div>
+          <div class="psc-feat ok"><div class="psc-fi">✓</div>Glasgow, ABCDE, SAMPLE</div>
+          <div class="psc-feat ok"><div class="psc-fi">✓</div>Output copiável + PDF profissional</div>
+        </div>
+        <button class="psc-btn" style="background:#F59E0B;color:white;border:none" onclick="abrirPagamento('aph')">Assinar Plano APH →</button>
+      </div>
     </div>
 
     <div class="psc-installments-note">* Valor estimado. As opções finais dependem do cartão, emissor e condições do pagamento.</div>
@@ -786,6 +894,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
     <!-- Painel do Influenciador — visível apenas para influenciadores -->
     <button class="nav-btn" id="nav-influenciador" onclick="showView('influenciador',this)" style="display:none">
       <div class="ni">🤝</div>Meu Painel
+    </button>
+    <button class="nav-btn" id="nav-aph" onclick="showView('aph',this)">
+      <div class="ni">🚑</div>APH
     </button>
   </aside>
 
@@ -1438,6 +1549,76 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
     </div>
     <!-- /view-influenciador -->
 
+    <!-- VIEW: MÓDULO APH -->
+    <div class="view" id="view-aph">
+
+      <!-- BLOQUEIO APH -->
+      <div id="aph-blocked" style="display:none;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;gap:16px">
+        <div style="font-size:52px">🚑</div>
+        <div style="font-size:20px;font-weight:800;color:var(--text)">Módulo APH — Atendimento Pré-Hospitalar</div>
+        <div style="font-size:14px;color:var(--text2);max-width:360px;line-height:1.6">Formulário completo de boletim pré-hospitalar, output copiável e PDF profissional.</div>
+        <div style="font-family:var(--mono);font-size:32px;font-weight:800;color:var(--teal)">R$ 147,00<span style="font-size:14px;font-weight:400;color:var(--text2)">/ano</span></div>
+        <button class="btn-cta" onclick="abrirPagamento('aph')">Assinar Plano APH</button>
+      </div>
+
+      <!-- FORM VIEW -->
+      <div id="aph-form-view" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+          <div>
+            <div style="font-size:18px;font-weight:800;color:var(--text)">🚑 Boletim APH</div>
+            <div style="font-size:13px;color:var(--text2)">Atendimento Pré-Hospitalar</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:36px" onclick="aphVerHistorico()">📋 Histórico APH</button>
+            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:36px" onclick="aphSalvarRascunho()">💾 Salvar Rascunho</button>
+          </div>
+        </div>
+
+        <!-- Stepper -->
+        <div class="aph-stepper" id="aph-stepper"></div>
+
+        <!-- Conteúdo das seções -->
+        <div id="aph-form-content" class="card" style="padding:18px"></div>
+
+        <!-- Navegação -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:12px">
+          <button id="aph-btn-anterior" onclick="aphNavigarStep(aph_stepAtual-1)" style="min-height:48px;padding:12px 20px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:14px;font-weight:700;color:var(--text2);cursor:pointer">← Anterior</button>
+          <button id="aph-btn-proximo" onclick="aphProximo()" style="min-height:48px;padding:12px 24px;border-radius:var(--r);border:none;background:var(--teal);color:white;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer">Próximo →</button>
+        </div>
+      </div>
+
+      <!-- RESULTADO -->
+      <div id="aph-result-view" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <div style="font-size:16px;font-weight:800;color:var(--text)">📄 Boletim Gerado</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:40px" onclick="aphCopiarBoletim()">📋 Copiar</button>
+            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:40px" onclick="aphCompartilharWhatsApp()">📱 WhatsApp</button>
+            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:40px" onclick="aphBaixarPDF()">📄 PDF</button>
+          </div>
+        </div>
+        <div id="aph-result-content"></div>
+        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+          <button onclick="aphEditarBoletim()" style="flex:1;min-height:48px;padding:12px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:14px;font-weight:700;color:var(--text2);cursor:pointer">✏️ Editar</button>
+          <button onclick="aphNovoBoletim()" style="flex:1;min-height:48px;padding:12px;border-radius:var(--r);border:none;background:var(--teal);color:white;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer">🔄 Novo Boletim</button>
+        </div>
+      </div>
+
+      <!-- HISTÓRICO -->
+      <div id="aph-historico-view" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <div style="font-size:16px;font-weight:800;color:var(--text)">📋 Histórico APH</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:36px" onclick="aphNovoBoletim()">+ Novo Boletim</button>
+            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:36px" onclick="carregarHistoricoAPH()">↺ Atualizar</button>
+          </div>
+        </div>
+        <div id="aph-historico-content"><div class="loading"><div class="spinner"></div>Carregando...</div></div>
+      </div>
+
+    </div>
+    <!-- /view-aph -->
+
   </main>
 </div>
 
@@ -1447,6 +1628,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   <button class="bn-btn" onclick="showView('estudo',this)" id="bn-estudo" style="display:none"><div class="bn-icon">🎓</div>Estudo</button>
   <button class="bn-btn" onclick="showView('prontuario',this)" id="bn-prontuario"><div class="bn-icon">🏥</div>Prontuário</button>
   <button class="bn-btn" onclick="showView('calcular',this)" id="bn-calcular"><div class="bn-icon">🧮</div>Calcular</button>
+  <button class="bn-btn" onclick="showView('aph',this)" id="bn-aph"><div class="bn-icon">🚑</div>APH</button>
 </nav>
 
 <div class="toast" id="toast" style="display:none"></div>
@@ -1477,6 +1659,11 @@ const REGIOES=['Cabeça','Pescoço','Tórax','Abdome','Pelve / quadril','Braço 
 let oco=[],selOco=null,selCtx=null,tpl=null,hist=[],selReg='';
 let currentUser=null,currentUsuario=null;
 let currentInfluenciador = null;
+let aph_currentBoletim = null; // boletim APH em construção
+let aph_stepAtual = 1;
+let aph_stepsVisitados = new Set([1]);
+let aph_sinaisVitais = [];
+let aph_intervencoes = [];
 // Estado extra para mapa corporal secundário
 let selRegsExtra = []; // multi-select (queda)
 let selRegExtraUnico = ''; // single-select (acesso_venoso)
@@ -1689,7 +1876,7 @@ function mostrarApp(dados){
     const restantes=10-usado;
     ti.innerHTML=`<span class="trial-badge">🎁 ${restantes} uso${restantes!==1?'s':''} grátis</span>`;
   } else if(dados.tipo_acesso==='anual'){
-    const planLabel = dados.plano === 'completo' ? 'Completo' : 'Anotações';
+    const planLabel = dados.plano === 'aph' ? 'APH' : dados.plano === 'completo' ? 'Completo' : 'Anotações';
     ti.innerHTML=`<span class="trial-badge" style="background:var(--verde-dim);border-color:#86EFAC;color:var(--verde)">✅ ${planLabel}</span>`;
   }
 
@@ -1814,14 +2001,23 @@ async function carregarAdmin(){
       const trialUsos=u.status==='trial'||u.tipo_acesso==='trial'?`${u.transacoes_trial||u.dias_restantes_trial||0}/10 usos`:'—';
       const anualFim=u.acesso_anual_fim?new Date(u.acesso_anual_fim).toLocaleDateString('pt-BR'):'—';
       const cupomBadge=u.cupom_afiliado?`<span style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--teal);background:var(--teal-dim);padding:2px 7px;border-radius:6px">${u.cupom_afiliado}</span>`:'—';
+      const planoCls = u.plano==='aph'?'background:#FEF3C7;color:#92400E;border-color:#FDE68A':u.plano==='completo'?'background:var(--verde-dim);color:var(--verde);border-color:#86EFAC':'background:var(--teal-dim);color:var(--teal);border-color:var(--teal-mid)';
+      const planoLabel = u.plano==='aph'?'🚑 APH':u.plano==='completo'?'Completo':'Anotações';
+      const planoBadge = u.tipo_acesso==='anual'?`<span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid;${planoCls}">${planoLabel}</span>`:'—';
       return`<tr>
         <td><div style="font-weight:700;color:var(--text)">${u.nome||'—'}</div><div style="font-size:11px;color:var(--text3)">${u.email}</div></td>
         <td><span class="status-pill ${statusCls}">${u.status}</span></td>
+        <td>${planoBadge}</td>
         <td style="font-size:12px">${trialUsos}</td>
         <td style="font-size:12px">${anualFim}</td>
         <td>${cupomBadge}</td>
-        <td>
-          <button onclick="liberarAnual('${u.id}')" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid #86EFAC;background:var(--verde-dim);color:var(--verde);cursor:pointer;font-family:var(--font);font-weight:700">+1 ano</button>
+        <td style="white-space:nowrap">
+          <select onchange="liberarAnual('${u.id}',this.value);this.selectedIndex=0" style="font-size:11px;padding:4px 6px;border-radius:6px;border:1px solid #86EFAC;background:var(--verde-dim);color:var(--verde);cursor:pointer;font-family:var(--font);font-weight:700">
+            <option value="">+1 ano ▾</option>
+            <option value="anotacoes">Anotações</option>
+            <option value="completo">Completo</option>
+            <option value="aph">APH 🚑</option>
+          </select>
           <button onclick="bloquearUser('${u.id}')" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid #FCA5A5;background:var(--vermelho-dim);color:var(--vermelho);cursor:pointer;font-family:var(--font);font-weight:700;margin-left:4px">Bloquear</button>
         </td>
       </tr>`;
@@ -1829,13 +2025,17 @@ async function carregarAdmin(){
   }catch(e){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--vermelho)">${e.message}</td></tr>`;}
 }
 
-async function liberarAnual(uid){
+async function liberarAnual(uid, plano='completo'){
   const agora=new Date();
   const fim=new Date(agora);fim.setFullYear(fim.getFullYear()+1);
-  await sb.from('usuarios').update({tipo_acesso:'anual',plano:'completo',acesso_anual_inicio:agora.toISOString(),acesso_anual_fim:fim.toISOString()}).eq('id',uid);
-  showToast('✅ Acesso anual liberado (Plano Completo)');
+  await sb.from('usuarios').update({tipo_acesso:'anual',plano,acesso_anual_inicio:agora.toISOString(),acesso_anual_fim:fim.toISOString()}).eq('id',uid);
+  const label = plano==='aph'?'APH':plano==='anotacoes'?'Anotações':'Completo';
+  showToast(`✅ Acesso anual liberado (Plano ${label})`);
   carregarAdmin();
 }
+
+async function liberarAPH(uid){ return liberarAnual(uid,'aph'); }
+async function liberarAnotacoes(uid){ return liberarAnual(uid,'anotacoes'); }
 
 async function bloquearUser(uid){
   await sb.from('usuarios').update({tipo_acesso:'bloqueado'}).eq('id',uid);
@@ -2978,6 +3178,7 @@ function showView(id,btn){
   if(id==='admin'){adminTab('usuarios',document.getElementById('admin-tab-usuarios'));}
   if(id==='historico'){carregarHistorico();}
   if(id==='estudo'){entrarModoEstudo();}
+  if(id==='aph'){entrarModuloAPH();}
 }
 
 function resetForm(){
@@ -3241,8 +3442,8 @@ function limparCalc(tipo) {
 
 // ── MÓDULO DE PAGAMENTO (Mercado Pago) ────────────────────────────────────────
 
-const PLAN_PRICES = { anotacoes: 97.00, completo: 117.00 };
-const PLAN_NAMES  = { anotacoes: 'Plano Anotações', completo: 'Plano Completo' };
+const PLAN_PRICES = { anotacoes: 97.00, completo: 117.00, aph: 147.00 };
+const PLAN_NAMES  = { anotacoes: 'Plano Anotações', completo: 'Plano Completo', aph: 'Plano APH' };
 
 let payMethod    = 'pix';          // método ativo: 'pix' | 'credit_card' | 'debit_card'
 let mpMounted    = false;          // controla se o Brick já foi montado
@@ -3792,6 +3993,1202 @@ async function toggleCasoAtivo(casoId, ativo) {
     await sb.from('casos_estudo').update({ ativo: !ativo }).eq('id', casoId);
     carregarCasosAdmin();
   } catch(e) { showToast('Erro ao atualizar caso: ' + e.message); }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MÓDULO APH — Atendimento Pré-Hospitalar
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── Verificação de acesso ─────────────────────────────────────────────────────
+function verificarAcessoAPH() {
+  if (!currentUsuario) return false;
+  const plano = currentUsuario.plano || '';
+  const tipo  = currentUsuario.tipo_acesso || '';
+  if (tipo !== 'anual') return false;
+  return plano === 'aph';
+}
+
+// ── Ponto de entrada do módulo ────────────────────────────────────────────────
+function entrarModuloAPH() {
+  const bloqueado = document.getElementById('aph-blocked');
+  const formView  = document.getElementById('aph-form-view');
+  const resultView= document.getElementById('aph-result-view');
+  const histView  = document.getElementById('aph-historico-view');
+  [bloqueado, formView, resultView, histView].forEach(el => el && (el.style.display = 'none'));
+
+  if (!verificarAcessoAPH()) {
+    if (bloqueado) bloqueado.style.display = '';
+    return;
+  }
+  // Mostrar histórico por padrão
+  aphMostrarHistorico();
+}
+
+// ── Novo boletim ──────────────────────────────────────────────────────────────
+function aphNovoBoletim() {
+  aph_currentBoletim = null;
+  aph_stepAtual      = 1;
+  aph_stepsVisitados = new Set([1]);
+  aph_sinaisVitais   = [];
+  aph_intervencoes   = [];
+  aphMostrarFormulario();
+}
+
+// ── Mostrar formulário ────────────────────────────────────────────────────────
+function aphMostrarFormulario() {
+  document.getElementById('aph-blocked').style.display     = 'none';
+  document.getElementById('aph-result-view').style.display = 'none';
+  document.getElementById('aph-historico-view').style.display = 'none';
+  document.getElementById('aph-form-view').style.display   = '';
+  aphRenderStepper();
+  aphRenderSecaoAtual();
+}
+
+// ── Definição das etapas ──────────────────────────────────────────────────────
+const APH_STEPS = [
+  { n: 1, label: 'Ocorrência'  },
+  { n: 2, label: 'Paciente'    },
+  { n: 3, label: 'ABCDE'       },
+  { n: 4, label: 'Glasgow'     },
+  { n: 5, label: 'Sinais'      },
+  { n: 6, label: 'SAMPLE'      },
+  { n: 7, label: 'Mecanismo'   },
+  { n: 8, label: 'Intervenções'},
+  { n: 9, label: 'Desfecho'    },
+];
+
+// ── Renderizar stepper ────────────────────────────────────────────────────────
+function aphRenderStepper() {
+  const el = document.getElementById('aph-stepper');
+  if (!el) return;
+  el.innerHTML = APH_STEPS.map(s => {
+    const done    = aph_stepsVisitados.has(s.n) && s.n !== aph_stepAtual;
+    const current = s.n === aph_stepAtual;
+    const cls = current ? 'aph-step current' : done ? 'aph-step done' : 'aph-step';
+    return `<div class="${cls}" onclick="aphIrParaStep(${s.n})">
+      <div class="aph-step-num">${done ? '✓' : s.n}</div>
+      <div class="aph-step-label">${s.label}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Renderizar seção atual ────────────────────────────────────────────────────
+function aphRenderSecaoAtual() {
+  const el = document.getElementById('aph-form-content');
+  if (!el) return;
+  el.innerHTML = aphRenderSecao(aph_stepAtual);
+  // Atualizar botões de nav
+  document.getElementById('aph-btn-voltar').style.display  = aph_stepAtual > 1 ? '' : 'none';
+  document.getElementById('aph-btn-proximo').textContent   = aph_stepAtual < 9 ? 'Próximo →' : 'Finalizar ✓';
+  // Restaurar valores salvos
+  aphRestaurarEstado();
+  // Glasgow auto-calc
+  if (aph_stepAtual === 4) {
+    ['aph-gl-ocular','aph-gl-verbal','aph-gl-motor'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('change', calcularGlasgow);
+    });
+    calcularGlasgow();
+  }
+  // SPO2 hint
+  if (aph_stepAtual === 3) {
+    const spo2 = document.getElementById('aph-spo2-input');
+    if (spo2) spo2.addEventListener('input', aphCheckSpo2);
+  }
+}
+
+// ── Helpers de chip UI ────────────────────────────────────────────────────────
+function aphChips(field, opts, multi = false) {
+  const items = opts.map(o =>
+    `<button type="button" class="aph-chip" data-field="${field}" data-val="${o.v}" onclick="aphToggleChip(this,${multi})">${o.l}</button>`
+  ).join('');
+  return `<div class="aph-chips" data-group="${field}">${items}</div>`;
+}
+
+function aphToggleChip(btn, multi) {
+  const group = btn.closest('[data-group]');
+  if (!multi) group.querySelectorAll('.aph-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.toggle('active');
+}
+
+function aphGetChip(field) {
+  const group = document.querySelector(`.aph-chips[data-group="${field}"]`);
+  if (!group) return null;
+  const active = group.querySelector('.aph-chip.active');
+  return active ? active.dataset.val : null;
+}
+
+function aphGetChipsMulti(field) {
+  const group = document.querySelector(`.aph-chips[data-group="${field}"]`);
+  if (!group) return [];
+  return [...group.querySelectorAll('.aph-chip.active')].map(b => b.dataset.val);
+}
+
+function aphSetChip(field, val) {
+  const group = document.querySelector(`.aph-chips[data-group="${field}"]`);
+  if (!group || !val) return;
+  group.querySelectorAll('.aph-chip').forEach(b => {
+    if (b.dataset.val === val) b.classList.add('active');
+  });
+}
+
+function aphSetChipsMulti(field, vals) {
+  if (!vals || !vals.length) return;
+  const arr = Array.isArray(vals) ? vals : [vals];
+  const group = document.querySelector(`.aph-chips[data-group="${field}"]`);
+  if (!group) return;
+  group.querySelectorAll('.aph-chip').forEach(b => {
+    if (arr.includes(b.dataset.val)) b.classList.add('active');
+  });
+}
+
+function aphInput(id, label, type = 'text', placeholder = '') {
+  return `<div class="aph-subgrupo">
+    <label class="aph-label">${label}</label>
+    <input id="${id}" type="${type}" class="aph-input" placeholder="${placeholder}">
+  </div>`;
+}
+
+function aphTextarea(id, label, rows = 3, placeholder = '') {
+  return `<div class="aph-subgrupo">
+    <label class="aph-label">${label}</label>
+    <textarea id="${id}" class="aph-textarea" rows="${rows}" placeholder="${placeholder}"></textarea>
+  </div>`;
+}
+
+// ── Renderizar seção por número ───────────────────────────────────────────────
+function aphRenderSecao(n) {
+  switch(n) {
+    case 1: return aphSecaoOcorrencia();
+    case 2: return aphSecaoPaciente();
+    case 3: return aphSecaoABCDE();
+    case 4: return aphSecaoGlasgow();
+    case 5: return aphSecaoSinaisVitais();
+    case 6: return aphSecaoSAMPLE();
+    case 7: return aphSecaoMecanismo();
+    case 8: return aphSecaoIntervencoes();
+    case 9: return aphSecaoDesfecho();
+    default: return '';
+  }
+}
+
+function aphSecaoOcorrencia() {
+  return `<h3 class="aph-section-title">Seção A — Identificação da Ocorrência</h3>
+  <div class="aph-grid2">
+    ${aphInput('aph-numero','Número da Ocorrência','text','Ex: 2024-001')}
+    ${aphInput('aph-viatura','Viatura','text','Ex: USA-03')}
+  </div>
+  <div class="aph-grid2">
+    ${aphInput('aph-data-acionamento','Data/Hora Acionamento','datetime-local','')}
+    ${aphInput('aph-data-chegada-local','Chegada ao Local','datetime-local','')}
+  </div>
+  <div class="aph-grid2">
+    ${aphInput('aph-data-saida-local','Saída do Local','datetime-local','')}
+    ${aphInput('aph-data-chegada-hospital','Chegada ao Hospital','datetime-local','')}
+  </div>
+  ${aphInput('aph-medico-regulador','Médico Regulador','text','')}
+  <div class="aph-subgrupo">
+    <label class="aph-label">Natureza da Ocorrência</label>
+    ${aphChips('natureza_ocorrencia',[
+      {v:'trauma',l:'Trauma'},{v:'clinico',l:'Clínico'},{v:'obstetrico',l:'Obstétrico'},
+      {v:'psiquiatrico',l:'Psiquiátrico'},{v:'pediatrico',l:'Pediátrico'}
+    ])}
+  </div>
+  <div class="aph-subgrupo">
+    <label class="aph-label">Tipo de Local</label>
+    ${aphChips('tipo_local',[
+      {v:'via_publica',l:'Via Pública'},{v:'residencia',l:'Residência'},
+      {v:'comercio',l:'Comércio'},{v:'outro',l:'Outro'}
+    ])}
+  </div>
+  ${aphTextarea('aph-endereco','Endereço da Ocorrência',2,'Rua, número, bairro...')}`;
+}
+
+function aphSecaoPaciente() {
+  return `<h3 class="aph-section-title">Seção B — Identificação do Paciente</h3>
+  ${aphInput('aph-pac-nome','Nome','text','Nome completo')}
+  <div class="aph-grid2">
+    ${aphInput('aph-pac-idade','Idade','number','anos')}
+    <div class="aph-subgrupo">
+      <label class="aph-label">Sexo</label>
+      ${aphChips('paciente_sexo',[{v:'M',l:'Masculino'},{v:'F',l:'Feminino'},{v:'nao_informado',l:'Não Informado'}])}
+    </div>
+  </div>
+  ${aphInput('aph-pac-doc','Documento (CPF/RG)','text','')}
+  ${aphInput('aph-pac-contato','Contato/Familiar','text','Telefone ou nome')}`;
+}
+
+function aphSecaoABCDE() {
+  return `<h3 class="aph-section-title">Seção C — ABCDE (Avaliação Primária)</h3>
+  <div class="aph-accordion">
+    <div class="aph-acc-header" onclick="this.parentElement.classList.toggle('open')">A — Via Aérea ▾</div>
+    <div class="aph-acc-body">
+      <div class="aph-subgrupo">
+        <label class="aph-label">Permeabilidade</label>
+        ${aphChips('abcde_via_aerea',[{v:'pervio',l:'Pérvio'},{v:'obstruido',l:'Obstruído'},{v:'dispositivo',l:'Com Dispositivo'}])}
+      </div>
+      ${aphInput('aph-disp-va','Dispositivo utilizado','text','Ex: COT, cânula de Guedel...')}
+    </div>
+  </div>
+  <div class="aph-accordion">
+    <div class="aph-acc-header" onclick="this.parentElement.classList.toggle('open')">B — Respiração ▾</div>
+    <div class="aph-acc-body">
+      <div class="aph-subgrupo">
+        <label class="aph-label">Respiração</label>
+        ${aphChips('abcde_respiracao',[{v:'normal',l:'Normal'},{v:'alterada',l:'Alterada'},{v:'ausente',l:'Ausente'}])}
+      </div>
+      <div class="aph-grid2">
+        ${aphInput('aph-fr','FR (irpm)','number','12-20')}
+        <div class="aph-subgrupo">
+          <label class="aph-label">SpO₂ (%)</label>
+          <input id="aph-spo2-input" type="number" class="aph-input" placeholder="95-100" min="0" max="100" oninput="aphCheckSpo2()">
+          <div id="aph-spo2-hint" style="font-size:11px;margin-top:4px;color:var(--text-muted)"></div>
+        </div>
+      </div>
+      <div class="aph-grid2">
+        ${aphInput('aph-o2-fluxo','O₂ Fluxo (L/min)','number','')}
+        <div class="aph-subgrupo">
+          <label class="aph-label">Dispositivo O₂</label>
+          ${aphChips('abcde_o2_dispositivo',[{v:'cateter',l:'Cateter'},{v:'mascara_simples',l:'Máscara Simples'},{v:'mascara_reservatorio',l:'Máscara Reservatório'},{v:'vmi',l:'VMI'}])}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="aph-accordion">
+    <div class="aph-acc-header" onclick="this.parentElement.classList.toggle('open')">C — Circulação ▾</div>
+    <div class="aph-acc-body">
+      <div class="aph-subgrupo">
+        <label class="aph-label">Circulação</label>
+        ${aphChips('abcde_circulacao',[{v:'normal',l:'Normal'},{v:'alterada',l:'Alterada'},{v:'pcr',l:'PCR'}])}
+      </div>
+      <div class="aph-subgrupo">
+        <label class="aph-label">Pulso</label>
+        ${aphChips('abcde_pulso',[{v:'presente',l:'Presente'},{v:'ausente',l:'Ausente'}])}
+      </div>
+      <div class="aph-grid2">
+        <div class="aph-subgrupo">
+          <label class="aph-label">Ritmo</label>
+          ${aphChips('abcde_ritmo_pulso',[{v:'regular',l:'Regular'},{v:'irregular',l:'Irregular'}])}
+        </div>
+        <div class="aph-subgrupo">
+          <label class="aph-label">Força</label>
+          ${aphChips('abcde_forca_pulso',[{v:'cheio',l:'Cheio'},{v:'fino',l:'Fino'},{v:'filiforme',l:'Filiforme'}])}
+        </div>
+      </div>
+      <div class="aph-subgrupo">
+        <label class="aph-label">TEC</label>
+        ${aphChips('abcde_tec',[{v:'menor_2s',l:'< 2s'},{v:'maior_2s',l:'> 2s'}])}
+      </div>
+      <div class="aph-subgrupo">
+        <label class="aph-label">Hemorragia Ativa?</label>
+        ${aphChips('abcde_hemorragia',[{v:'true',l:'Sim'},{v:'false',l:'Não'}])}
+      </div>
+      ${aphInput('aph-hemorragia-tipo','Tipo de hemorragia','text','Ex: arterial, venosa, capilar...')}
+    </div>
+  </div>
+  <div class="aph-accordion">
+    <div class="aph-acc-header" onclick="this.parentElement.classList.toggle('open')">D — Nível de Consciência ▾</div>
+    <div class="aph-acc-body">
+      <div class="aph-subgrupo">
+        <label class="aph-label">AVDI</label>
+        ${aphChips('abcde_nivel_consciencia',[{v:'alerta',l:'Alerta'},{v:'voz',l:'Voz'},{v:'dor',l:'Dor'},{v:'irresponsivo',l:'Irresponsivo'}])}
+      </div>
+      <div class="aph-subgrupo">
+        <label class="aph-label">Pupilas</label>
+        ${aphChips('abcde_pupilas',[{v:'isocoricas_fotorreativas',l:'Isocóricas Fotorreativas'},{v:'anisocoricas',l:'Anisocóricas'},{v:'miose',l:'Miose'},{v:'midriase',l:'Midríase'}])}
+      </div>
+    </div>
+  </div>
+  <div class="aph-accordion">
+    <div class="aph-acc-header" onclick="this.parentElement.classList.toggle('open')">E — Exposição ▾</div>
+    <div class="aph-acc-body">
+      ${aphTextarea('aph-exposicao','Achados na exposição',2,'Lesões, queimaduras, fraturas evidentes...')}
+      <div class="aph-subgrupo">
+        <label class="aph-label">Suspeita de Trauma Raquimedular?</label>
+        ${aphChips('abcde_suspeita_trauma_raqui',[{v:'true',l:'Sim'},{v:'false',l:'Não'}])}
+      </div>
+    </div>
+  </div>`;
+}
+
+function aphSecaoGlasgow() {
+  return `<h3 class="aph-section-title">Seção D — Glasgow</h3>
+  <div class="aph-subgrupo">
+    <label class="aph-label">Abertura Ocular (AO)</label>
+    <select id="aph-gl-ocular" class="aph-input" onchange="calcularGlasgow()">
+      <option value="">— selecione —</option>
+      <option value="4">4 — Espontânea</option>
+      <option value="3">3 — À voz</option>
+      <option value="2">2 — À dor</option>
+      <option value="1">1 — Ausente</option>
+    </select>
+  </div>
+  <div class="aph-subgrupo">
+    <label class="aph-label">Resposta Verbal (RV)</label>
+    <select id="aph-gl-verbal" class="aph-input" onchange="calcularGlasgow()">
+      <option value="">— selecione —</option>
+      <option value="5">5 — Orientado</option>
+      <option value="4">4 — Confuso</option>
+      <option value="3">3 — Palavras inapropriadas</option>
+      <option value="2">2 — Sons incompreensíveis</option>
+      <option value="1">1 — Ausente</option>
+    </select>
+  </div>
+  <div class="aph-subgrupo">
+    <label class="aph-label">Resposta Motora (RM)</label>
+    <select id="aph-gl-motor" class="aph-input" onchange="calcularGlasgow()">
+      <option value="">— selecione —</option>
+      <option value="6">6 — Obedece comandos</option>
+      <option value="5">5 — Localiza dor</option>
+      <option value="4">4 — Flexão normal</option>
+      <option value="3">3 — Flexão anormal</option>
+      <option value="2">2 — Extensão</option>
+      <option value="1">1 — Ausente</option>
+    </select>
+  </div>
+  <div id="aph-glasgow-badge" class="glasgow-badge" style="margin-top:12px;display:none"></div>`;
+}
+
+function aphSecaoSinaisVitais() {
+  return `<h3 class="aph-section-title">Seção E — Sinais Vitais (Série Temporal)</h3>
+  <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Registre múltiplas aferições durante o atendimento.</p>
+  <div id="aph-vitais-lista"></div>
+  <button type="button" class="btn-secondary" style="width:100%;margin-top:8px" onclick="aphAdicionarSinal()">+ Adicionar Aferição</button>`;
+}
+
+function aphSecaoSAMPLE() {
+  return `<h3 class="aph-section-title">Seção F — SAMPLE (Anamnese)</h3>
+  ${aphTextarea('aph-sample-sintomas','S — Sinais e Sintomas',3,'Queixas do paciente, início, características...')}
+  ${aphTextarea('aph-sample-alergias','A — Alergias',2,'Medicamentos, alimentos, outros...')}
+  ${aphTextarea('aph-sample-medicamentos','M — Medicamentos em uso',2,'Nome, dose, frequência...')}
+  ${aphTextarea('aph-sample-historico','P — Patologias / Histórico',2,'Doenças preexistentes, cirurgias...')}
+  ${aphTextarea('aph-sample-ultima-refeicao','L — Última Refeição',2,'Horário e o que comeu...')}
+  ${aphTextarea('aph-sample-eventos','E — Eventos que levaram à ocorrência',3,'O que aconteceu antes...')}`;
+}
+
+function aphSecaoMecanismo() {
+  return `<h3 class="aph-section-title">Seção G — Mecanismo de Lesão</h3>
+  <div class="aph-subgrupo">
+    <label class="aph-label">Tipo de Mecanismo</label>
+    ${aphChips('mecanismo_tipo',[
+      {v:'trauma_contuso',l:'Trauma Contuso'},{v:'perfurante',l:'Perfurante'},
+      {v:'queimadura',l:'Queimadura'},{v:'afogamento',l:'Afogamento'},
+      {v:'eletrico',l:'Elétrico'},{v:'clinico',l:'Clínico'}
+    ])}
+  </div>
+  ${aphTextarea('aph-mecanismo-cinematica','Cinemática do Trauma',3,'Descreva o mecanismo com detalhes...')}
+  <div class="aph-subgrupo">
+    <label class="aph-label">Uso de EPI / Dispositivos de Segurança</label>
+    ${aphChips('mecanismo_uso_epi',[{v:'cinto',l:'Cinto'},{v:'capacete',l:'Capacete'},{v:'airbag',l:'Airbag'},{v:'nenhum',l:'Nenhum'}],true)}
+  </div>`;
+}
+
+function aphSecaoIntervencoes() {
+  return `<h3 class="aph-section-title">Seção H — Intervenções</h3>
+  <div id="aph-interv-lista"></div>
+  <button type="button" class="btn-secondary" style="width:100%;margin-top:8px" onclick="aphAdicionarIntervencao()">+ Adicionar Intervenção</button>`;
+}
+
+function aphSecaoDesfecho() {
+  return `<h3 class="aph-section-title">Seção I — Desfecho</h3>
+  ${aphInput('aph-desfecho-hospital','Hospital de Destino','text','Nome do hospital...')}
+  <div class="aph-subgrupo">
+    <label class="aph-label">Condição na Transferência</label>
+    ${aphChips('desfecho_condicao',[
+      {v:'estavel',l:'Estável'},{v:'instavel',l:'Instável'},
+      {v:'em_pcr',l:'Em PCR'},{v:'obito_local',l:'Óbito no Local'}
+    ])}
+  </div>
+  ${aphTextarea('aph-desfecho-obs','Observações Finais',3,'')}
+  ${aphInput('aph-desfecho-profissional','Profissional Responsável','text','Nome completo')}
+  ${aphInput('aph-desfecho-coren','COREN','text','Ex: COREN-SP 000000')}
+  ${aphInput('aph-desfecho-medico','Médico Responsável','text','Nome do médico')}
+  <div class="aph-subgrupo" style="margin-top:16px">
+    <label class="aph-label">Status do Boletim</label>
+    ${aphChips('status_boletim',[{v:'rascunho',l:'Rascunho'},{v:'finalizado',l:'Finalizado'}])}
+  </div>`;
+}
+
+// ── SpO2 hint ─────────────────────────────────────────────────────────────────
+function aphCheckSpo2() {
+  const val = parseInt(document.getElementById('aph-spo2-input')?.value || '0');
+  const hint = document.getElementById('aph-spo2-hint');
+  if (!hint) return;
+  if (!val) { hint.textContent = ''; return; }
+  if (val >= 95)      { hint.style.color = 'var(--verde)';   hint.textContent = '✓ Saturação normal'; }
+  else if (val >= 90) { hint.style.color = 'var(--amarelo)'; hint.textContent = '⚠ Hipoxemia leve'; }
+  else if (val >= 85) { hint.style.color = 'var(--laranja,#F59E0B)'; hint.textContent = '⚠ Hipoxemia moderada — oferecer O₂'; }
+  else                { hint.style.color = 'var(--vermelho)'; hint.textContent = '✖ Hipoxemia grave — ação imediata!'; }
+}
+
+// ── Glasgow auto-calc ─────────────────────────────────────────────────────────
+function calcularGlasgow() {
+  const o = parseInt(document.getElementById('aph-gl-ocular')?.value  || '0');
+  const v = parseInt(document.getElementById('aph-gl-verbal')?.value  || '0');
+  const m = parseInt(document.getElementById('aph-gl-motor')?.value   || '0');
+  const badge = document.getElementById('aph-glasgow-badge');
+  if (!badge) return;
+  if (!o && !v && !m) { badge.style.display = 'none'; return; }
+  const total = (o||0) + (v||0) + (m||0);
+  let cls = 'glasgow-verde', txt = 'Leve';
+  if (total <= 8)       { cls = 'glasgow-vermelho'; txt = 'Grave'; }
+  else if (total <= 12) { cls = 'glasgow-amarelo';  txt = 'Moderado'; }
+  badge.className   = `glasgow-badge ${cls}`;
+  badge.style.display = '';
+  badge.innerHTML   = `Glasgow: <strong>${total}/15</strong> — ${txt} (AO:${o||'?'} RV:${v||'?'} RM:${m||'?'})`;
+}
+
+// ── Sinais vitais dinâmicos ───────────────────────────────────────────────────
+function aphRenderSinais() {
+  const el = document.getElementById('aph-vitais-lista');
+  if (!el) return;
+  el.innerHTML = aph_sinaisVitais.map((s, i) => `
+    <div class="aph-intervencao-card" style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <strong style="color:var(--primary)">Aferição ${i+1}</strong>
+        <button type="button" onclick="aphRemoverSinal(${i})" style="background:none;border:none;color:var(--vermelho);cursor:pointer;font-size:18px">×</button>
+      </div>
+      <div class="aph-grid2">
+        <div class="aph-subgrupo"><label class="aph-label">Horário</label>
+          <input type="time" class="aph-input" value="${s.horario||''}" onchange="aph_sinaisVitais[${i}].horario=this.value"></div>
+        <div class="aph-subgrupo"><label class="aph-label">PA (mmHg)</label>
+          <input type="text" class="aph-input" placeholder="120/80" value="${s.pa||''}" onchange="aph_sinaisVitais[${i}].pa=this.value"></div>
+        <div class="aph-subgrupo"><label class="aph-label">FC (bpm)</label>
+          <input type="number" class="aph-input" placeholder="60-100" value="${s.fc||''}" onchange="aph_sinaisVitais[${i}].fc=this.value"></div>
+        <div class="aph-subgrupo"><label class="aph-label">FR (irpm)</label>
+          <input type="number" class="aph-input" placeholder="12-20" value="${s.fr||''}" onchange="aph_sinaisVitais[${i}].fr=this.value"></div>
+        <div class="aph-subgrupo"><label class="aph-label">SpO₂ (%)</label>
+          <input type="number" class="aph-input" placeholder="95-100" value="${s.spo2||''}" onchange="aph_sinaisVitais[${i}].spo2=this.value"></div>
+        <div class="aph-subgrupo"><label class="aph-label">HGT (mg/dL)</label>
+          <input type="number" class="aph-input" placeholder="70-99" value="${s.hgt||''}" onchange="aph_sinaisVitais[${i}].hgt=this.value"></div>
+        <div class="aph-subgrupo"><label class="aph-label">Temp (°C)</label>
+          <input type="number" step="0.1" class="aph-input" placeholder="36.5" value="${s.temp||''}" onchange="aph_sinaisVitais[${i}].temp=this.value"></div>
+        <div class="aph-subgrupo"><label class="aph-label">EVA (0-10)</label>
+          <input type="number" class="aph-input" min="0" max="10" placeholder="0" value="${s.eva||''}" onchange="aph_sinaisVitais[${i}].eva=this.value"></div>
+      </div>
+    </div>`).join('');
+}
+
+function aphAdicionarSinal() {
+  aph_sinaisVitais.push({ horario:'', pa:'', fc:'', fr:'', spo2:'', hgt:'', temp:'', eva:'' });
+  aphRenderSinais();
+}
+
+function aphRemoverSinal(i) {
+  aph_sinaisVitais.splice(i, 1);
+  aphRenderSinais();
+}
+
+// ── Intervenções dinâmicas ────────────────────────────────────────────────────
+function aphRenderIntervencoes() {
+  const el = document.getElementById('aph-interv-lista');
+  if (!el) return;
+  el.innerHTML = aph_intervencoes.map((iv, i) => `
+    <div class="aph-intervencao-card" style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <strong style="color:var(--primary)">Intervenção ${i+1}</strong>
+        <button type="button" onclick="aphRemoverIntervencao(${i})" style="background:none;border:none;color:var(--vermelho);cursor:pointer;font-size:18px">×</button>
+      </div>
+      <div class="aph-grid2">
+        <div class="aph-subgrupo"><label class="aph-label">Tipo</label>
+          <input type="text" class="aph-input" placeholder="Ex: Acesso venoso, IOT..." value="${iv.tipo||''}" onchange="aph_intervencoes[${i}].tipo=this.value"></div>
+        <div class="aph-subgrupo"><label class="aph-label">Horário</label>
+          <input type="time" class="aph-input" value="${iv.horario||''}" onchange="aph_intervencoes[${i}].horario=this.value"></div>
+      </div>
+      <div class="aph-subgrupo"><label class="aph-label">Descrição</label>
+        <textarea class="aph-textarea" rows="2" onchange="aph_intervencoes[${i}].descricao=this.value">${iv.descricao||''}</textarea></div>
+      <div class="aph-subgrupo"><label class="aph-label">Profissional</label>
+        <input type="text" class="aph-input" placeholder="Nome" value="${iv.profissional||''}" onchange="aph_intervencoes[${i}].profissional=this.value"></div>
+    </div>`).join('');
+}
+
+function aphAdicionarIntervencao() {
+  aph_intervencoes.push({ tipo:'', horario:'', descricao:'', profissional:'' });
+  aphRenderIntervencoes();
+}
+
+function aphRemoverIntervencao(i) {
+  aph_intervencoes.splice(i, 1);
+  aphRenderIntervencoes();
+}
+
+// ── Salvar estado (antes de trocar de step) ───────────────────────────────────
+function aphSalvarEstado() {
+  if (aph_stepAtual === 1) {
+    aph_currentBoletim = aph_currentBoletim || {};
+    Object.assign(aph_currentBoletim, {
+      numero_ocorrencia:     document.getElementById('aph-numero')?.value || null,
+      viatura:               document.getElementById('aph-viatura')?.value || null,
+      data_acionamento:      document.getElementById('aph-data-acionamento')?.value || null,
+      data_chegada_local:    document.getElementById('aph-data-chegada-local')?.value || null,
+      data_saida_local:      document.getElementById('aph-data-saida-local')?.value || null,
+      data_chegada_hospital: document.getElementById('aph-data-chegada-hospital')?.value || null,
+      medico_regulador:      document.getElementById('aph-medico-regulador')?.value || null,
+      natureza_ocorrencia:   aphGetChip('natureza_ocorrencia'),
+      tipo_local:            aphGetChip('tipo_local'),
+      endereco_ocorrencia:   document.getElementById('aph-endereco')?.value || null,
+    });
+  } else if (aph_stepAtual === 2) {
+    aph_currentBoletim = aph_currentBoletim || {};
+    Object.assign(aph_currentBoletim, {
+      paciente_nome:      document.getElementById('aph-pac-nome')?.value || null,
+      paciente_idade:     parseInt(document.getElementById('aph-pac-idade')?.value)||null,
+      paciente_sexo:      aphGetChip('paciente_sexo'),
+      paciente_documento: document.getElementById('aph-pac-doc')?.value || null,
+      paciente_contato:   document.getElementById('aph-pac-contato')?.value || null,
+    });
+  } else if (aph_stepAtual === 3) {
+    aph_currentBoletim = aph_currentBoletim || {};
+    Object.assign(aph_currentBoletim, {
+      abcde_via_aerea:           aphGetChip('abcde_via_aerea'),
+      abcde_dispositivo_va:      document.getElementById('aph-disp-va')?.value || null,
+      abcde_respiracao:          aphGetChip('abcde_respiracao'),
+      abcde_fr:                  parseInt(document.getElementById('aph-fr')?.value)||null,
+      abcde_spo2:                parseInt(document.getElementById('aph-spo2-input')?.value)||null,
+      abcde_o2_fluxo:            parseInt(document.getElementById('aph-o2-fluxo')?.value)||null,
+      abcde_o2_dispositivo:      aphGetChip('abcde_o2_dispositivo'),
+      abcde_circulacao:          aphGetChip('abcde_circulacao'),
+      abcde_pulso:               aphGetChip('abcde_pulso'),
+      abcde_ritmo_pulso:         aphGetChip('abcde_ritmo_pulso'),
+      abcde_forca_pulso:         aphGetChip('abcde_forca_pulso'),
+      abcde_tec:                 aphGetChip('abcde_tec'),
+      abcde_hemorragia:          aphGetChip('abcde_hemorragia') === 'true',
+      abcde_hemorragia_tipo:     document.getElementById('aph-hemorragia-tipo')?.value || null,
+      abcde_nivel_consciencia:   aphGetChip('abcde_nivel_consciencia'),
+      abcde_pupilas:             aphGetChip('abcde_pupilas'),
+      abcde_exposicao:           document.getElementById('aph-exposicao')?.value || null,
+      abcde_suspeita_trauma_raqui: aphGetChip('abcde_suspeita_trauma_raqui') === 'true',
+    });
+  } else if (aph_stepAtual === 4) {
+    aph_currentBoletim = aph_currentBoletim || {};
+    Object.assign(aph_currentBoletim, {
+      glasgow_ocular: parseInt(document.getElementById('aph-gl-ocular')?.value)||null,
+      glasgow_verbal: parseInt(document.getElementById('aph-gl-verbal')?.value)||null,
+      glasgow_motor:  parseInt(document.getElementById('aph-gl-motor')?.value)||null,
+      // glasgow_total is a GENERATED column — never included
+    });
+  } else if (aph_stepAtual === 5) {
+    aph_currentBoletim = aph_currentBoletim || {};
+    aph_currentBoletim.sinais_vitais = aph_sinaisVitais;
+  } else if (aph_stepAtual === 6) {
+    aph_currentBoletim = aph_currentBoletim || {};
+    Object.assign(aph_currentBoletim, {
+      sample_sintomas:        document.getElementById('aph-sample-sintomas')?.value || null,
+      sample_alergias:        document.getElementById('aph-sample-alergias')?.value || null,
+      sample_medicamentos:    document.getElementById('aph-sample-medicamentos')?.value || null,
+      sample_historico:       document.getElementById('aph-sample-historico')?.value || null,
+      sample_ultima_refeicao: document.getElementById('aph-sample-ultima-refeicao')?.value || null,
+      sample_eventos:         document.getElementById('aph-sample-eventos')?.value || null,
+    });
+  } else if (aph_stepAtual === 7) {
+    aph_currentBoletim = aph_currentBoletim || {};
+    Object.assign(aph_currentBoletim, {
+      mecanismo_tipo:       aphGetChip('mecanismo_tipo'),
+      mecanismo_cinematica: document.getElementById('aph-mecanismo-cinematica')?.value || null,
+      mecanismo_uso_epi:    aphGetChipsMulti('mecanismo_uso_epi').join(',') || null,
+    });
+  } else if (aph_stepAtual === 8) {
+    aph_currentBoletim = aph_currentBoletim || {};
+    aph_currentBoletim.intervencoes = aph_intervencoes;
+  } else if (aph_stepAtual === 9) {
+    aph_currentBoletim = aph_currentBoletim || {};
+    Object.assign(aph_currentBoletim, {
+      desfecho_hospital:     document.getElementById('aph-desfecho-hospital')?.value || null,
+      desfecho_condicao:     aphGetChip('desfecho_condicao'),
+      desfecho_observacoes:  document.getElementById('aph-desfecho-obs')?.value || null,
+      desfecho_profissional: document.getElementById('aph-desfecho-profissional')?.value || null,
+      desfecho_coren:        document.getElementById('aph-desfecho-coren')?.value || null,
+      desfecho_medico:       document.getElementById('aph-desfecho-medico')?.value || null,
+      status_boletim:        aphGetChip('status_boletim') || 'rascunho',
+    });
+  }
+}
+
+// ── Restaurar estado ao voltar para step ──────────────────────────────────────
+function aphRestaurarEstado() {
+  if (!aph_currentBoletim) return;
+  const b = aph_currentBoletim;
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val != null) el.value = val; };
+
+  if (aph_stepAtual === 1) {
+    set('aph-numero', b.numero_ocorrencia);
+    set('aph-viatura', b.viatura);
+    set('aph-data-acionamento', b.data_acionamento ? b.data_acionamento.slice(0,16) : '');
+    set('aph-data-chegada-local', b.data_chegada_local ? b.data_chegada_local.slice(0,16) : '');
+    set('aph-data-saida-local', b.data_saida_local ? b.data_saida_local.slice(0,16) : '');
+    set('aph-data-chegada-hospital', b.data_chegada_hospital ? b.data_chegada_hospital.slice(0,16) : '');
+    set('aph-medico-regulador', b.medico_regulador);
+    set('aph-endereco', b.endereco_ocorrencia);
+    aphSetChip('natureza_ocorrencia', b.natureza_ocorrencia);
+    aphSetChip('tipo_local', b.tipo_local);
+  } else if (aph_stepAtual === 2) {
+    set('aph-pac-nome', b.paciente_nome);
+    set('aph-pac-idade', b.paciente_idade);
+    set('aph-pac-doc', b.paciente_documento);
+    set('aph-pac-contato', b.paciente_contato);
+    aphSetChip('paciente_sexo', b.paciente_sexo);
+  } else if (aph_stepAtual === 3) {
+    aphSetChip('abcde_via_aerea', b.abcde_via_aerea);
+    set('aph-disp-va', b.abcde_dispositivo_va);
+    aphSetChip('abcde_respiracao', b.abcde_respiracao);
+    set('aph-fr', b.abcde_fr);
+    set('aph-spo2-input', b.abcde_spo2);
+    set('aph-o2-fluxo', b.abcde_o2_fluxo);
+    aphSetChip('abcde_o2_dispositivo', b.abcde_o2_dispositivo);
+    aphSetChip('abcde_circulacao', b.abcde_circulacao);
+    aphSetChip('abcde_pulso', b.abcde_pulso);
+    aphSetChip('abcde_ritmo_pulso', b.abcde_ritmo_pulso);
+    aphSetChip('abcde_forca_pulso', b.abcde_forca_pulso);
+    aphSetChip('abcde_tec', b.abcde_tec);
+    aphSetChip('abcde_hemorragia', b.abcde_hemorragia ? 'true' : 'false');
+    set('aph-hemorragia-tipo', b.abcde_hemorragia_tipo);
+    aphSetChip('abcde_nivel_consciencia', b.abcde_nivel_consciencia);
+    aphSetChip('abcde_pupilas', b.abcde_pupilas);
+    set('aph-exposicao', b.abcde_exposicao);
+    aphSetChip('abcde_suspeita_trauma_raqui', b.abcde_suspeita_trauma_raqui ? 'true' : 'false');
+    aphCheckSpo2();
+  } else if (aph_stepAtual === 4) {
+    set('aph-gl-ocular', b.glasgow_ocular);
+    set('aph-gl-verbal', b.glasgow_verbal);
+    set('aph-gl-motor', b.glasgow_motor);
+    setTimeout(calcularGlasgow, 50);
+  } else if (aph_stepAtual === 5) {
+    aphRenderSinais();
+  } else if (aph_stepAtual === 6) {
+    set('aph-sample-sintomas', b.sample_sintomas);
+    set('aph-sample-alergias', b.sample_alergias);
+    set('aph-sample-medicamentos', b.sample_medicamentos);
+    set('aph-sample-historico', b.sample_historico);
+    set('aph-sample-ultima-refeicao', b.sample_ultima_refeicao);
+    set('aph-sample-eventos', b.sample_eventos);
+  } else if (aph_stepAtual === 7) {
+    aphSetChip('mecanismo_tipo', b.mecanismo_tipo);
+    set('aph-mecanismo-cinematica', b.mecanismo_cinematica);
+    if (b.mecanismo_uso_epi) aphSetChipsMulti('mecanismo_uso_epi', b.mecanismo_uso_epi.split(','));
+  } else if (aph_stepAtual === 8) {
+    aphRenderIntervencoes();
+  } else if (aph_stepAtual === 9) {
+    set('aph-desfecho-hospital', b.desfecho_hospital);
+    aphSetChip('desfecho_condicao', b.desfecho_condicao);
+    set('aph-desfecho-obs', b.desfecho_observacoes);
+    set('aph-desfecho-profissional', b.desfecho_profissional);
+    set('aph-desfecho-coren', b.desfecho_coren);
+    set('aph-desfecho-medico', b.desfecho_medico);
+    aphSetChip('status_boletim', b.status_boletim || 'rascunho');
+  }
+}
+
+// ── Navegação entre steps ─────────────────────────────────────────────────────
+function aphProximo() {
+  aphSalvarEstado();
+  if (aph_stepAtual < 9) {
+    aph_stepAtual++;
+    aph_stepsVisitados.add(aph_stepAtual);
+    aphRenderStepper();
+    aphRenderSecaoAtual();
+    document.getElementById('aph-form-view').scrollTop = 0;
+  } else {
+    aphFinalizar();
+  }
+}
+
+function aphVoltar() {
+  aphSalvarEstado();
+  if (aph_stepAtual > 1) {
+    aph_stepAtual--;
+    aphRenderStepper();
+    aphRenderSecaoAtual();
+  }
+}
+
+function aphIrParaStep(n) {
+  if (!aph_stepsVisitados.has(n)) return;
+  aphSalvarEstado();
+  aph_stepAtual = n;
+  aphRenderStepper();
+  aphRenderSecaoAtual();
+}
+
+// ── Coletar todos os dados ────────────────────────────────────────────────────
+function aphColetarDados() {
+  aphSalvarEstado();
+  const b = aph_currentBoletim || {};
+  // NUNCA incluir glasgow_total — coluna gerada pelo banco
+  return {
+    numero_ocorrencia:          b.numero_ocorrencia    || null,
+    viatura:                    b.viatura              || null,
+    data_acionamento:           b.data_acionamento     || null,
+    data_chegada_local:         b.data_chegada_local   || null,
+    data_saida_local:           b.data_saida_local     || null,
+    data_chegada_hospital:      b.data_chegada_hospital|| null,
+    medico_regulador:           b.medico_regulador     || null,
+    natureza_ocorrencia:        b.natureza_ocorrencia  || null,
+    tipo_local:                 b.tipo_local           || null,
+    endereco_ocorrencia:        b.endereco_ocorrencia  || null,
+    paciente_nome:              b.paciente_nome        || null,
+    paciente_idade:             b.paciente_idade       || null,
+    paciente_sexo:              b.paciente_sexo        || null,
+    paciente_documento:         b.paciente_documento   || null,
+    paciente_contato:           b.paciente_contato     || null,
+    abcde_via_aerea:            b.abcde_via_aerea      || null,
+    abcde_dispositivo_va:       b.abcde_dispositivo_va || null,
+    abcde_respiracao:           b.abcde_respiracao     || null,
+    abcde_fr:                   b.abcde_fr             || null,
+    abcde_spo2:                 b.abcde_spo2           || null,
+    abcde_o2_fluxo:             b.abcde_o2_fluxo       || null,
+    abcde_o2_dispositivo:       b.abcde_o2_dispositivo || null,
+    abcde_circulacao:           b.abcde_circulacao     || null,
+    abcde_pulso:                b.abcde_pulso          || null,
+    abcde_ritmo_pulso:          b.abcde_ritmo_pulso    || null,
+    abcde_forca_pulso:          b.abcde_forca_pulso    || null,
+    abcde_tec:                  b.abcde_tec            || null,
+    abcde_hemorragia:           b.abcde_hemorragia     || false,
+    abcde_hemorragia_tipo:      b.abcde_hemorragia_tipo|| null,
+    abcde_nivel_consciencia:    b.abcde_nivel_consciencia || null,
+    abcde_pupilas:              b.abcde_pupilas        || null,
+    abcde_exposicao:            b.abcde_exposicao      || null,
+    abcde_suspeita_trauma_raqui:b.abcde_suspeita_trauma_raqui || false,
+    glasgow_ocular:             b.glasgow_ocular       || null,
+    glasgow_verbal:             b.glasgow_verbal       || null,
+    glasgow_motor:              b.glasgow_motor        || null,
+    sinais_vitais:              aph_sinaisVitais,
+    sample_sintomas:            b.sample_sintomas      || null,
+    sample_alergias:            b.sample_alergias      || null,
+    sample_medicamentos:        b.sample_medicamentos  || null,
+    sample_historico:           b.sample_historico     || null,
+    sample_ultima_refeicao:     b.sample_ultima_refeicao || null,
+    sample_eventos:             b.sample_eventos       || null,
+    mecanismo_tipo:             b.mecanismo_tipo       || null,
+    mecanismo_cinematica:       b.mecanismo_cinematica || null,
+    mecanismo_uso_epi:          b.mecanismo_uso_epi    || null,
+    intervencoes:               aph_intervencoes,
+    desfecho_hospital:          b.desfecho_hospital    || null,
+    desfecho_condicao:          b.desfecho_condicao    || null,
+    desfecho_observacoes:       b.desfecho_observacoes || null,
+    desfecho_profissional:      b.desfecho_profissional|| null,
+    desfecho_coren:             b.desfecho_coren       || null,
+    desfecho_medico:            b.desfecho_medico      || null,
+    status_boletim:             b.status_boletim       || 'rascunho',
+  };
+}
+
+// ── Salvar rascunho ───────────────────────────────────────────────────────────
+async function aphSalvarRascunho() {
+  try {
+    const dados = aphColetarDados();
+    dados.status_boletim = 'rascunho';
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) { showToast('Sessão expirada. Faça login novamente.'); return; }
+
+    if (aph_currentBoletim?.id) {
+      const { error } = await sb.from('ocorrencias_aph').update(dados).eq('id', aph_currentBoletim.id);
+      if (error) throw error;
+    } else {
+      const { data, error } = await sb.from('ocorrencias_aph').insert({ ...dados, user_id: user.id }).select().single();
+      if (error) throw error;
+      aph_currentBoletim = { ...aph_currentBoletim, ...data };
+    }
+    showToast('Rascunho salvo!');
+  } catch(e) { showToast('Erro ao salvar rascunho: ' + (e.message || e)); }
+}
+
+// ── Finalizar boletim ─────────────────────────────────────────────────────────
+async function aphFinalizar() {
+  try {
+    const dados = aphColetarDados();
+    dados.status_boletim = aphGetChip('status_boletim') || 'finalizado';
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) { showToast('Sessão expirada.'); return; }
+
+    let boletim;
+    if (aph_currentBoletim?.id) {
+      const { data, error } = await sb.from('ocorrencias_aph').update(dados).eq('id', aph_currentBoletim.id).select().single();
+      if (error) throw error;
+      boletim = data;
+    } else {
+      const { data, error } = await sb.from('ocorrencias_aph').insert({ ...dados, user_id: user.id }).select().single();
+      if (error) throw error;
+      boletim = data;
+    }
+    aph_currentBoletim = boletim;
+    aphMostrarResultado(boletim);
+  } catch(e) { showToast('Erro ao salvar boletim: ' + (e.message || e)); }
+}
+
+// ── Labels para exibição ──────────────────────────────────────────────────────
+const APH_LABELS = {
+  natureza_ocorrencia: { trauma:'Trauma', clinico:'Clínico', obstetrico:'Obstétrico', psiquiatrico:'Psiquiátrico', pediatrico:'Pediátrico' },
+  tipo_local:          { via_publica:'Via Pública', residencia:'Residência', comercio:'Comércio', outro:'Outro' },
+  paciente_sexo:       { M:'Masculino', F:'Feminino', nao_informado:'Não Informado' },
+  abcde_via_aerea:     { pervio:'Pérvio', obstruido:'Obstruído', dispositivo:'Com Dispositivo' },
+  abcde_respiracao:    { normal:'Normal', alterada:'Alterada', ausente:'Ausente' },
+  abcde_o2_dispositivo:{ cateter:'Cateter', mascara_simples:'Máscara Simples', mascara_reservatorio:'Máscara Reservatório', vmi:'VMI' },
+  abcde_circulacao:    { normal:'Normal', alterada:'Alterada', pcr:'PCR' },
+  abcde_pulso:         { presente:'Presente', ausente:'Ausente' },
+  abcde_ritmo_pulso:   { regular:'Regular', irregular:'Irregular' },
+  abcde_forca_pulso:   { cheio:'Cheio', fino:'Fino', filiforme:'Filiforme' },
+  abcde_tec:           { menor_2s:'< 2s', maior_2s:'> 2s' },
+  abcde_nivel_consciencia: { alerta:'Alerta', voz:'À voz', dor:'À dor', irresponsivo:'Irresponsivo' },
+  abcde_pupilas:       { isocoricas_fotorreativas:'Isocóricas Fotorreativas', anisocoricas:'Anisocóricas', miose:'Miose', midriase:'Midríase' },
+  mecanismo_tipo:      { trauma_contuso:'Trauma Contuso', perfurante:'Perfurante', queimadura:'Queimadura', afogamento:'Afogamento', eletrico:'Elétrico', clinico:'Clínico' },
+  desfecho_condicao:   { estavel:'Estável', instavel:'Instável', em_pcr:'Em PCR', obito_local:'Óbito no Local' },
+  status_boletim:      { rascunho:'Rascunho', finalizado:'Finalizado' },
+};
+
+function lbl(field, val) {
+  if (val == null) return '—';
+  return (APH_LABELS[field] && APH_LABELS[field][val]) || val;
+}
+
+// ── Gerar texto do boletim ────────────────────────────────────────────────────
+function gerarTextoBoletim(b) {
+  const fmt = v => v || '—';
+  const glasgowTotal = (b.glasgow_ocular||0) + (b.glasgow_verbal||0) + (b.glasgow_motor||0);
+  const glasgowStr = glasgowTotal > 0
+    ? `${glasgowTotal}/15 (AO:${b.glasgow_ocular||'?'} RV:${b.glasgow_verbal||'?'} RM:${b.glasgow_motor||'?'})`
+    : '—';
+
+  let txt = `🚑 BOLETIM APH — PULSO ANOTA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Nº: ${fmt(b.numero_ocorrencia)} | Viatura: ${fmt(b.viatura)}
+Acionamento: ${b.data_acionamento ? new Date(b.data_acionamento).toLocaleString('pt-BR') : '—'}
+Chegada local: ${b.data_chegada_local ? new Date(b.data_chegada_local).toLocaleString('pt-BR') : '—'}
+Saída local: ${b.data_saida_local ? new Date(b.data_saida_local).toLocaleString('pt-BR') : '—'}
+Chegada hospital: ${b.data_chegada_hospital ? new Date(b.data_chegada_hospital).toLocaleString('pt-BR') : '—'}
+Médico regulador: ${fmt(b.medico_regulador)}
+Natureza: ${lbl('natureza_ocorrencia',b.natureza_ocorrencia)} | Local: ${lbl('tipo_local',b.tipo_local)}
+Endereço: ${fmt(b.endereco_ocorrencia)}
+
+👤 PACIENTE
+Nome: ${fmt(b.paciente_nome)} | Sexo: ${lbl('paciente_sexo',b.paciente_sexo)} | Idade: ${b.paciente_idade ? b.paciente_idade+'a' : '—'}
+Doc: ${fmt(b.paciente_documento)} | Contato: ${fmt(b.paciente_contato)}
+
+🔬 ABCDE
+Via aérea: ${lbl('abcde_via_aerea',b.abcde_via_aerea)}${b.abcde_dispositivo_va ? ' ('+b.abcde_dispositivo_va+')' : ''}
+Respiração: ${lbl('abcde_respiracao',b.abcde_respiracao)} | FR: ${fmt(b.abcde_fr)} irpm | SpO₂: ${b.abcde_spo2 ? b.abcde_spo2+'%' : '—'}
+Circulação: ${lbl('abcde_circulacao',b.abcde_circulacao)} | Pulso: ${lbl('abcde_pulso',b.abcde_pulso)}
+TEC: ${lbl('abcde_tec',b.abcde_tec)} | Consciência: ${lbl('abcde_nivel_consciencia',b.abcde_nivel_consciencia)}
+Pupilas: ${lbl('abcde_pupilas',b.abcde_pupilas)}
+
+🧠 GLASGOW: ${glasgowStr}
+`;
+
+  if (b.sinais_vitais && b.sinais_vitais.length > 0) {
+    txt += `\n📊 SINAIS VITAIS\n`;
+    b.sinais_vitais.forEach((s, i) => {
+      txt += `${i+1}. ${s.horario||'?h'} | PA:${s.pa||'?'} FC:${s.fc||'?'} FR:${s.fr||'?'} SpO₂:${s.spo2||'?'}% HGT:${s.hgt||'?'} T:${s.temp||'?'}°C EVA:${s.eva||'?'}\n`;
+    });
+  }
+
+  txt += `\n📋 SAMPLE
+S: ${fmt(b.sample_sintomas)}
+A: ${fmt(b.sample_alergias)}
+M: ${fmt(b.sample_medicamentos)}
+P: ${fmt(b.sample_historico)}
+L: ${fmt(b.sample_ultima_refeicao)}
+E: ${fmt(b.sample_eventos)}
+
+⚡ MECANISMO
+Tipo: ${lbl('mecanismo_tipo',b.mecanismo_tipo)}
+Cinemática: ${fmt(b.mecanismo_cinematica)}
+`;
+
+  if (b.intervencoes && b.intervencoes.length > 0) {
+    txt += `\n🩺 INTERVENÇÕES\n`;
+    b.intervencoes.forEach((iv, i) => {
+      txt += `${i+1}. [${iv.horario||'?h'}] ${iv.tipo||'?'}: ${iv.descricao||'—'} (${iv.profissional||'—'})\n`;
+    });
+  }
+
+  txt += `\n🏥 DESFECHO
+Hospital: ${fmt(b.desfecho_hospital)}
+Condição: ${lbl('desfecho_condicao',b.desfecho_condicao)}
+Obs: ${fmt(b.desfecho_observacoes)}
+Profissional: ${fmt(b.desfecho_profissional)} ${b.desfecho_coren ? '| '+b.desfecho_coren : ''}
+Médico: ${fmt(b.desfecho_medico)}
+`;
+
+  if (txt.length > 2900) {
+    txt = txt.slice(0, 2900) + '\n...[texto truncado para WhatsApp]';
+  }
+  return txt;
+}
+
+// ── Mostrar tela de resultado ─────────────────────────────────────────────────
+function aphMostrarResultado(b) {
+  document.getElementById('aph-form-view').style.display     = 'none';
+  document.getElementById('aph-historico-view').style.display= 'none';
+  document.getElementById('aph-blocked').style.display       = 'none';
+  const rv = document.getElementById('aph-result-view');
+  rv.style.display = '';
+
+  const glasgowTotal = (b.glasgow_ocular||0) + (b.glasgow_verbal||0) + (b.glasgow_motor||0);
+  const condCor = { estavel:'var(--verde)', instavel:'var(--amarelo)', em_pcr:'var(--vermelho)', obito_local:'#374151' };
+  const cor = condCor[b.desfecho_condicao] || 'var(--primary)';
+
+  document.getElementById('aph-result-content').innerHTML = `
+    <div class="aph-result-header" style="border-color:${cor}">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-size:13px;color:var(--text-muted)">Boletim APH</div>
+          <div style="font-size:20px;font-weight:700;color:var(--primary)">${b.numero_ocorrencia || 'Sem número'}</div>
+        </div>
+        <span class="aph-status-badge ${b.status_boletim === 'finalizado' ? 'aph-status-finalizado' : 'aph-status-rascunho'}">${lbl('status_boletim',b.status_boletim)}</span>
+      </div>
+      <div style="margin-top:12px;font-size:13px;color:var(--text-muted)">
+        ${b.data_acionamento ? '🕐 '+new Date(b.data_acionamento).toLocaleString('pt-BR') : ''}
+        ${b.viatura ? ' · 🚑 '+b.viatura : ''}
+      </div>
+    </div>
+
+    <div class="aph-result-section">
+      <div class="aph-result-label">Paciente</div>
+      <div class="aph-result-value">${b.paciente_nome || '—'} · ${lbl('paciente_sexo',b.paciente_sexo)} · ${b.paciente_idade ? b.paciente_idade+'a' : '—'}</div>
+    </div>
+    <div class="aph-result-section">
+      <div class="aph-result-label">Natureza / Local</div>
+      <div class="aph-result-value">${lbl('natureza_ocorrencia',b.natureza_ocorrencia)} · ${lbl('tipo_local',b.tipo_local)}</div>
+    </div>
+    <div class="aph-result-section">
+      <div class="aph-result-label">ABCDE Resumo</div>
+      <div class="aph-result-value">
+        VA: ${lbl('abcde_via_aerea',b.abcde_via_aerea)} ·
+        Resp: ${lbl('abcde_respiracao',b.abcde_respiracao)} ·
+        SpO₂: ${b.abcde_spo2 ? b.abcde_spo2+'%' : '—'} ·
+        Circ: ${lbl('abcde_circulacao',b.abcde_circulacao)} ·
+        AVDI: ${lbl('abcde_nivel_consciencia',b.abcde_nivel_consciencia)}
+      </div>
+    </div>
+    ${glasgowTotal > 0 ? `<div class="aph-result-section">
+      <div class="aph-result-label">Glasgow</div>
+      <div class="aph-result-value">${glasgowTotal}/15 (AO:${b.glasgow_ocular||'?'} RV:${b.glasgow_verbal||'?'} RM:${b.glasgow_motor||'?'})</div>
+    </div>` : ''}
+    ${b.sinais_vitais && b.sinais_vitais.length ? `<div class="aph-result-section">
+      <div class="aph-result-label">Sinais Vitais (${b.sinais_vitais.length} aferição${b.sinais_vitais.length>1?'ões':''})</div>
+      <div style="overflow-x:auto"><table class="aph-vitais-table">
+        <thead><tr><th>Hr</th><th>PA</th><th>FC</th><th>FR</th><th>SpO₂</th><th>HGT</th><th>T°</th><th>EVA</th></tr></thead>
+        <tbody>${b.sinais_vitais.map(s=>`<tr><td>${s.horario||'?'}</td><td>${s.pa||'?'}</td><td>${s.fc||'?'}</td><td>${s.fr||'?'}</td><td>${s.spo2||'?'}%</td><td>${s.hgt||'?'}</td><td>${s.temp||'?'}</td><td>${s.eva||'?'}</td></tr>`).join('')}</tbody>
+      </table></div>
+    </div>` : ''}
+    <div class="aph-result-section">
+      <div class="aph-result-label">Desfecho</div>
+      <div class="aph-result-value" style="color:${cor};font-weight:600">${lbl('desfecho_condicao',b.desfecho_condicao)} · ${b.desfecho_hospital || '—'}</div>
+    </div>
+    ${b.desfecho_observacoes ? `<div class="aph-result-section">
+      <div class="aph-result-label">Observações</div>
+      <div class="aph-result-value">${b.desfecho_observacoes}</div>
+    </div>` : ''}
+    <div class="aph-result-section">
+      <div class="aph-result-label">Profissional</div>
+      <div class="aph-result-value">${b.desfecho_profissional || '—'} ${b.desfecho_coren ? '· '+b.desfecho_coren : ''}</div>
+    </div>`;
+}
+
+// ── Ações do resultado ────────────────────────────────────────────────────────
+function aphCopiarBoletim() {
+  const txt = gerarTextoBoletim(aph_currentBoletim);
+  navigator.clipboard.writeText(txt).then(() => showToast('Boletim copiado!')).catch(() => showToast('Erro ao copiar.'));
+}
+
+function aphEnviarWhatsApp() {
+  const txt = gerarTextoBoletim(aph_currentBoletim);
+  const url = 'https://wa.me/?text=' + encodeURIComponent(txt);
+  window.open(url, '_blank');
+}
+
+function aphEditarBoletim() {
+  aphMostrarFormulario();
+}
+
+function aphNovoBoletimReset() {
+  aphNovoBoletim();
+  aphMostrarFormulario();
+}
+
+// ── PDF ───────────────────────────────────────────────────────────────────────
+function gerarPDFBoletim() {
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const b = aph_currentBoletim;
+    if (!b) { showToast('Nenhum boletim para exportar.'); return; }
+
+    const glasgowTotal = (b.glasgow_ocular||0) + (b.glasgow_verbal||0) + (b.glasgow_motor||0);
+    const fmt = v => v || '—';
+    const dt  = v => v ? new Date(v).toLocaleString('pt-BR') : '—';
+
+    // Header
+    doc.setFillColor(0, 168, 232);
+    doc.rect(0, 0, 210, 22, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(14); doc.setFont(undefined, 'bold');
+    doc.text('BOLETIM APH — PULSO ANOTA', 10, 10);
+    doc.setFontSize(9); doc.setFont(undefined, 'normal');
+    doc.text(`Nº: ${fmt(b.numero_ocorrencia)}  |  Viatura: ${fmt(b.viatura)}  |  Status: ${lbl('status_boletim',b.status_boletim)}`, 10, 17);
+
+    doc.setTextColor(0, 0, 0);
+    let y = 28;
+
+    const section = (title) => {
+      doc.setFillColor(230, 245, 255);
+      doc.rect(10, y-4, 190, 7, 'F');
+      doc.setFontSize(9); doc.setFont(undefined, 'bold');
+      doc.text(title, 12, y);
+      doc.setFont(undefined, 'normal');
+      y += 5;
+    };
+    const row = (label, val) => {
+      doc.setFontSize(8);
+      doc.setFont(undefined, 'bold'); doc.text(label + ':', 12, y);
+      doc.setFont(undefined, 'normal'); doc.text(String(fmt(val)), 55, y);
+      y += 5;
+      if (y > 270) { doc.addPage(); y = 15; }
+    };
+
+    section('A — IDENTIFICAÇÃO DA OCORRÊNCIA');
+    row('Acionamento', dt(b.data_acionamento));
+    row('Chegada Local', dt(b.data_chegada_local));
+    row('Saída Local', dt(b.data_saida_local));
+    row('Chegada Hospital', dt(b.data_chegada_hospital));
+    row('Médico Regulador', b.medico_regulador);
+    row('Natureza', lbl('natureza_ocorrencia', b.natureza_ocorrencia));
+    row('Tipo de Local', lbl('tipo_local', b.tipo_local));
+    row('Endereço', b.endereco_ocorrencia);
+    y += 3;
+
+    section('B — PACIENTE');
+    row('Nome', b.paciente_nome);
+    row('Sexo / Idade', `${lbl('paciente_sexo',b.paciente_sexo)} / ${b.paciente_idade ? b.paciente_idade+'a' : '—'}`);
+    row('Documento', b.paciente_documento);
+    row('Contato', b.paciente_contato);
+    y += 3;
+
+    section('C — ABCDE');
+    row('Via Aérea', `${lbl('abcde_via_aerea',b.abcde_via_aerea)}${b.abcde_dispositivo_va?' ('+b.abcde_dispositivo_va+')':''}`);
+    row('Respiração', `${lbl('abcde_respiracao',b.abcde_respiracao)} | FR: ${fmt(b.abcde_fr)} irpm | SpO₂: ${b.abcde_spo2||'—'}%`);
+    row('Circulação', `${lbl('abcde_circulacao',b.abcde_circulacao)} | Pulso: ${lbl('abcde_pulso',b.abcde_pulso)}`);
+    row('TEC', lbl('abcde_tec',b.abcde_tec));
+    row('Consciência (AVDI)', lbl('abcde_nivel_consciencia',b.abcde_nivel_consciencia));
+    row('Pupilas', lbl('abcde_pupilas',b.abcde_pupilas));
+    if (b.abcde_hemorragia) row('Hemorragia', b.abcde_hemorragia_tipo || 'Sim');
+    if (b.abcde_exposicao) row('Exposição', b.abcde_exposicao);
+    y += 3;
+
+    section('D — GLASGOW');
+    row('Glasgow', glasgowTotal > 0 ? `${glasgowTotal}/15  (AO:${b.glasgow_ocular||'?'} RV:${b.glasgow_verbal||'?'} RM:${b.glasgow_motor||'?'})` : '—');
+    y += 3;
+
+    if (b.sinais_vitais && b.sinais_vitais.length > 0) {
+      section('E — SINAIS VITAIS');
+      const svHead = [['Hr','PA','FC','FR','SpO₂','HGT','T°C','EVA']];
+      const svBody = b.sinais_vitais.map(s => [s.horario||'?',s.pa||'?',s.fc||'?',s.fr||'?',(s.spo2||'?')+'%',s.hgt||'?',s.temp||'?',s.eva||'?']);
+      doc.autoTable({ head: svHead, body: svBody, startY: y, theme: 'grid', styles:{fontSize:7}, margin:{left:10,right:10} });
+      y = doc.lastAutoTable.finalY + 5;
+    }
+
+    section('F — SAMPLE');
+    row('Sintomas', b.sample_sintomas);
+    row('Alergias', b.sample_alergias);
+    row('Medicamentos', b.sample_medicamentos);
+    row('Histórico', b.sample_historico);
+    row('Última Refeição', b.sample_ultima_refeicao);
+    row('Eventos', b.sample_eventos);
+    y += 3;
+
+    section('G — MECANISMO');
+    row('Tipo', lbl('mecanismo_tipo',b.mecanismo_tipo));
+    row('Cinemática', b.mecanismo_cinematica);
+    row('EPI/Dispositivos', b.mecanismo_uso_epi);
+    y += 3;
+
+    if (b.intervencoes && b.intervencoes.length > 0) {
+      section('H — INTERVENÇÕES');
+      const ivHead = [['#','Horário','Tipo','Descrição','Profissional']];
+      const ivBody = b.intervencoes.map((iv,i) => [i+1, iv.horario||'?', iv.tipo||'?', iv.descricao||'—', iv.profissional||'—']);
+      doc.autoTable({ head: ivHead, body: ivBody, startY: y, theme: 'grid', styles:{fontSize:7}, margin:{left:10,right:10} });
+      y = doc.lastAutoTable.finalY + 5;
+    }
+
+    section('I — DESFECHO');
+    row('Hospital', b.desfecho_hospital);
+    row('Condição', lbl('desfecho_condicao',b.desfecho_condicao));
+    row('Observações', b.desfecho_observacoes);
+    row('Profissional', `${fmt(b.desfecho_profissional)}${b.desfecho_coren?' | '+b.desfecho_coren:''}`);
+    row('Médico', b.desfecho_medico);
+
+    // Rodapé
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(7); doc.setTextColor(150);
+      doc.text(`Pulso Anota · Boletim APH · Página ${i}/${pageCount} · ${new Date().toLocaleDateString('pt-BR')}`, 10, 290);
+    }
+
+    const nome = (b.paciente_nome || 'boletim').replace(/\s+/g,'_').toLowerCase();
+    doc.save(`APH_${nome}_${new Date().toISOString().slice(0,10)}.pdf`);
+  } catch(e) {
+    console.error('PDF error:', e);
+    showToast('Erro ao gerar PDF: ' + (e.message||e));
+  }
+}
+
+// ── Histórico ─────────────────────────────────────────────────────────────────
+async function aphMostrarHistorico() {
+  document.getElementById('aph-blocked').style.display       = 'none';
+  document.getElementById('aph-form-view').style.display     = 'none';
+  document.getElementById('aph-result-view').style.display   = 'none';
+  const hv = document.getElementById('aph-historico-view');
+  hv.style.display = '';
+
+  const lista = document.getElementById('aph-hist-lista');
+  lista.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted)">Carregando...</div>';
+
+  try {
+    const { data, error } = await sb.from('ocorrencias_aph')
+      .select('id,numero_ocorrencia,paciente_nome,natureza_ocorrencia,desfecho_condicao,status_boletim,criado_em,data_acionamento')
+      .order('criado_em', { ascending: false })
+      .limit(50);
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      lista.innerHTML = '<div style="text-align:center;padding:32px;color:var(--text-muted)">Nenhum boletim registrado ainda.<br><br><button class="btn-primary" onclick="aphNovoBoletim()">Criar Primeiro Boletim</button></div>';
+      return;
+    }
+
+    const condCor = { estavel:'var(--verde)', instavel:'var(--amarelo)', em_pcr:'var(--vermelho)', obito_local:'#6B7280' };
+    lista.innerHTML = data.map(b => `
+      <div class="aph-hist-item" onclick="aphAbrirBoletim('${b.id}')">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+          <div>
+            <div style="font-weight:700;color:var(--primary)">${b.numero_ocorrencia || 'Sem número'}</div>
+            <div style="font-size:12px;color:var(--text-muted)">${b.paciente_nome || 'Paciente não identificado'}</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <span class="aph-status-badge ${b.status_boletim==='finalizado'?'aph-status-finalizado':'aph-status-rascunho'}">${lbl('status_boletim',b.status_boletim)}</span>
+            ${b.desfecho_condicao ? `<div style="font-size:11px;color:${condCor[b.desfecho_condicao]||'var(--text-muted)'};margin-top:4px">${lbl('desfecho_condicao',b.desfecho_condicao)}</div>` : ''}
+          </div>
+        </div>
+        <div style="margin-top:6px;font-size:11px;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap">
+          <span>${lbl('natureza_ocorrencia',b.natureza_ocorrencia)}</span>
+          <span>${b.data_acionamento ? new Date(b.data_acionamento).toLocaleDateString('pt-BR') : new Date(b.criado_em).toLocaleDateString('pt-BR')}</span>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    lista.innerHTML = `<div style="text-align:center;padding:24px;color:var(--vermelho)">Erro: ${e.message}</div>`;
+  }
+}
+
+async function aphAbrirBoletim(id) {
+  try {
+    const { data, error } = await sb.from('ocorrencias_aph').select('*').eq('id', id).single();
+    if (error) throw error;
+    aph_currentBoletim = data;
+    aph_sinaisVitais   = Array.isArray(data.sinais_vitais) ? data.sinais_vitais : [];
+    aph_intervencoes   = Array.isArray(data.intervencoes)  ? data.intervencoes  : [];
+    aph_stepAtual      = 1;
+    aph_stepsVisitados = new Set([1,2,3,4,5,6,7,8,9]);
+    aphMostrarResultado(data);
+  } catch(e) { showToast('Erro ao abrir boletim: ' + (e.message||e)); }
 }
 </script>
 </body>

@@ -8,6 +8,7 @@ const ALLOWED_ORIGIN = "https://anota.pulsoenfermagem.com.br";
 const PRICES: Record<string, number> = {
   anotacoes: 97.00,   // Módulo de anotações de enfermagem
   completo:  117.00,  // Anotações + Calculadora de Medicamentos
+  aph:       147.00,  // Anotações + Calculadora + Módulo APH
 };
 const DAYS = 365;
 
@@ -101,7 +102,7 @@ serve(async (req) => {
     }
     const payerEmailSafe = user.email!;
 
-    const planLabel = plan === "completo" ? "Completo" : "Anotações";
+    const planLabel = plan === "completo" ? "Completo" : plan === "aph" ? "APH" : "Anotações";
 
     // 5. Montar payload para o Mercado Pago
     const mpPayload: Record<string, unknown> = {
