@@ -895,7 +895,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
     <button class="nav-btn" id="nav-influenciador" onclick="showView('influenciador',this)" style="display:none">
       <div class="ni">🤝</div>Meu Painel
     </button>
-    <button class="nav-btn" id="nav-aph" onclick="showView('aph',this)">
+    <button class="nav-btn" id="nav-aph" onclick="showView('aph',this)" style="display:none">
       <div class="ni">🚑</div>APH
     </button>
   </aside>
@@ -1628,7 +1628,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   <button class="bn-btn" onclick="showView('estudo',this)" id="bn-estudo" style="display:none"><div class="bn-icon">🎓</div>Estudo</button>
   <button class="bn-btn" onclick="showView('prontuario',this)" id="bn-prontuario"><div class="bn-icon">🏥</div>Prontuário</button>
   <button class="bn-btn" onclick="showView('calcular',this)" id="bn-calcular"><div class="bn-icon">🧮</div>Calcular</button>
-  <button class="bn-btn" onclick="showView('aph',this)" id="bn-aph"><div class="bn-icon">🚑</div>APH</button>
+  <button class="bn-btn" onclick="showView('aph',this)" id="bn-aph" style="display:none"><div class="bn-icon">🚑</div>APH</button>
 </nav>
 
 <div class="toast" id="toast" style="display:none"></div>
@@ -1907,6 +1907,14 @@ function mostrarApp(dados){
     const bnCalc  = document.getElementById('bn-calcular');
     if(navCalc){ navCalc.onclick = lockCalc; navCalc.title='🔒 Disponível no Plano Completo'; }
     if(bnCalc) { bnCalc.onclick  = lockCalc; }
+  }
+
+  // Mostrar botão APH no bottom-nav e sidebar apenas para quem tem acesso
+  if(verificarAcessoAPH()){
+    const bnAph  = document.getElementById('bn-aph');
+    const navAph = document.getElementById('nav-aph');
+    if(bnAph)  bnAph.style.display  = '';
+    if(navAph) navAph.style.display = '';
   }
 }
 
@@ -4003,6 +4011,7 @@ async function toggleCasoAtivo(casoId, ativo) {
 function verificarAcessoAPH() {
   if (!currentUsuario) return false;
   if (currentUsuario.tipo_acesso === 'admin') return true;
+  if (currentInfluenciador) return true;
   if (currentUsuario.status === 'trial') return true;
   if (currentUsuario.tipo_acesso === 'anual' && currentUsuario.plano === 'aph') return true;
   return false;
