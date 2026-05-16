@@ -3607,10 +3607,20 @@ function iniciarCaso(casoId) {
 }
 
 function avaliarCompletude(textoUsuario, criterios) {
+  // U+0300–U+036F: combining diacritical marks (explicit range avoids encoding issues)
   const norm = t => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
   const texto = norm(textoUsuario);
   return criterios.map(criterio => {
-    const presente = criterio.palavras_chave.some(p => texto.includes(norm(p)));
+    const presente = criterio.palavras_chave.some(p => {
+      const np = norm(p);
+      // Purely alphabetic keywords (e.g. "EV", "dose") need a word-start boundary so that
+      // "ev" does not match inside "escrever", while prefix keywords like "reavali" still
+      // match "reavaliado" (boundary only on the left).
+      if (/^[a-z]+$/.test(np)) {
+        return new RegExp('\\b' + np).test(texto);
+      }
+      return texto.includes(np);
+    });
     return { id: criterio.id, descricao: criterio.descricao, obrigatorio: criterio.obrigatorio, presente };
   });
 }
