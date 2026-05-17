@@ -341,8 +341,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   .sidebar-overlay.open{display:block}
   .hamburger{display:flex}
   .bottom-nav{display:flex}
-  .layout{height:calc(100vh - var(--topbar-h) - var(--bottom-nav-h))}
-  .content{padding:14px;padding-bottom:calc(var(--bottom-nav-h) + 14px)}
+  .layout{height:calc(100vh - var(--topbar-h) - var(--bottom-nav-h));overflow:hidden}
+  .main{height:100%;overflow:hidden}
+  .content{height:100%;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding:14px;padding-bottom:calc(var(--bottom-nav-h) + 14px);box-sizing:border-box}
   .oco-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
   .fg{grid-template-columns:1fr}
   .patient-bar{display:none}
@@ -4087,8 +4088,8 @@ function aphRenderSecaoAtual() {
   if (!el) return;
   el.innerHTML = aphRenderSecao(aph_stepAtual);
   // Atualizar botões de nav
-  document.getElementById('aph-btn-voltar').style.display  = aph_stepAtual > 1 ? '' : 'none';
-  document.getElementById('aph-btn-proximo').textContent   = aph_stepAtual < 9 ? 'Próximo →' : 'Finalizar ✓';
+  document.getElementById('aph-btn-anterior').style.display = aph_stepAtual > 1 ? '' : 'none';
+  document.getElementById('aph-btn-proximo').textContent    = aph_stepAtual < 9 ? 'Próximo →' : 'Finalizar ✓';
   // Restaurar valores salvos
   aphRestaurarEstado();
   // Glasgow auto-calc
@@ -5187,7 +5188,11 @@ async function aphMostrarHistorico() {
   }
 }
 
-function carregarHistoricoAPH() { aphMostrarHistorico(); }
+function carregarHistoricoAPH()    { aphMostrarHistorico(); }
+function aphNavigarStep(n)         { if (n >= 1 && n <= 9) aphIrParaStep(n); }
+function aphVerHistorico()         { aphMostrarHistorico(); }
+function aphCompartilharWhatsApp() { aphEnviarWhatsApp(); }
+function aphBaixarPDF()            { gerarPDFBoletim(); }
 
 async function aphAbrirBoletim(id) {
   try {
