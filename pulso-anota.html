@@ -1551,10 +1551,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
     <!-- /view-influenciador -->
 
     <!-- VIEW: MÓDULO APH -->
-    <div class="view" id="view-aph">
-      <div id="aph-wrap"></div>
-    </div>
-    <!-- /view-aph -->
+    <div class="view" id="view-aph"></div>
 
   </main>
 </div>
@@ -3120,6 +3117,7 @@ function showView(id,btn){
   document.querySelectorAll('.bn-btn').forEach(b=>b.classList.remove('active'));
   const bn=document.getElementById(`bn-${id}`);if(bn)bn.classList.add('active');
   closeSidebar();
+  const ct=document.querySelector('.content');if(ct)ct.scrollTop=0;
   if(id==='admin'){adminTab('usuarios',document.getElementById('admin-tab-usuarios'));}
   if(id==='historico'){carregarHistorico();}
   if(id==='estudo'){entrarModoEstudo();}
@@ -3971,8 +3969,10 @@ function entrarModuloAPH() {
 }
 
 function aphRenderWrap(html) {
-  const w = document.getElementById('aph-wrap');
+  const w = document.getElementById('view-aph');
   if (w) w.innerHTML = html;
+  const ct = document.querySelector('.content');
+  if (ct) ct.scrollTop = 0;
 }
 
 // ── Novo boletim ──────────────────────────────────────────────────────────────
