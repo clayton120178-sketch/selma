@@ -342,8 +342,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   .hamburger{display:flex}
   .bottom-nav{display:flex}
   .layout{height:calc(100vh - var(--topbar-h) - var(--bottom-nav-h));overflow:hidden}
-  .main{height:100%;overflow:hidden}
-  .content{height:100%;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding:14px;padding-bottom:calc(var(--bottom-nav-h) + 14px);box-sizing:border-box}
+  .main{flex:1;min-height:0;overflow:hidden}
+  .content{flex:1;min-height:0;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding:14px;padding-bottom:calc(var(--bottom-nav-h) + 14px)}
   .oco-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
   .fg{grid-template-columns:1fr}
   .patient-bar{display:none}
@@ -1552,71 +1552,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 
     <!-- VIEW: MÓDULO APH -->
     <div class="view" id="view-aph">
-
-      <!-- BLOQUEIO APH -->
-      <div id="aph-blocked" style="display:none;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;gap:16px">
-        <div style="font-size:52px">🚑</div>
-        <div style="font-size:20px;font-weight:800;color:var(--text)">Módulo APH — Atendimento Pré-Hospitalar</div>
-        <div style="font-size:14px;color:var(--text2);max-width:360px;line-height:1.6">Formulário completo de boletim pré-hospitalar, output copiável e PDF profissional.</div>
-        <div style="font-family:var(--mono);font-size:32px;font-weight:800;color:var(--teal)">R$ 147,00<span style="font-size:14px;font-weight:400;color:var(--text2)">/ano</span></div>
-        <button class="btn-cta" onclick="abrirPagamento('aph')">Assinar Plano APH</button>
-      </div>
-
-      <!-- FORM VIEW -->
-      <div id="aph-form-view" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
-          <div>
-            <div style="font-size:18px;font-weight:800;color:var(--text)">🚑 Boletim APH</div>
-            <div style="font-size:13px;color:var(--text2)">Atendimento Pré-Hospitalar</div>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:36px" onclick="aphVerHistorico()">📋 Histórico APH</button>
-            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:36px" onclick="aphSalvarRascunho()">💾 Salvar Rascunho</button>
-          </div>
-        </div>
-
-        <!-- Stepper -->
-        <div class="aph-stepper" id="aph-stepper"></div>
-
-        <!-- Conteúdo das seções -->
-        <div id="aph-form-content" class="card" style="padding:18px"></div>
-
-        <!-- Navegação -->
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:12px">
-          <button id="aph-btn-anterior" onclick="aphNavigarStep(aph_stepAtual-1)" style="min-height:48px;padding:12px 20px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:14px;font-weight:700;color:var(--text2);cursor:pointer">← Anterior</button>
-          <button id="aph-btn-proximo" onclick="aphProximo()" style="min-height:48px;padding:12px 24px;border-radius:var(--r);border:none;background:var(--teal);color:white;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer">Próximo →</button>
-        </div>
-      </div>
-
-      <!-- RESULTADO -->
-      <div id="aph-result-view" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-          <div style="font-size:16px;font-weight:800;color:var(--text)">📄 Boletim Gerado</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:40px" onclick="aphCopiarBoletim()">📋 Copiar</button>
-            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:40px" onclick="aphCompartilharWhatsApp()">📱 WhatsApp</button>
-            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:40px" onclick="aphBaixarPDF()">📄 PDF</button>
-          </div>
-        </div>
-        <div id="aph-result-content"></div>
-        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
-          <button onclick="aphEditarBoletim()" style="flex:1;min-height:48px;padding:12px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:14px;font-weight:700;color:var(--text2);cursor:pointer">✏️ Editar</button>
-          <button onclick="aphNovoBoletim()" style="flex:1;min-height:48px;padding:12px;border-radius:var(--r);border:none;background:var(--teal);color:white;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer">🔄 Novo Boletim</button>
-        </div>
-      </div>
-
-      <!-- HISTÓRICO -->
-      <div id="aph-historico-view" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-          <div style="font-size:16px;font-weight:800;color:var(--text)">📋 Histórico APH</div>
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:36px" onclick="aphNovoBoletim()">+ Novo Boletim</button>
-            <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:36px" onclick="carregarHistoricoAPH()">↺ Atualizar</button>
-          </div>
-        </div>
-        <div id="aph-historico-content"><div class="loading"><div class="spinner"></div>Carregando...</div></div>
-      </div>
-
+      <div id="aph-wrap"></div>
     </div>
     <!-- /view-aph -->
 
@@ -4020,18 +3956,23 @@ function verificarAcessoAPH() {
 
 // ── Ponto de entrada do módulo ────────────────────────────────────────────────
 function entrarModuloAPH() {
-  const bloqueado = document.getElementById('aph-blocked');
-  const formView  = document.getElementById('aph-form-view');
-  const resultView= document.getElementById('aph-result-view');
-  const histView  = document.getElementById('aph-historico-view');
-  [bloqueado, formView, resultView, histView].forEach(el => el && (el.style.display = 'none'));
-
   if (!verificarAcessoAPH()) {
-    if (bloqueado) bloqueado.style.display = '';
+    aphRenderWrap(`
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;gap:16px">
+        <div style="font-size:52px">🚑</div>
+        <div style="font-size:20px;font-weight:800;color:var(--text)">Módulo APH</div>
+        <div style="font-size:14px;color:var(--text2);max-width:360px;line-height:1.6">Formulário completo de boletim pré-hospitalar, output copiável e PDF profissional.</div>
+        <div style="font-family:var(--mono);font-size:32px;font-weight:800;color:var(--teal)">R$ 147,00<span style="font-size:14px;font-weight:400;color:var(--text2)">/ano</span></div>
+        <button class="btn-cta" onclick="abrirPagamento('aph')">Assinar Plano APH</button>
+      </div>`);
     return;
   }
-  // Mostrar histórico por padrão
   aphMostrarHistorico();
+}
+
+function aphRenderWrap(html) {
+  const w = document.getElementById('aph-wrap');
+  if (w) w.innerHTML = html;
 }
 
 // ── Novo boletim ──────────────────────────────────────────────────────────────
@@ -4046,10 +3987,23 @@ function aphNovoBoletim() {
 
 // ── Mostrar formulário ────────────────────────────────────────────────────────
 function aphMostrarFormulario() {
-  document.getElementById('aph-blocked').style.display     = 'none';
-  document.getElementById('aph-result-view').style.display = 'none';
-  document.getElementById('aph-historico-view').style.display = 'none';
-  document.getElementById('aph-form-view').style.display   = '';
+  aphRenderWrap(`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+      <div>
+        <div style="font-size:18px;font-weight:800;color:var(--text)">🚑 Boletim APH</div>
+        <div style="font-size:13px;color:var(--text2)">Atendimento Pré-Hospitalar</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:36px" onclick="aphVerHistorico()">📋 Histórico</button>
+        <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:36px" onclick="aphSalvarRascunho()">💾 Rascunho</button>
+      </div>
+    </div>
+    <div class="aph-stepper" id="aph-stepper"></div>
+    <div id="aph-form-content" class="card" style="padding:18px"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:12px">
+      <button id="aph-btn-anterior" onclick="aphVoltar()" style="min-height:48px;padding:12px 20px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:14px;font-weight:700;color:var(--text2);cursor:pointer">← Anterior</button>
+      <button id="aph-btn-proximo" onclick="aphProximo()" style="min-height:48px;padding:12px 24px;border-radius:var(--r);border:none;background:var(--teal);color:white;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer">Próximo →</button>
+    </div>`);
   aphRenderStepper();
   aphRenderSecaoAtual();
 }
@@ -4696,7 +4650,7 @@ function aphProximo() {
     aph_stepsVisitados.add(aph_stepAtual);
     aphRenderStepper();
     aphRenderSecaoAtual();
-    document.getElementById('aph-form-view').scrollTop = 0;
+    document.querySelector('.content').scrollTo({top:0,behavior:'smooth'});
   } else {
     aphFinalizar();
   }
@@ -4926,11 +4880,20 @@ Médico: ${fmt(b.desfecho_medico)}
 
 // ── Mostrar tela de resultado ─────────────────────────────────────────────────
 function aphMostrarResultado(b) {
-  document.getElementById('aph-form-view').style.display     = 'none';
-  document.getElementById('aph-historico-view').style.display= 'none';
-  document.getElementById('aph-blocked').style.display       = 'none';
-  const rv = document.getElementById('aph-result-view');
-  rv.style.display = '';
+  aphRenderWrap(`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div style="font-size:16px;font-weight:800;color:var(--text)">📄 Boletim Gerado</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:40px" onclick="aphCopiarBoletim()">📋 Copiar</button>
+        <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:40px" onclick="aphEnviarWhatsApp()">📱 WhatsApp</button>
+        <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:40px" onclick="gerarPDFBoletim()">📄 PDF</button>
+      </div>
+    </div>
+    <div id="aph-result-content"></div>
+    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+      <button onclick="aphEditarBoletim()" style="flex:1;min-height:48px;padding:12px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:14px;font-weight:700;color:var(--text2);cursor:pointer">✏️ Editar</button>
+      <button onclick="aphNovoBoletim()" style="flex:1;min-height:48px;padding:12px;border-radius:var(--r);border:none;background:var(--teal);color:white;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer">🔄 Novo Boletim</button>
+    </div>`);
 
   const glasgowTotal = (b.glasgow_ocular||0) + (b.glasgow_verbal||0) + (b.glasgow_motor||0);
   const condCor = { estavel:'var(--verde)', instavel:'var(--amarelo)', em_pcr:'var(--vermelho)', obito_local:'#374151' };
@@ -5144,14 +5107,17 @@ function gerarPDFBoletim() {
 
 // ── Histórico ─────────────────────────────────────────────────────────────────
 async function aphMostrarHistorico() {
-  document.getElementById('aph-blocked').style.display       = 'none';
-  document.getElementById('aph-form-view').style.display     = 'none';
-  document.getElementById('aph-result-view').style.display   = 'none';
-  const hv = document.getElementById('aph-historico-view');
-  hv.style.display = '';
+  aphRenderWrap(`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div style="font-size:16px;font-weight:800;color:var(--text)">📋 Histórico APH</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:36px" onclick="aphNovoBoletim()">+ Novo Boletim</button>
+        <button class="btn btn-outline" style="font-size:12px;padding:7px 14px;min-height:36px" onclick="aphMostrarHistorico()">↺ Atualizar</button>
+      </div>
+    </div>
+    <div id="aph-historico-content"><div class="loading"><div class="spinner"></div>Carregando...</div></div>`);
 
   const lista = document.getElementById('aph-historico-content');
-  lista.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted)">Carregando...</div>';
 
   try {
     const { data, error } = await sb.from('ocorrencias_aph')
