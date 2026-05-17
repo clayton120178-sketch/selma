@@ -344,6 +344,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   .layout{height:calc(100vh - var(--topbar-h) - var(--bottom-nav-h));overflow:hidden}
   .main{flex:1;min-height:0;overflow:hidden}
   .content{flex:1;min-height:0;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding:14px;padding-bottom:calc(var(--bottom-nav-h) + 14px)}
+  #view-aph.active{position:fixed;top:var(--topbar-h);bottom:var(--bottom-nav-h);left:0;right:0;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--bg);padding:14px;z-index:50;display:block}
   .oco-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
   .fg{grid-template-columns:1fr}
   .patient-bar{display:none}
