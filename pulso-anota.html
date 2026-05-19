@@ -1878,7 +1878,7 @@ function hideAll(){
 async function loginGoogle(){
   const {error}=await sb.auth.signInWithOAuth({
     provider:'google',
-    options:{redirectTo:'https://anota.pulsoenfermagem.com.br/pulso-anota.html'}
+    options:{redirectTo:'https://app.pulsoenfermagem.com.br'}
   });
   if(error)showToast('❌ Erro ao conectar com Google');
 }
